@@ -6,11 +6,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   slug: "calendario-app",
   version: "1.0.0",
   orientation: "portrait",
-  icon: "./assets/images/icon.png",
+  icon: "./assets/icon.png",
   userInterfaceStyle: "light",
   newArchEnabled: true,
   splash: {
-    image: "./assets/images/splash-icon.png",
+    image: "./assets/splash-icon.png",
     resizeMode: "contain",
     backgroundColor: "#ffffff",
   },
@@ -24,10 +24,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   android: {
     adaptiveIcon: {
-      foregroundImage: "./assets/images/adaptive-icon.png",
+      foregroundImage: "./assets/adaptive-icon.png",
       backgroundColor: "#ffffff",
     },
     package: "com.calendario.app",
+    usesCleartextTraffic: true,
   },
   plugins: [
     "expo-router",

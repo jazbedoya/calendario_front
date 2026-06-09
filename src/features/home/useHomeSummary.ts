@@ -1,0 +1,28 @@
+import { useQuery } from "@tanstack/react-query";
+import { apiClient } from "@/lib/api";
+
+export interface UpcomingEvent {
+  id: string;
+  title: string;
+  start_at: string;
+  end_at: string;
+  layer: "family" | "work" | "personal";
+  is_all_day: boolean;
+}
+
+export interface HomeSummary {
+  upcoming_events: UpcomingEvent[];
+  week_hours_by_layer: { family: number; work: number; personal: number };
+  today_tasks_pending: number;
+}
+
+export function useHomeSummary() {
+  return useQuery<HomeSummary>({
+    queryKey: ["home-summary"],
+    queryFn: async () => {
+      const { data } = await apiClient.get("/home/summary");
+      return data as HomeSummary;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+}

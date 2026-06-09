@@ -1,0 +1,260 @@
+{
+  "common": {
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "update": "Aktualisieren",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "close": "Schließen",
+    "error": "Fehler",
+    "back": "Zurück",
+    "comingSoon": "Demnächst verfügbar"
+  },
+  "auth": {
+    "login": {
+      "title": "Willkommen zurück",
+      "subtitle": "Ihre Zeit wartet auf Sie",
+      "googleBtn": "Mit Google fortfahren",
+      "divider": "ODER MIT E-MAIL ANMELDEN",
+      "emailLabel": "E-Mail",
+      "passwordLabel": "Passwort",
+      "forgotPassword": "Passwort vergessen?",
+      "submitBtn": "Anmelden",
+      "noAccount": "Noch kein Konto?",
+      "createAccount": "Jetzt erstellen",
+      "privacy": "Datenschutzrichtlinie · Nutzungsbedingungen",
+      "copyright": "© 2026 Avante Wellness"
+    },
+    "signup": {
+      "title": "Willkommen bei Avante",
+      "subtitle": "Lassen Sie uns gemeinsam Ihre Zeit gestalten",
+      "googleBtn": "Mit Google fortfahren",
+      "divider": "ODER KONTO MIT E-MAIL ERSTELLEN",
+      "nameLabel": "Name",
+      "namePlaceholder": "Ihr Name",
+      "emailLabel": "E-Mail",
+      "passwordLabel": "Passwort",
+      "passwordPlaceholder": "Mindestens 8 Zeichen",
+      "submitBtn": "Konto erstellen",
+      "hasAccount": "Bereits ein Konto?",
+      "loginLink": "Anmelden"
+    },
+    "validation": {
+      "emailInvalid": "Ungültige E-Mail",
+      "required": "Pflichtfeld",
+      "minChars_one": "Mindestens {{count}} Zeichen",
+      "minChars_other": "Mindestens {{count}} Zeichen"
+    },
+    "errors": {
+      "wrongCredentials": "Falsche E-Mail oder falsches Passwort",
+      "serverError": "Serverfehler, bitte versuchen Sie es später erneut",
+      "connectionError": "Verbindung zum Server fehlgeschlagen",
+      "unexpected": "Unerwarteter Fehler, bitte versuchen Sie es erneut"
+    }
+  },
+  "onboarding": {
+    "title": "Triff deine Schildkröte",
+    "subtitle": "Deine Begleiterin auf dieser Reise. Sie feiert jeden Erfolg mit dir.",
+    "mascotMessage": "Hallo! Schön, dich kennenzulernen.",
+    "nameLabel": "Gib ihr einen Namen",
+    "startBtn": "Loslegen"
+  },
+  "tabs": {
+    "home": "Start",
+    "all": "Kalender",
+    "balance": "Balance",
+    "settings": "Einstellungen"
+  },
+  "layers": {
+    "family": "Familie",
+    "work": "Arbeit",
+    "personal": "Persönlich"
+  },
+  "home": {
+    "greeting": {
+      "morning": "Guten Morgen",
+      "afternoon": "Guten Nachmittag",
+      "evening": "Guten Abend"
+    },
+    "area": {
+      "weekHours": "{{hours}}Std. diese Woche"
+    },
+    "insight": {
+      "tasksPending_one": "{{count}} Aufgabe heute ausstehend",
+      "tasksPending_other": "{{count}} Aufgaben heute ausstehend",
+      "tasksUpToDate": "Heute alles erledigt 🎉"
+    }
+  },
+  "calendar": {
+    "search": "Ereignisse suchen...",
+    "noResults": "Keine Ergebnisse für \"{{query}}\"",
+    "eventsTitle": "Heutige Ereignisse",
+    "noEvents": "Keine Ereignisse",
+    "noScheduled": "Für diesen Tag nichts geplant.",
+    "viewMonth": "Monat",
+    "viewWeek": "Woche",
+    "allDay": "Ganztägig",
+    "occupied": "Andere Bereiche"
+  },
+  "eventSheet": {
+    "titlePlaceholder": "Was passiert?",
+    "recurrence": {
+      "none": "Nicht wiederholen",
+      "daily": "Jeden Tag",
+      "weekly": "Jede Woche",
+      "monthly": "Jeden Monat",
+      "labelDaily": "Täglich wiederholen",
+      "labelWeekly": "Wöchentlich wiederholen",
+      "labelMonthly": "Monatlich wiederholen"
+    },
+    "save": "Speichern",
+    "saving": "Speichern…",
+    "update": "Aktualisieren",
+    "updating": "Aktualisieren…",
+    "conflictOverlap": "Konflikt um {{time}} · \"{{title}}\" belegt diesen Slot bereits · wird trotzdem gespeichert",
+    "conflictTight": "Enge Zeitplanung · \"{{title}}\" ist um {{time}} · wird trotzdem gespeichert",
+    "deleteTitle": "Ereignis löschen",
+    "deleteSingleMsg": "\"{{title}}\" löschen?",
+    "deleteRecurringMsg": "Was möchten Sie löschen?",
+    "deleteOnlyThis": "Nur dieses Ereignis",
+    "deleteAllSeries": "Alle Ereignisse der Serie",
+    "reminderTitle": "⏰ In 15 Minuten"
+  },
+  "tasks": {
+    "sectionTitle": "Heutige Aufgaben",
+    "counter_one": "{{done}} von {{total}} Aufgabe",
+    "counter_other": "{{done}} von {{total}} Aufgaben",
+    "progress": {
+      "empty": "Was möchten Sie heute erreichen? Schreiben Sie es auf.",
+      "start": "Fangen Sie an, wenn Sie bereit sind, kein Stress!",
+      "done": "Alles erledigt! Heute war ein toller Tag.",
+      "half": "Gut so — {{done}} von {{total}}. Weiter so!",
+      "mostDone": "Mehr als die Hälfte! {{done}} von {{total}}."
+    },
+    "yesterday": {
+      "pending": "Von gestern:",
+      "add": "+ Hinzufügen"
+    },
+    "addPlaceholder": "Aufgabe eingeben..."
+  },
+  "mascot": {
+    "sleepy": "Erholen Sie sich gut. Bis morgen!",
+    "excited": "Sie haben bald etwas. Los geht's!",
+    "lowEnergy": "Jeder Tag zählt. Sie schaffen das!",
+    "balanced": "Was für ein ausgeglichener Tag!",
+    "happy": "Bereit für einen großartigen Tag!"
+  },
+  "celebration": {
+    "messages": [
+      { "title": "Heute alles geschafft!", "body": "Ich bin so stolz auf dich 🐢" },
+      { "title": "Tag abgeschlossen!", "body": "Jeder Schritt zählt und heute hast du alle gemacht 🎉" },
+      { "title": "Unglaublich!", "body": "Du hast heute wirklich gut auf dich geachtet 💚" },
+      { "title": "Du hast den Tag gemeistert!", "body": "Tuga tanzt vor Freude 🌟" },
+      { "title": "Alles abgehakt!", "body": "Das ist echte Selbstfürsorge 🏆" }
+    ],
+    "closeBtn": "Super!",
+    "streak": "🔥 {{count}} Tage in Folge auf dich geachtet"
+  },
+  "dayCheck": {
+    "titleNew": "Wie war dein Tag?",
+    "titleUpdate": "Check-in aktualisieren",
+    "titleSaved": "Gespeichert",
+    "saveBtn": "Check-in speichern",
+    "updateBtn": "Aktualisieren",
+    "savedText": "Gespeichert. Ihre Statistiken werden dies berücksichtigen.",
+    "notesPlaceholder": "Etwas, das Sie von heute festhalten möchten (optional)",
+    "energy": {
+      "good": { "label": "Gute Energie", "hint": "Ich fühlte mich stark und klar" },
+      "medium": { "label": "Anstrengend aber okay", "hint": "Viel zu tun, aber ich hab's geschafft" },
+      "bad": { "label": "Schwerer Tag", "hint": "Schwer, wenig Energie, viel Druck" }
+    }
+  },
+  "emptyArea": {
+    "addBtn": "Etwas hinzufügen",
+    "dismissBtn": "Nicht jetzt",
+    "family": [
+      "Eine Woche ohne Familienpläne. Ein Abendessen, ein Anruf, ein Ausflug? 🐢",
+      "Zeit mit der Familie ist die Art, die bleibt. Sollen wir Platz machen?",
+      "Eine kleine Sache diese Woche kann viel bedeuten 🐢",
+      "Welchen einfachen Plan könnten Sie diese Woche mit Ihrer Familie machen?"
+    ],
+    "work": [
+      "Es ist eine Weile her, dass Sie etwas für die Arbeit notiert haben. Etwas Wichtiges? 🐢",
+      "Gibt es ein Meeting oder eine Aufgabe, die einen Platz im Kalender verdient?",
+      "Ein eingetragener Termin kann die ganze Woche klarer machen 🐢",
+      "Was steht in Ihrer Arbeitsagenda, was Sie noch nicht eingetragen haben?"
+    ],
+    "personal": [
+      "Ihre persönliche Zeit verdient auch einen Platz im Kalender 🐢",
+      "Etwas für Sie diese Woche? Ein Termin, ein Hobby, ein ruhiger Moment.",
+      "Auf sich zu achten erfordert auch Planung. Sollen wir etwas hinzufügen? 🐢",
+      "Gibt es etwas, das Sie für sich tun möchten und das noch nicht geplant ist?"
+    ]
+  },
+  "conflict": {
+    "overlap": "Überschneidung",
+    "tight": "Enge Zeitplanung",
+    "overlapMin": "Überschneidung: {{count}} Min.",
+    "marginMin": "Puffer: {{count}} Min.",
+    "ends": "endet um",
+    "starts": "beginnt um",
+    "resolve": "Lösen"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "mascot": {
+      "section": "Ihre Schildkröte",
+      "changeName": "Namen ändern",
+      "namePlaceholder": "Name der Schildkröte",
+      "saveBtn": "Speichern",
+      "cancelBtn": "Abbrechen",
+      "invalidName": "Ungültiger Name",
+      "invalidNameMsg": "Bitte geben Sie mindestens ein Zeichen ein."
+    },
+    "calendar": {
+      "section": "Google Kalender",
+      "description": "Importieren Sie Ihre Google Kalender-Ereignisse und organisieren Sie sie nach Lebensbereichen.",
+      "connect": "Google Kalender verbinden",
+      "sync": "Jetzt synchronisieren",
+      "disconnect": "Konto trennen",
+      "connected": "Verbunden",
+      "noSync": "Noch nicht synchronisiert — tippen Sie auf Jetzt synchronisieren",
+      "lastSync": "Letzte Sync: {{date}}",
+      "imported": "{{count}} importiert",
+      "disconnectTitle": "Google Kalender trennen",
+      "disconnectMsg": "Synchronisierte Ereignisse werden entfernt. Fortfahren?",
+      "disconnectConfirm": "Trennen",
+      "connectError": "Verbindung mit Google Kalender konnte nicht gestartet werden.",
+      "errorTitle": "Fehler"
+    },
+    "celebration": {
+      "section": "Feier",
+      "haptics": "Vibration beim Abschluss",
+      "hapticsHint": "Haptischer Impuls wenn alle Aufgaben erledigt sind",
+      "sound": "Feier-Sound"
+    },
+    "language": {
+      "section": "Sprache",
+      "es": "Español",
+      "en": "English",
+      "fr": "Français",
+      "de": "Deutsch"
+    },
+    "session": {
+      "section": "Sitzung",
+      "logout": "Abmelden"
+    }
+  },
+  "notifications": {
+    "dailyCheck": {
+      "title": "Wie war dein Tag?",
+      "body": "5 Sekunden, um ihn zu bewerten. Ihre Statistiken werden es zeigen."
+    }
+  },
+  "calendarError": {
+    "title": "Ups, etwas ist schiefgelaufen",
+    "missingScope": "Sie müssen den Kalenderzugriff in Google gewähren.",
+    "generic": "Google Kalender konnte nicht verbunden werden. Bitte versuchen Sie es erneut.",
+    "backBtn": "Zurück zu den Einstellungen"
+  }
+}

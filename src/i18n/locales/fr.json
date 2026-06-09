@@ -1,0 +1,260 @@
+{
+  "common": {
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "update": "Mettre à jour",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer",
+    "error": "Erreur",
+    "back": "Retour",
+    "comingSoon": "Bientôt disponible"
+  },
+  "auth": {
+    "login": {
+      "title": "Bon retour",
+      "subtitle": "Votre temps vous attend",
+      "googleBtn": "Continuer avec Google",
+      "divider": "OU SE CONNECTER PAR E-MAIL",
+      "emailLabel": "E-mail",
+      "passwordLabel": "Mot de passe",
+      "forgotPassword": "Mot de passe oublié ?",
+      "submitBtn": "Se connecter",
+      "noAccount": "Pas encore de compte ?",
+      "createAccount": "En créer un",
+      "privacy": "Politique de confidentialité · Conditions d'utilisation",
+      "copyright": "© 2026 Avante Wellness"
+    },
+    "signup": {
+      "title": "Bienvenue sur Avante",
+      "subtitle": "Prenons soin de votre temps ensemble",
+      "googleBtn": "Continuer avec Google",
+      "divider": "OU CRÉER UN COMPTE PAR E-MAIL",
+      "nameLabel": "Prénom",
+      "namePlaceholder": "Votre prénom",
+      "emailLabel": "E-mail",
+      "passwordLabel": "Mot de passe",
+      "passwordPlaceholder": "8 caractères minimum",
+      "submitBtn": "Créer un compte",
+      "hasAccount": "Déjà un compte ?",
+      "loginLink": "Se connecter"
+    },
+    "validation": {
+      "emailInvalid": "E-mail invalide",
+      "required": "Requis",
+      "minChars_one": "Au moins {{count}} caractère",
+      "minChars_other": "Au moins {{count}} caractères"
+    },
+    "errors": {
+      "wrongCredentials": "E-mail ou mot de passe incorrect",
+      "serverError": "Erreur serveur, veuillez réessayer plus tard",
+      "connectionError": "Impossible de se connecter au serveur",
+      "unexpected": "Erreur inattendue, veuillez réessayer"
+    }
+  },
+  "onboarding": {
+    "title": "Rencontrez votre tortue",
+    "subtitle": "Votre compagne dans ce voyage. Elle célébrera chaque victoire avec vous.",
+    "mascotMessage": "Bonjour ! Ravie de vous rencontrer.",
+    "nameLabel": "Donnez-lui un prénom",
+    "startBtn": "Commencer"
+  },
+  "tabs": {
+    "home": "Accueil",
+    "all": "Calendrier",
+    "balance": "Équilibre",
+    "settings": "Réglages"
+  },
+  "layers": {
+    "family": "Famille",
+    "work": "Travail",
+    "personal": "Personnel"
+  },
+  "home": {
+    "greeting": {
+      "morning": "Bonjour",
+      "afternoon": "Bon après-midi",
+      "evening": "Bonsoir"
+    },
+    "area": {
+      "weekHours": "{{hours}}h cette semaine"
+    },
+    "insight": {
+      "tasksPending_one": "{{count}} tâche en attente aujourd'hui",
+      "tasksPending_other": "{{count}} tâches en attente aujourd'hui",
+      "tasksUpToDate": "Tout est à jour aujourd'hui 🎉"
+    }
+  },
+  "calendar": {
+    "search": "Rechercher des événements...",
+    "noResults": "Aucun résultat pour \"{{query}}\"",
+    "eventsTitle": "Événements du jour",
+    "noEvents": "Aucun événement",
+    "noScheduled": "Rien de prévu pour ce jour.",
+    "viewMonth": "Mois",
+    "viewWeek": "Semaine",
+    "allDay": "Toute la journée",
+    "occupied": "Autres domaines"
+  },
+  "eventSheet": {
+    "titlePlaceholder": "Qu'est-ce qui se passe ?",
+    "recurrence": {
+      "none": "Ne pas répéter",
+      "daily": "Chaque jour",
+      "weekly": "Chaque semaine",
+      "monthly": "Chaque mois",
+      "labelDaily": "Répétition quotidienne",
+      "labelWeekly": "Répétition hebdomadaire",
+      "labelMonthly": "Répétition mensuelle"
+    },
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "update": "Mettre à jour",
+    "updating": "Mise à jour…",
+    "conflictOverlap": "Conflit à {{time}} · \"{{title}}\" occupe déjà ce créneau · sera enregistré quand même",
+    "conflictTight": "Marge serrée · \"{{title}}\" est à {{time}} · sera enregistré quand même",
+    "deleteTitle": "Supprimer l'événement",
+    "deleteSingleMsg": "Supprimer \"{{title}}\" ?",
+    "deleteRecurringMsg": "Que souhaitez-vous supprimer ?",
+    "deleteOnlyThis": "Cet événement uniquement",
+    "deleteAllSeries": "Tous les événements de la série",
+    "reminderTitle": "⏰ Dans 15 minutes"
+  },
+  "tasks": {
+    "sectionTitle": "Tâches du jour",
+    "counter_one": "{{done}} sur {{total}} tâche",
+    "counter_other": "{{done}} sur {{total}} tâches",
+    "progress": {
+      "empty": "Qu'est-ce que vous voulez accomplir aujourd'hui ? Notez-le.",
+      "start": "Commencez quand vous êtes prêt, sans pression !",
+      "done": "Tout est fait ! Quelle belle journée.",
+      "half": "Ça avance — {{done}} sur {{total}}. Continuez !",
+      "mostDone": "Plus de la moitié ! {{done}} sur {{total}}."
+    },
+    "yesterday": {
+      "pending": "D'hier :",
+      "add": "+ Ajouter"
+    },
+    "addPlaceholder": "Écrire une tâche..."
+  },
+  "mascot": {
+    "sleepy": "Reposez-vous bien. À demain !",
+    "excited": "Vous avez quelque chose bientôt. Allez !",
+    "lowEnergy": "Chaque jour compte. Vous pouvez le faire !",
+    "balanced": "Quelle journée équilibrée !",
+    "happy": "Prêt pour une belle journée !"
+  },
+  "celebration": {
+    "messages": [
+      { "title": "Tout accompli aujourd'hui !", "body": "Je suis tellement fière de vous 🐢" },
+      { "title": "Journée complète !", "body": "Chaque pas compte et vous les avez tous faits 🎉" },
+      { "title": "Incroyable !", "body": "Vous vous êtes vraiment bien occupé de vous aujourd'hui 💚" },
+      { "title": "Vous avez maîtrisé la journée !", "body": "Tuga danse de joie 🌟" },
+      { "title": "Tout coché !", "body": "C'est ça le vrai soin de soi 🏆" }
+    ],
+    "closeBtn": "Super !",
+    "streak": "🔥 {{count}} jours de suite à prendre soin de vous"
+  },
+  "dayCheck": {
+    "titleNew": "Comment s'est passée votre journée ?",
+    "titleUpdate": "Mettre à jour le bilan",
+    "titleSaved": "Enregistré",
+    "saveBtn": "Enregistrer le bilan",
+    "updateBtn": "Mettre à jour",
+    "savedText": "Enregistré. Vos statistiques en tiendront compte.",
+    "notesPlaceholder": "Quelque chose à retenir d'aujourd'hui (optionnel)",
+    "energy": {
+      "good": { "label": "Bonne énergie", "hint": "Je me suis senti fort et lucide" },
+      "medium": { "label": "Difficile mais ça va", "hint": "Chargé, mais j'ai tenu le coup" },
+      "bad": { "label": "Journée difficile", "hint": "Lourd, peu d'énergie, beaucoup de pression" }
+    }
+  },
+  "emptyArea": {
+    "addBtn": "Ajouter quelque chose",
+    "dismissBtn": "Pas maintenant",
+    "family": [
+      "Une semaine sans plans en famille. Un dîner, un appel, une sortie ? 🐢",
+      "Le temps en famille est celui qui compte le plus. On lui fait une place ?",
+      "Une petite chose cette semaine peut faire beaucoup 🐢",
+      "Quel plan simple pourriez-vous avoir avec votre famille cette semaine ?"
+    ],
+    "work": [
+      "Ça fait un moment que vous n'avez rien noté pour le travail. Quelque chose à retenir ? 🐢",
+      "Y a-t-il une réunion ou une tâche qui mérite une place dans le calendrier ?",
+      "Un événement noté peut souvent clarifier toute la semaine 🐢",
+      "Qu'est-ce qui est dans votre agenda professionnel et que vous n'avez pas encore ajouté ?"
+    ],
+    "personal": [
+      "Votre temps personnel mérite aussi une place dans le calendrier 🐢",
+      "Quelque chose pour vous cette semaine ? Un rendez-vous, un hobby, un moment calme.",
+      "Prendre soin de soi, ça se planifie aussi. On ajoute quelque chose ? 🐢",
+      "Y a-t-il quelque chose que vous voulez faire pour vous et qui n'est pas encore planifié ?"
+    ]
+  },
+  "conflict": {
+    "overlap": "Chevauchement",
+    "tight": "Marge serrée",
+    "overlapMin": "Chevauchement : {{count}} min",
+    "marginMin": "Marge : {{count}} min",
+    "ends": "se termine à",
+    "starts": "commence à",
+    "resolve": "Résoudre"
+  },
+  "settings": {
+    "title": "Réglages",
+    "mascot": {
+      "section": "Votre tortue",
+      "changeName": "Changer le prénom",
+      "namePlaceholder": "Prénom de la tortue",
+      "saveBtn": "Enregistrer",
+      "cancelBtn": "Annuler",
+      "invalidName": "Prénom invalide",
+      "invalidNameMsg": "Veuillez saisir au moins un caractère."
+    },
+    "calendar": {
+      "section": "Google Agenda",
+      "description": "Importez vos événements Google Agenda et organisez-les par domaine de vie.",
+      "connect": "Connecter Google Agenda",
+      "sync": "Synchroniser maintenant",
+      "disconnect": "Déconnecter le compte",
+      "connected": "Connecté",
+      "noSync": "Pas encore synchronisé — appuyez sur Synchroniser maintenant",
+      "lastSync": "Dernière sync : {{date}}",
+      "imported": "{{count}} importés",
+      "disconnectTitle": "Déconnecter Google Agenda",
+      "disconnectMsg": "Les événements synchronisés seront supprimés. Continuer ?",
+      "disconnectConfirm": "Déconnecter",
+      "connectError": "Impossible de démarrer la connexion avec Google Agenda.",
+      "errorTitle": "Erreur"
+    },
+    "celebration": {
+      "section": "Célébration",
+      "haptics": "Vibration à la complétion",
+      "hapticsHint": "Impulsion haptique quand toutes les tâches sont terminées",
+      "sound": "Son de célébration"
+    },
+    "language": {
+      "section": "Langue",
+      "es": "Español",
+      "en": "English",
+      "fr": "Français",
+      "de": "Deutsch"
+    },
+    "session": {
+      "section": "Session",
+      "logout": "Se déconnecter"
+    }
+  },
+  "notifications": {
+    "dailyCheck": {
+      "title": "Comment s'est passée votre journée ?",
+      "body": "5 secondes pour l'évaluer. Vos statistiques en tiendront compte."
+    }
+  },
+  "calendarError": {
+    "title": "Oups, quelque chose s'est mal passé",
+    "missingScope": "Vous devez autoriser l'accès au calendrier dans Google.",
+    "generic": "Impossible de connecter Google Agenda. Veuillez réessayer.",
+    "backBtn": "Retour aux réglages"
+  }
+}
