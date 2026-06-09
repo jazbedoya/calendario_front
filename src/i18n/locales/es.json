@@ -243,7 +243,18 @@
     "session": {
       "section": "Sesión",
       "logout": "Cerrar sesión"
+    },
+    "about": {
+      "section": "Acerca de",
+      "title": "Acerca de Avante"
     }
+  },
+  "about": {
+    "title": "Acerca de",
+    "app": "Aplicación",
+    "animations": "Animaciones",
+    "animationsCredit": "Animaciones de tortuga: Bashir Ahmad y otros autores de LottieFiles.",
+    "animationsWalkingCredit": "Animación caminando: LottieFiles."
   },
   "notifications": {
     "dailyCheck": {

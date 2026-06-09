@@ -243,7 +243,18 @@
     "session": {
       "section": "Session",
       "logout": "Sign out"
+    },
+    "about": {
+      "section": "About",
+      "title": "About Avante"
     }
+  },
+  "about": {
+    "title": "About",
+    "app": "App",
+    "animations": "Animations",
+    "animationsCredit": "Turtle animations: Bashir Ahmad and other authors from LottieFiles.",
+    "animationsWalkingCredit": "Walking animation: LottieFiles."
   },
   "notifications": {
     "dailyCheck": {

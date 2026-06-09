@@ -243,7 +243,18 @@
     "session": {
       "section": "Sitzung",
       "logout": "Abmelden"
+    },
+    "about": {
+      "section": "Über die App",
+      "title": "Über Avante"
     }
+  },
+  "about": {
+    "title": "Über die App",
+    "app": "Anwendung",
+    "animations": "Animationen",
+    "animationsCredit": "Schildkröten-Animationen: Bashir Ahmad und andere Autoren von LottieFiles.",
+    "animationsWalkingCredit": "Lauf-Animation: LottieFiles."
   },
   "notifications": {
     "dailyCheck": {

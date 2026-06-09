@@ -31,7 +31,8 @@ function extractToken(): string | null {
 export default function GoogleCallbackScreen() {
   const router = useRouter();
   const { setTokens, setUser } = useAuthStore();
-  const syncMascotName = useMascotStore((s) => s.syncMascotName);
+  const syncMascotName     = useMascotStore((s) => s.syncMascotName);
+  const completeOnboarding = useMascotStore((s) => s.completeOnboarding);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
@@ -52,6 +53,7 @@ export default function GoogleCallbackScreen() {
         const me = await getMeApi();
         setUser(me);
         await syncMascotName(me.mascot_name);
+        await completeOnboarding();
         router.replace("/");
       })
       .catch((e) => {

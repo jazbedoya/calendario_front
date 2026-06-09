@@ -16,7 +16,7 @@ import { useAuthStore }              from "@/stores/authStore";
 import { useMascotStore }            from "@/features/mascot/mascotStore";
 import { useCelebrationSettings }    from "@/stores/celebrationSettingsStore";
 import { getMascotState }            from "@/features/mascot/getMascotState";
-import { TugaAnimation, MOOD_TO_STATE } from "@/features/mascot/TugaAnimation";
+import { Mascot } from "@/features/mascot/Mascot";
 import {
   useCalendarStatus,
   useSyncCalendar,
@@ -247,10 +247,7 @@ export default function SettingsScreen() {
         <Text style={s.sectionLabel}>{t("settings.mascot.section")}</Text>
         <View style={s.card}>
           <View style={s.tugaBox}>
-            <View style={s.tugaFrame}>
-              <TugaAnimation state={MOOD_TO_STATE[mascotState.mood]} size={100} />
-            </View>
-            <Text style={s.tugaName}>{mascotName}</Text>
+            <Mascot name={mascotName} mood={mascotState.mood} message="" size="small" showName />
           </View>
 
           <View style={s.cardDivider} />
@@ -403,6 +400,19 @@ export default function SettingsScreen() {
           />
         </View>
 
+        {/* ── Acerca de ────────────────────────────────────── */}
+        <Text style={s.sectionLabel}>{t("settings.about.section")}</Text>
+        <View style={s.card}>
+          <Row
+            icon="information-circle-outline"
+            iconBg="#F0F4FF"
+            iconColor="#4A6FA5"
+            label={t("settings.about.title")}
+            onPress={() => router.push("/about")}
+            last
+          />
+        </View>
+
         <View style={{ height: 40 }} />
       </ScrollView>
     </SafeAreaView>
@@ -437,9 +447,7 @@ const s = StyleSheet.create({
 
   cardDivider: { height: StyleSheet.hairlineWidth, backgroundColor: "#EFEFEF" },
 
-  tugaBox:   { alignItems: "center", paddingTop: 20, paddingBottom: 12 },
-  tugaFrame: { width: 100, height: 100, overflow: "hidden" },
-  tugaName:  { marginTop: 8, fontSize: 16, fontWeight: "700", color: "#1A1A1A", letterSpacing: 0.1 },
+  tugaBox: { alignItems: "center", paddingTop: 20, paddingBottom: 12 },
 
   editBlock: { padding: 18, gap: 10 },
   input: {

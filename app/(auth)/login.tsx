@@ -32,7 +32,8 @@ export default function LoginScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { setTokens, setUser } = useAuthStore();
-  const syncMascotName = useMascotStore((s) => s.syncMascotName);
+  const syncMascotName     = useMascotStore((s) => s.syncMascotName);
+  const completeOnboarding = useMascotStore((s) => s.completeOnboarding);
   const [showPassword, setShowPassword] = useState(false);
 
   const schema = z.object({
@@ -66,6 +67,7 @@ export default function LoginScreen() {
       const me = await getMeApi();
       setUser(me);
       await syncMascotName(me.mascot_name);
+      await completeOnboarding();
       router.replace("/");
     };
 
@@ -114,9 +116,7 @@ export default function LoginScreen() {
           {/* Tortuga + Títulos — ocultos en Android cuando el teclado está abierto */}
           {!(Platform.OS === "android" && keyboardVisible) && (
             <>
-              <View style={styles.mascotWrap}>
-                <Mascot name="" mood="happy" message="" />
-              </View>
+              <Mascot name="" mood="happy" message="" size="large" showName={false} />
               <Text style={styles.title}>{t("auth.login.title")}</Text>
               <Text style={styles.subtitle}>{t("auth.login.subtitle")}</Text>
             </>
@@ -237,23 +237,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: Colors.textSecondary,
     fontWeight: "500",
-  },
-
-  // Tortuga
-  mascotWrap: {
-    alignItems: "center",
-    backgroundColor: Colors.surface,
-    alignSelf: "center",
-    width: 140,
-    height: 140,
-    borderRadius: 20,
-    justifyContent: "center",
-    marginTop: 8,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-    elevation: 2,
   },
 
   // Títulos
