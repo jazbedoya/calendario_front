@@ -38,10 +38,17 @@ function AppShell() {
   const qc = useQueryClient();
 
   useEffect(() => {
-    initializeAuth();
-    initializeMascot();
-    initializeCelebration();
-    initializeLanguage();
+    async function init() {
+      // Auth first so we can read user.language for the language init
+      await initializeAuth();
+      const serverLanguage = useAuthStore.getState().user?.language;
+      await Promise.all([
+        initializeLanguage(serverLanguage),
+        initializeMascot(),
+        initializeCelebration(),
+      ]);
+    }
+    init();
   }, [initializeAuth, initializeMascot, initializeCelebration, initializeLanguage]);
 
   // Limpiar toda la caché de queries al cerrar sesión (isAuthenticated: true → false)

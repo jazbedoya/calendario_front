@@ -30,7 +30,8 @@ import {
   isToday,
   parseISO,
 } from "date-fns";
-import { es } from "date-fns/locale";
+import { useLanguageStore } from "@/features/settings/languageStore";
+import { getDateLocale } from "@/i18n/dateLocale";
 
 import { useEventsStore } from "@/features/events/eventsStore";
 import { useGetEvents } from "@/features/events/useGetEvents";
@@ -80,6 +81,7 @@ interface Props {
 
 export function AreaCalendarScreen({ layer, accent, accentLight, title }: Props) {
   const { t } = useTranslation();
+  const language = useLanguageStore((s) => s.language);
   const now = new Date();
   const [viewYear,     setViewYear]     = useState(now.getFullYear());
   const [viewMonth,    setViewMonth]    = useState(now.getMonth());
@@ -148,9 +150,10 @@ export function AreaCalendarScreen({ layer, accent, accentLight, title }: Props)
     setSheetOpen(true);
   }
 
-  const monthLabel = format(new Date(viewYear, viewMonth, 1), "MMMM yyyy", { locale: es });
+  const dateLocale = getDateLocale(language);
+  const monthLabel = format(new Date(viewYear, viewMonth, 1), "MMMM yyyy", { locale: dateLocale });
   const dayLabel   = selectedDate
-    ? format(parseISO(selectedDate), "EEEE d 'de' MMMM", { locale: es })
+    ? format(parseISO(selectedDate), "EEEE d 'de' MMMM", { locale: dateLocale })
     : null;
 
   return (

@@ -79,15 +79,15 @@ const r = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 18,
-    paddingVertical: 14,
+    paddingVertical: 16,
     backgroundColor: "#FFFFFF",
   },
   border:   { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: "#EFEFEF" },
-  iconBox:  { width: 34, height: 34, borderRadius: 9, alignItems: "center", justifyContent: "center", marginRight: 14 },
+  iconBox:  { width: 36, height: 36, borderRadius: 10, alignItems: "center", justifyContent: "center", marginRight: 14 },
   labelWrap:{ flex: 1 },
   label:    { fontSize: 15, fontWeight: "500", color: "#1A1A1A" },
   labelRed: { color: "#C8553D" },
-  sublabel: { fontSize: 12, color: "#8A8A8A", marginTop: 1 },
+  sublabel: { fontSize: 12, color: "#8A8A8A", marginTop: 2 },
   right:    { marginLeft: 8 },
   rightText:{ fontSize: 13, color: "#8A8A8A", marginLeft: 8 },
 });
@@ -128,25 +128,25 @@ function LanguagePicker() {
 const lp = StyleSheet.create({
   row: {
     flexDirection: "row",
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    gap: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+    gap: 10,
     flexWrap: "wrap",
   },
   pill: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 6,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
+    gap: 7,
+    paddingHorizontal: 16,
+    paddingVertical: 11,
+    borderRadius: 22,
     backgroundColor: "#F5F5F5",
     borderWidth: 1.5,
     borderColor: "transparent",
   },
-  pillActive:    { backgroundColor: "#FFF3E8", borderColor: "#C8553D" },
+  pillActive:    { backgroundColor: "#FFF3E8", borderColor: "#C8553D", borderWidth: 2 },
   pillBorder:    {},
-  flag:          { fontSize: 16 },
+  flag:          { fontSize: 17 },
   pillTxt:       { fontSize: 14, fontWeight: "500", color: "#5A5A5A" },
   pillTxtActive: { color: "#C8553D", fontWeight: "700" },
 });
@@ -414,14 +414,14 @@ export default function SettingsScreen() {
 const s = StyleSheet.create({
   safe:        { flex: 1, backgroundColor: "#F8F6F2" },
   scroll:      { flex: 1 },
-  content:     { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 40 },
+  content:     { paddingHorizontal: 20, paddingTop: 24, paddingBottom: 48 },
 
-  screenTitle: { fontSize: 28, fontWeight: "800", color: "#1A1A1A", marginBottom: 24, letterSpacing: -0.3 },
+  screenTitle: { fontSize: 28, fontWeight: "800", color: "#1A1A1A", marginBottom: 28, letterSpacing: -0.3 },
 
   sectionLabel: {
-    fontSize: 12, fontWeight: "600", color: "#8A8A8A",
-    textTransform: "uppercase", letterSpacing: 0.8,
-    marginBottom: 8, marginLeft: 4, marginTop: 20,
+    fontSize: 11, fontWeight: "700", color: "#666666",
+    textTransform: "uppercase", letterSpacing: 1.2,
+    marginBottom: 10, marginLeft: 4, marginTop: 32,
   },
 
   card: {

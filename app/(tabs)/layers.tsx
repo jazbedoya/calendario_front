@@ -31,7 +31,8 @@ import {
   isToday,
   parseISO,
 } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { useLanguageStore } from '@/features/settings/languageStore';
+import { getDateLocale } from '@/i18n/dateLocale';
 import { useTranslation } from 'react-i18next';
 import { useEventsStore } from '@/features/events/eventsStore';
 import { useDeleteEvent } from '@/features/events/useDeleteEvent';
@@ -80,6 +81,7 @@ function buildWeekDays(weekStart: Date): Date[] {
 
 export default function LayersScreen() {
   const { t } = useTranslation();
+  const language = useLanguageStore((s) => s.language);
   const { width: winW } = useWindowDimensions();
   const CELL_W = (winW - 24) / 7;
   const today = new Date();
@@ -208,18 +210,19 @@ export default function LayersScreen() {
     return items;
   }, [selectedEvents, selectedConflicts, selectedDate]);
 
+  const dateLocale = getDateLocale(language);
   const dayLabel = selectedDate
-    ? format(parseISO(selectedDate), "EEEE d 'de' MMMM", { locale: es })
+    ? format(parseISO(selectedDate), "EEEE d 'de' MMMM", { locale: dateLocale })
     : null;
 
-  const monthName = format(new Date(viewYear, viewMonth, 1), 'MMMM', { locale: es });
+  const monthName = format(new Date(viewYear, viewMonth, 1), 'MMMM', { locale: dateLocale });
   const yearStr   = String(viewYear);
 
   // Week header label: "9 – 15 jun"
   const weekLabel = (() => {
     const days = buildWeekDays(weekStart);
-    const s = format(days[0], 'd MMM', { locale: es });
-    const e = format(days[6], 'd MMM yyyy', { locale: es });
+    const s = format(days[0], 'd MMM', { locale: dateLocale });
+    const e = format(days[6], 'd MMM yyyy', { locale: dateLocale });
     return `${s} – ${e}`;
   })();
 

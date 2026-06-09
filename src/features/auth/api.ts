@@ -49,6 +49,7 @@ export async function patchMeApi(data: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   weekly_intentions?: any;
   weekly_intentions_week?: string; // "yyyy-MM-dd"
+  language?: string;
 }): Promise<AuthUser> {
   const response = await apiClient.patch<AuthUser>("/auth/me", data);
   return response.data;

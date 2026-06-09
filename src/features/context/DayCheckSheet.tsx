@@ -13,8 +13,9 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { format } from "date-fns";
-import { es } from "date-fns/locale";
 import { useTranslation } from "react-i18next";
+import { useLanguageStore } from "@/features/settings/languageStore";
+import { getDateLocale } from "@/i18n/dateLocale";
 import { useContextStore } from "./contextStore";
 
 // ─── Opciones de energia ───────────────────────────────────────────────────────
@@ -37,6 +38,7 @@ export interface DayCheckSheetProps {
 
 export function DayCheckSheet({ visible, date, onClose }: DayCheckSheetProps) {
   const { t } = useTranslation();
+  const language = useLanguageStore((s) => s.language);
   const slideAnim = useRef(new Animated.Value(400)).current;
   const logDay    = useContextStore((s) => s.logDay);
   const existing  = useContextStore((s) => s.entries.find((e) => e.date === date));
@@ -85,7 +87,7 @@ export function DayCheckSheet({ visible, date, onClose }: DayCheckSheetProps) {
   const dateLabel = (() => {
     try {
       const [y, m, d] = date.split("-").map(Number);
-      return format(new Date(y, m - 1, d), "EEEE d 'de' MMMM", { locale: es });
+      return format(new Date(y, m - 1, d), "EEEE d 'de' MMMM", { locale: getDateLocale(language) });
     } catch {
       return date;
     }

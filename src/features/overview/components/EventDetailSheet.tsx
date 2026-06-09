@@ -13,7 +13,8 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { parseISO, format } from "date-fns";
-import { es } from "date-fns/locale";
+import { useLanguageStore } from "@/features/settings/languageStore";
+import { getDateLocale } from "@/i18n/dateLocale";
 import { formatInTimeZone } from "date-fns-tz";
 import { LAYER_COLORS, LAYER_LABELS, type CalendarEvent } from "@/features/overview/types";
 
@@ -34,6 +35,7 @@ interface Props {
 
 export function EventDetailSheet({ visible, event, timezone, onClose, onEdit, onDelete }: Props) {
   const { t } = useTranslation();
+  const language = useLanguageStore((s) => s.language);
   const slideAnim = useRef(new Animated.Value(400)).current;
 
   useEffect(() => {
@@ -52,8 +54,8 @@ export function EventDetailSheet({ visible, event, timezone, onClose, onEdit, on
 
   const startDate = parseISO(event.startAt);
   const dateLabel = event.isAllDay
-    ? format(startDate, "EEEE d 'de' MMMM yyyy", { locale: es })
-    : format(startDate, "EEEE d 'de' MMMM", { locale: es }) +
+    ? format(startDate, "EEEE d 'de' MMMM yyyy", { locale: getDateLocale(language) })
+    : format(startDate, "EEEE d 'de' MMMM", { locale: getDateLocale(language) }) +
       " · " + formatInTimeZone(event.startAt, timezone, "HH:mm");
 
   const endLabel = !event.isAllDay

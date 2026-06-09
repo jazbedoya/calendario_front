@@ -11,6 +11,7 @@ export interface AuthUser {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   weekly_intentions: any;
   weekly_intentions_week: string | null; // "yyyy-MM-dd"
+  language: string;
 }
 
 interface AuthState {
