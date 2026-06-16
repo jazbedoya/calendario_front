@@ -47,9 +47,44 @@
     },
     "errors": {
       "wrongCredentials": "Incorrect email or password",
+      "emailNotVerified": "Please verify your email before signing in. Check your inbox.",
       "serverError": "Server error, please try again later",
       "connectionError": "Could not connect to the server",
       "unexpected": "Unexpected error, please try again"
+    },
+    "emailVerified": {
+      "title": "Account verified!",
+      "subtitle": "You can now sign in with your email and password.",
+      "loginBtn": "Sign in"
+    },
+    "pendingVerification": {
+      "title": "Check your inbox",
+      "subtitle": "We sent a verification link to:",
+      "instruction": "Tap the link in the email to activate your account. It may take a few minutes.",
+      "resendBtn": "Resend email",
+      "resendCooldown": "Resend in {{seconds}}s",
+      "resentOk": "Email resent!",
+      "backToLogin": "Back to sign in"
+    },
+    "forgotPw": {
+      "title": "Recover your password",
+      "subtitle": "Enter your email and we'll send you instructions",
+      "emailLabel": "Email",
+      "submitBtn": "Send instructions",
+      "successTitle": "Check your inbox!",
+      "successSubtitle": "We sent you a link to reset your password. Tap the link in the email to continue.",
+      "backToLogin": "Back to sign in"
+    },
+    "resetPw": {
+      "title": "New password",
+      "subtitle": "Enter your new password",
+      "tokenLabel": "Recovery code",
+      "tokenPlaceholder": "Paste the code from the email",
+      "passwordLabel": "New password",
+      "confirmLabel": "Confirm password",
+      "submitBtn": "Change password",
+      "errorMismatch": "Passwords do not match",
+      "errorToken": "Invalid or expired code"
     }
   },
   "onboarding": {
@@ -73,6 +108,7 @@
   "home": {
     "greeting": {
       "morning": "Good morning",
+      "night": "Good night",
       "afternoon": "Good afternoon",
       "evening": "Good evening"
     },
@@ -83,6 +119,15 @@
       "tasksPending_one": "{{count}} task pending today",
       "tasksPending_other": "{{count}} tasks pending today",
       "tasksUpToDate": "All caught up today 🎉"
+    },
+    "nextEvent": {
+      "label": "Next",
+      "labelNow": "Now",
+      "endsAt": "Ends at {{time}}",
+      "quietDay": "Quiet day ahead 🐢",
+      "noEvents": "No events today",
+      "addHint": "Add something?",
+      "allDay": "All day"
     }
   },
   "calendar": {
@@ -94,7 +139,28 @@
     "viewMonth": "Month",
     "viewWeek": "Week",
     "allDay": "All day",
-    "occupied": "Other areas"
+    "occupied": "Other areas",
+    "holiday": "Public holiday"
+  },
+  "holidays": {
+    "newYear":               "New Year's Day",
+    "epiphany":              "Epiphany",
+    "holyThursday":          "Holy Thursday",
+    "goodFriday":            "Good Friday",
+    "laborDay":              "Labour Day",
+    "assumption":            "Assumption Day",
+    "hispanicDay":           "Spain's National Day",
+    "allSaints":             "All Saints' Day",
+    "constitutionDay":       "Constitution Day",
+    "immaculateConception":  "Immaculate Conception",
+    "christmas":             "Christmas",
+    "heroesDay":             "Heroes' Day",
+    "independenceEve":       "Independence Eve",
+    "independenceDay":       "Independence Day",
+    "chacoPeace":            "Chaco Peace",
+    "asuncionDay":           "Founding of Asunción",
+    "boqueron":              "Battle of Boquerón",
+    "caacupe":               "Virgin of Caacupé"
   },
   "eventSheet": {
     "titlePlaceholder": "What's happening?",
@@ -138,11 +204,12 @@
     "addPlaceholder": "Write a task..."
   },
   "mascot": {
-    "sleepy": "Rest well. See you tomorrow!",
-    "excited": "You've got something soon. Let's go!",
-    "lowEnergy": "Every day counts. You've got this!",
-    "balanced": "What a balanced day!",
-    "happy": "Ready for a great day!"
+    "morning":   ["Ready for a great day!", "What a lovely morning!", "Let's make today count", "Good morning energy!"],
+    "afternoon": ["Take it steady", "What do you feel like this afternoon?", "I'm right here with you", "The afternoon is yours"],
+    "evening":   ["It's been a good day", "Wind down slowly", "Time to slow the pace", "You can rest now"],
+    "night":     ["Rest up, we continue tomorrow", "Time to sleep 🌙", "See you tomorrow 🐢", "Sweet dreams"],
+    "excited":   "You've got something soon. Let's go!",
+    "lowEnergy": "Every day counts. You've got this!"
   },
   "celebration": {
     "messages": [
@@ -244,6 +311,11 @@
       "section": "Session",
       "logout": "Sign out"
     },
+    "country": {
+      "section": "Holiday country",
+      "ES": "Spain",
+      "PY": "Paraguay"
+    },
     "about": {
       "section": "About",
       "title": "About Avante"
@@ -267,5 +339,9 @@
     "missingScope": "You need to grant calendar access in Google.",
     "generic": "Could not connect Google Calendar. Please try again.",
     "backBtn": "Back to Settings"
+  },
+  "dateFormat": {
+    "dayMonth": "EEEE, MMMM d",
+    "dayMonthYear": "EEEE, MMMM d, yyyy"
   }
 }

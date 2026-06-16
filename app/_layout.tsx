@@ -1,21 +1,18 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Stack } from "expo-router";
 import { QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider, type Persister } from "@tanstack/react-query-persist-client";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
-import { Platform, StyleSheet } from "react-native";
-import * as Notifications from "expo-notifications";
+import { StyleSheet } from "react-native";
 import * as Linking from "expo-linking";
-import { format } from "date-fns";
 import "../global.css";
 import "@/i18n";
 import { queryClient } from "@/lib/queryClient";
-import { useScheduleDailyCheck, DAY_CHECK_DATA_TYPE } from "@/features/context/useScheduleDailyCheck";
-import { DayCheckSheet } from "@/features/context/DayCheckSheet";
 import { useMascotStore } from "@/features/mascot/mascotStore";
 import { useAuthStore } from "@/stores/authStore";
 import { useCelebrationSettings } from "@/stores/celebrationSettingsStore";
 import { useLanguageStore } from "@/features/settings/languageStore";
+import { useHolidayStore } from "@/features/settings/holidayStore";
 
 // NativeWind web requires darkMode to be set to 'class' at runtime
 if (typeof StyleSheet.setFlag === "function") {
@@ -28,12 +25,11 @@ const persister: Persister | null = Platform.OS === "web"
   : null;
 
 function AppShell() {
-  useScheduleDailyCheck();
-
   const initializeMascot       = useMascotStore((s) => s.initialize);
   const initializeAuth         = useAuthStore((s) => s.initialize);
   const initializeCelebration  = useCelebrationSettings((s) => s.initialize);
   const initializeLanguage     = useLanguageStore((s) => s.initialize);
+  const initializeHolidays     = useHolidayStore((s) => s.initialize);
   const isAuthenticated        = useAuthStore((s) => s.isAuthenticated);
   const qc = useQueryClient();
 
@@ -46,6 +42,7 @@ function AppShell() {
         initializeLanguage(serverLanguage),
         initializeMascot(),
         initializeCelebration(),
+        initializeHolidays(),
       ]);
     }
     init();
@@ -70,35 +67,9 @@ function AppShell() {
     return () => sub.remove();
   }, [qc]);
 
-  const [checkSheetOpen, setCheckSheetOpen] = useState(false);
-  const [checkDate,      setCheckDate]      = useState(format(new Date(), "yyyy-MM-dd"));
-  const responseListener = useRef<Notifications.EventSubscription | null>(null);
-
-  useEffect(() => {
-    if (Platform.OS === "web") return;
-
-    // Escuchar cuando el usuario toca la notificación
-    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-      const data = response.notification.request.content.data;
-      if (data?.type === DAY_CHECK_DATA_TYPE) {
-        setCheckDate(format(new Date(), "yyyy-MM-dd"));
-        setCheckSheetOpen(true);
-      }
-    });
-
-    return () => {
-      responseListener.current?.remove();
-    };
-  }, []);
-
   return (
     <>
       <Stack screenOptions={{ headerShown: false }} />
-      <DayCheckSheet
-        visible={checkSheetOpen}
-        date={checkDate}
-        onClose={() => setCheckSheetOpen(false)}
-      />
     </>
   );
 }

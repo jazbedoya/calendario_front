@@ -2,7 +2,8 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { parseISO } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
-import { LAYER_COLORS, LAYER_LABELS, type Conflict } from '../types';
+import { useTranslation } from 'react-i18next';
+import { LAYER_COLORS, type Conflict } from '../types';
 
 interface ConflictCardProps {
   conflict: Conflict;
@@ -11,18 +12,19 @@ interface ConflictCardProps {
 }
 
 export function ConflictCard({ conflict, timezone, onResolve }: ConflictCardProps) {
+  const { t } = useTranslation();
   const { type, eventA, eventB, marginMinutes } = conflict;
 
   const endTimeA   = formatInTimeZone(parseISO(eventA.endAt),   timezone, 'HH:mm');
   const startTimeB = formatInTimeZone(parseISO(eventB.startAt), timezone, 'HH:mm');
 
   const typeLabel =
-    type === 'overlap' ? 'Solapamiento' : 'Margen ajustado';
+    type === 'overlap' ? t('conflict.overlap') : t('conflict.tight');
 
   const marginText =
     type === 'overlap'
-      ? `Se solapan ${Math.abs(marginMinutes)} min`
-      : `Margen: ${marginMinutes} min`;
+      ? t('conflict.overlapMin', { count: Math.abs(marginMinutes) })
+      : t('conflict.marginMin', { count: marginMinutes });
 
   return (
     <View style={styles.card}>
@@ -33,11 +35,11 @@ export function ConflictCard({ conflict, timezone, onResolve }: ConflictCardProp
           {typeLabel}
           {'  '}
           <Text style={[styles.layerTag, { color: LAYER_COLORS[conflict.layers[0]] }]}>
-            {LAYER_LABELS[conflict.layers[0]]}
+            {t(`layers.${conflict.layers[0]}`)}
           </Text>
           <Text style={styles.vs}>{' vs '}</Text>
           <Text style={[styles.layerTag, { color: LAYER_COLORS[conflict.layers[1]] }]}>
-            {LAYER_LABELS[conflict.layers[1]]}
+            {t(`layers.${conflict.layers[1]}`)}
           </Text>
         </Text>
       </View>
@@ -45,12 +47,12 @@ export function ConflictCard({ conflict, timezone, onResolve }: ConflictCardProp
       {/* Detalle de eventos */}
       <Text style={styles.detail}>
         <Text style={styles.quote}>"{eventA.title}"</Text>
-        {' acaba '}
+        {` ${t('conflict.ends')} `}
         <Text style={styles.time}>{endTimeA}</Text>
       </Text>
       <Text style={styles.detail}>
         <Text style={styles.quote}>"{eventB.title}"</Text>
-        {' empieza '}
+        {` ${t('conflict.starts')} `}
         <Text style={styles.time}>{startTimeB}</Text>
       </Text>
 
@@ -62,7 +64,7 @@ export function ConflictCard({ conflict, timezone, onResolve }: ConflictCardProp
           onPress={() => onResolve(conflict)}
           activeOpacity={0.8}
         >
-          <Text style={styles.resolveTxt}>Resolver</Text>
+          <Text style={styles.resolveTxt}>{t('conflict.resolve')}</Text>
         </TouchableOpacity>
       </View>
     </View>

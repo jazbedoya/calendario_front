@@ -23,7 +23,11 @@ function useProgressMessage(t: ReturnType<typeof useTranslation>['t']) {
   };
 }
 
-export function DailyTasksSection() {
+interface DailyTasksSectionProps {
+  onInputFocus?: () => void;
+}
+
+export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
   const { t } = useTranslation();
   const today = useTodayDate();
   const { data: tasks = [], isLoading, isPending } = useGetTodayTasks();
@@ -33,7 +37,7 @@ export function DailyTasksSection() {
   // IDs de sugerencias de ayer ya añadidas (se ocultan individualmente)
   const [addedFromYesterday, setAddedFromYesterday] = useState<string[]>([]);
 
-  const { mutate: create,  isPending: creating  } = useCreateTask();
+  const { mutate: create  } = useCreateTask();
   const { mutate: toggle                         } = useToggleTask();
   const { mutate: remove                         } = useDeleteTask();
 
@@ -149,7 +153,7 @@ export function DailyTasksSection() {
         <AddTask
           accent={ACCENT}
           onAdd={(text) => create(text)}
-          disabled={creating}
+          onFocus={onInputFocus}
         />
       </View>
 

@@ -3,12 +3,13 @@ import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 interface Props {
-  accent:   string;
-  onAdd:    (text: string) => void;
+  accent:    string;
+  onAdd:     (text: string) => void;
   disabled?: boolean;
+  onFocus?:  () => void;
 }
 
-export function AddTask({ accent, onAdd, disabled }: Props) {
+export function AddTask({ accent, onAdd, disabled, onFocus }: Props) {
   const [text, setText] = useState("");
   const inputRef = useRef<TextInput>(null);
 
@@ -34,6 +35,7 @@ export function AddTask({ accent, onAdd, disabled }: Props) {
         onChangeText={setText}
         returnKeyType="done"
         onSubmitEditing={submit}
+        onFocus={onFocus}
         editable={!disabled}
         maxLength={200}
         blurOnSubmit={false}

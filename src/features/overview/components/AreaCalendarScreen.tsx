@@ -42,7 +42,7 @@ import {
   detectConflicts,
   getEventsForDay,
 } from "@/features/overview/calendarUtils";
-import { LAYER_LABELS, type Layer, type CalendarEvent } from "@/features/overview/types";
+import { type Layer, type CalendarEvent } from "@/features/overview/types";
 import { EventRow } from "./EventRow";
 import { OccupiedRow } from "./OccupiedRow";
 import { ConflictCard } from "./ConflictCard";
@@ -50,12 +50,14 @@ import { EmptyAreaCard } from "./EmptyAreaCard";
 import { EventDetailSheet } from "./EventDetailSheet";
 import { useAreaNudge } from "@/features/overview/useAreaNudge";
 import { useTranslation } from "react-i18next";
+import { useHolidayStore } from "@/features/settings/holidayStore";
+import { getHolidayMapForMonth } from "@/features/overview/getHolidays";
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 
-const BG       = "#FAF9F7";
-const WEEKDAYS = ["L", "M", "X", "J", "V", "S", "D"];
-const USER_TZ  = "Europe/Madrid";
+const BG           = "#FAF9F7";
+const USER_TZ      = "Europe/Madrid";
+const HOLIDAY_GOLD = "#C8A52A";
 
 function buildWeeks(year: number, month: number): Date[][] {
   const first = startOfMonth(new Date(year, month, 1));
@@ -117,6 +119,13 @@ export function AreaCalendarScreen({ layer, accent, accentLight, title }: Props)
 
   const weeks = useMemo(() => buildWeeks(viewYear, viewMonth), [viewYear, viewMonth]);
 
+  const holidayCountry = useHolidayStore((s) => s.country);
+  const holidayMap     = useMemo(
+    () => getHolidayMapForMonth(holidayCountry, viewYear, viewMonth),
+    [holidayCountry, viewYear, viewMonth],
+  );
+  const selectedHoliday = selectedDate ? (holidayMap.get(selectedDate) ?? null) : null;
+
   const layersByDay = useMemo(
     () => getLayersByDay(events, new Date(viewYear, viewMonth), USER_TZ),
     [events, viewYear, viewMonth],
@@ -151,9 +160,12 @@ export function AreaCalendarScreen({ layer, accent, accentLight, title }: Props)
   }
 
   const dateLocale = getDateLocale(language);
+  const weekdays   = Array.from({ length: 7 }, (_, i) =>
+    format(new Date(2023, 0, 2 + i), 'EEEEE', { locale: dateLocale })
+  );
   const monthLabel = format(new Date(viewYear, viewMonth, 1), "MMMM yyyy", { locale: dateLocale });
   const dayLabel   = selectedDate
-    ? format(parseISO(selectedDate), "EEEE d 'de' MMMM", { locale: dateLocale })
+    ? format(parseISO(selectedDate), t('dateFormat.dayMonth'), { locale: dateLocale })
     : null;
 
   return (
@@ -217,12 +229,16 @@ export function AreaCalendarScreen({ layer, accent, accentLight, title }: Props)
             <View style={[s.legendDot, { backgroundColor: "#CCCCCC" }]} />
             <Text style={s.legendTxt}>{t('calendar.occupied')}</Text>
           </View>
+          <View style={s.legendItem}>
+            <View style={[s.legendDot, { backgroundColor: HOLIDAY_GOLD }]} />
+            <Text style={s.legendTxt}>{t('calendar.holiday')}</Text>
+          </View>
         </View>
 
         {/* ── Cabecera días semana ── */}
         <View style={s.weekdayRow}>
-          {WEEKDAYS.map((d) => (
-            <Text key={d} style={s.weekdayLabel}>{d}</Text>
+          {weekdays.map((d, i) => (
+            <Text key={i} style={s.weekdayLabel}>{d}</Text>
           ))}
         </View>
 
@@ -238,6 +254,7 @@ export function AreaCalendarScreen({ layer, accent, accentLight, title }: Props)
                 const layers   = layersByDay.get(key);
                 const hasArea  = layers?.has(layer) ?? false;
                 const hasOther = layers ? otherLayers.some((l) => layers.has(l)) : false;
+                const isHoliday = inMonth && holidayMap.has(key);
 
                 return (
                   <TouchableOpacity
@@ -246,19 +263,22 @@ export function AreaCalendarScreen({ layer, accent, accentLight, title }: Props)
                     onPress={() => handleDay(day)}
                     activeOpacity={0.7}
                   >
-                    <View style={[
-                      s.dayCircle,
-                      isTodayD && !isSelect && { borderWidth: 1.5, borderColor: accent },
-                      isSelect && { backgroundColor: accentLight },
-                    ]}>
-                      <Text style={[
-                        s.dayText,
-                        !inMonth && s.outMonth,
-                        isSelect && s.selectedText,
-                        isTodayD && !isSelect && { color: accent, fontWeight: "700" },
+                    <View style={s.dayNumWrap}>
+                      <View style={[
+                        s.dayCircle,
+                        isTodayD && !isSelect && { borderWidth: 1.5, borderColor: accent },
+                        isSelect && { backgroundColor: accentLight },
                       ]}>
-                        {format(day, "d")}
-                      </Text>
+                        <Text style={[
+                          s.dayText,
+                          !inMonth && s.outMonth,
+                          isSelect && s.selectedText,
+                          isTodayD && !isSelect && { color: accent, fontWeight: "700" },
+                        ]}>
+                          {format(day, "d")}
+                        </Text>
+                      </View>
+                      {isHoliday && <View style={s.holidayDot} />}
                     </View>
                     <View style={s.dots}>
                       {hasArea  && <View style={[s.dot, { backgroundColor: accent }]} />}
@@ -281,6 +301,14 @@ export function AreaCalendarScreen({ layer, accent, accentLight, title }: Props)
               </Text>
               <Text style={s.panelDate}>{dayLabel}</Text>
             </View>
+
+            {selectedHoliday && (
+              <View style={s.holidayRow}>
+                <View style={s.holidayRowDot} />
+                <Text style={s.holidayRowName}>{t(selectedHoliday.nameKey)}</Text>
+                <Text style={s.holidayRowBadge}>{t('calendar.holiday')}</Text>
+              </View>
+            )}
 
             {conflicts.length > 0 && (
               <View style={s.conflictBlock}>
@@ -361,7 +389,7 @@ export function AreaCalendarScreen({ layer, accent, accentLight, title }: Props)
             { icon: "home",           label: t('tabs.home'),    active: false, route: "/(tabs)"          },
             { icon: "layers",         label: t('tabs.all'),     active: false, route: "/(tabs)/layers"   },
             { icon: "bar-chart",      label: t('tabs.balance'), active: false, route: "/(tabs)/stats"    },
-            { icon: "settings-sharp", label: t('tabs.settings'),active: false, route: "/(tabs)/settings" },
+            { icon: "settings", label: t('tabs.settings'),active: false, route: "/(tabs)/settings" },
           ].map((tab) => (
             <TouchableOpacity
               key={tab.icon}
@@ -424,6 +452,13 @@ const s = StyleSheet.create({
   outMonth:     { color: "#D4D0CB" },
   selectedText: { fontWeight: "700", color: "#2D2D2D" },
 
+  dayNumWrap: { position: "relative" },
+  holidayDot: {
+    position: "absolute", top: 1, right: 1,
+    width: 6, height: 6, borderRadius: 3,
+    backgroundColor: HOLIDAY_GOLD,
+  },
+
   dots:     { flexDirection: "row", gap: 3, height: 9, marginTop: 3, alignItems: "center", justifyContent: "center" },
   dot:      { width: 6, height: 6, borderRadius: 3 },
   dotEmpty: { width: 6, height: 6 },
@@ -445,6 +480,18 @@ const s = StyleSheet.create({
   panelTitle:    { fontSize: 16, fontWeight: "700", color: "#2D2D2D" },
   panelDate:     { fontSize: 13, color: "#AAAAAA", textTransform: "capitalize" },
   conflictBlock: { marginBottom: 8 },
+
+  holidayRow: {
+    flexDirection: "row", alignItems: "center", gap: 10,
+    paddingVertical: 10,
+    borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: "#F0EDE8",
+  },
+  holidayRowDot:   { width: 8, height: 8, borderRadius: 4, backgroundColor: HOLIDAY_GOLD, flexShrink: 0 },
+  holidayRowName:  { flex: 1, fontSize: 14, color: "#1A1A1A", fontWeight: "500" },
+  holidayRowBadge: {
+    fontSize: 11, color: HOLIDAY_GOLD, fontWeight: "600",
+    backgroundColor: "#FDF8E8", paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8,
+  },
 
   divider:     { flexDirection: "row", alignItems: "center", gap: 8, marginVertical: 12 },
   dividerLine: { flex: 1, height: 1, backgroundColor: "#EEEEEE" },

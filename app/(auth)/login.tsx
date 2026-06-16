@@ -67,8 +67,13 @@ export default function LoginScreen() {
       const me = await getMeApi();
       setUser(me);
       await syncMascotName(me.mascot_name);
-      await completeOnboarding();
-      router.replace("/");
+      if (me.mascot_name === "Tuga") {
+        // Usuario nuevo — dejar que onboarding complete el flujo
+        router.replace("/onboarding");
+      } else {
+        await completeOnboarding();
+        router.replace("/");
+      }
     };
 
     try {
@@ -85,6 +90,8 @@ export default function LoginScreen() {
       let message: string;
       if (status === 401) {
         message = t("auth.errors.wrongCredentials");
+      } else if (status === 403 && e?.response?.data?.detail === "email_not_verified") {
+        message = t("auth.errors.emailNotVerified");
       } else if (status >= 500) {
         message = t("auth.errors.serverError");
       } else if (!e?.response) {
@@ -123,14 +130,15 @@ export default function LoginScreen() {
           )}
 
           {/* Botón Google */}
-          <Pressable
-            style={({ pressed }) => [styles.googleBtn, pressed && styles.googleBtnPressed]}
+          <TouchableOpacity
+            style={styles.googleBtn}
             onPress={() => promptAsync()}
             disabled={googleDisabled}
+            activeOpacity={0.8}
           >
-            <AntDesign name="google" size={18} color="#4285F4" />
+            <AntDesign name="google" size={20} color="#4285F4" />
             <Text style={styles.googleBtnText}>{t("auth.login.googleBtn")}</Text>
-          </Pressable>
+          </TouchableOpacity>
 
           {/* Separador */}
           <View style={styles.divider}>
@@ -187,7 +195,9 @@ export default function LoginScreen() {
           />
           {errors.password && <Text style={styles.fieldError}>{errors.password.message}</Text>}
 
-          <Text style={styles.forgotPassword}>{t("auth.login.forgotPassword")}</Text>
+          <Pressable onPress={() => router.push("/(auth)/forgot-password" as any)}>
+            <Text style={styles.forgotPassword}>{t("auth.login.forgotPassword")}</Text>
+          </Pressable>
 
           {errors.root && <Text style={styles.rootError}>{errors.root.message}</Text>}
 
@@ -258,18 +268,23 @@ const styles = StyleSheet.create({
 
   // Google
   googleBtn: {
-    height: 52,
+    width: "100%",
+    height: 54,
     borderRadius: 16,
-    borderWidth: 1.5,
-    borderColor: Colors.border,
-    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
+    backgroundColor: "#FFFFFF",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 10,
+    gap: 12,
+    elevation: 1,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
   },
-  googleBtnPressed: { backgroundColor: "#F5F3F0" },
-  googleBtnText: { fontSize: 15, fontWeight: "600", color: Colors.textPrimary },
+  googleBtnText: { fontSize: 16, fontWeight: "600", color: "#1A1A1A" },
 
   // Separador
   divider: { flexDirection: "row", alignItems: "center", marginVertical: 20 },
@@ -324,7 +339,7 @@ const styles = StyleSheet.create({
   // Botón principal
   primaryBtn: {
     height: 54,
-    borderRadius: 18,
+    borderRadius: 16,
     backgroundColor: Colors.primary,
     alignItems: "center",
     justifyContent: "center",

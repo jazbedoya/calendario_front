@@ -1,7 +1,9 @@
 import { View, Text, StyleSheet } from "react-native";
-import { format } from "date-fns";
+import { format, getHours } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { useTranslation } from "react-i18next";
 import { getDateLocale } from "@/i18n/dateLocale";
+import { useAuthStore } from "@/stores/authStore";
 
 interface GreetingProps {
   userName: string;
@@ -9,15 +11,18 @@ interface GreetingProps {
 
 export function Greeting({ userName }: GreetingProps) {
   const { t, i18n } = useTranslation();
-  const hour = new Date().getHours();
-  const greeting =
-    hour < 13 ? t("home.greeting.morning") :
-    hour < 20 ? t("home.greeting.afternoon") :
-                t("home.greeting.evening");
+  const user      = useAuthStore((s) => s.user);
+  const timezone  = user?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const hour      = getHours(toZonedTime(new Date(), timezone));
+  const greeting  =
+    hour >= 5  && hour < 12 ? t("home.greeting.morning") :
+    hour >= 12 && hour < 19 ? t("home.greeting.afternoon") :
+    hour >= 19 && hour < 22 ? t("home.greeting.evening") :
+                               t("home.greeting.night");
 
   const today = new Date();
   const locale = getDateLocale(i18n.language);
-  const dateStr = format(today, "EEEE, d 'de' MMMM", { locale });
+  const dateStr = format(today, t('dateFormat.dayMonth'), { locale });
   const capitalizedDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
 
   return (

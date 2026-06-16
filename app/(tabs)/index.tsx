@@ -9,9 +9,13 @@ import { useTranslation } from "react-i18next";
 import { Greeting } from "@/features/home/components/Greeting";
 import { LifeAreaCard } from "@/features/home/components/LifeAreaCard";
 import { InsightCard } from "@/features/home/components/InsightCard";
+import { NextEventCard } from "@/features/home/components/NextEventCard";
 import { mockHomeData } from "@/features/home/mockData";
+import { getHours } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { Mascot } from "@/features/mascot/Mascot";
 import { getMascotState } from "@/features/mascot/getMascotState";
+import { useMascotMessage } from "@/features/mascot/useMascotMessage";
 import { useMascotStore } from "@/features/mascot/mascotStore";
 import { useAuthStore } from "@/stores/authStore";
 import { useHomeSummary } from "@/features/home/useHomeSummary";
@@ -22,7 +26,10 @@ export default function HomeScreen() {
   const { areas, insights } = mockHomeData;
   const { mascotName, onboardingDone, initialized } = useMascotStore();
   const user = useAuthStore((s) => s.user);
-  const mascotState = getMascotState({ hourOfDay: new Date().getHours() });
+  const timezone   = user?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const localHour  = getHours(toZonedTime(new Date(), timezone));
+  const mascotState = getMascotState({ hourOfDay: localHour });
+  const mascotMessage = useMascotMessage(mascotState.messageKey);
   const qc = useQueryClient();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -72,7 +79,7 @@ export default function HomeScreen() {
         <Greeting userName={user?.full_name?.split(" ")[0] ?? "tú"} />
 
         <View style={styles.mascotSection}>
-          <Mascot name={mascotName} mood={mascotState.mood} message={t(mascotState.messageKey)} />
+          <Mascot name={mascotName} mood={mascotState.mood} message={mascotMessage} />
         </View>
 
         <View style={styles.areaCards}>
@@ -95,6 +102,10 @@ export default function HomeScreen() {
           {insightsWithData.map((insight) => (
             <InsightCard key={insight.id} insight={insight} />
           ))}
+          <NextEventCard
+            events={summary?.upcoming_events ?? []}
+            timezone={timezone}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>

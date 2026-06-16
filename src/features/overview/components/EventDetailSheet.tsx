@@ -16,7 +16,7 @@ import { parseISO, format } from "date-fns";
 import { useLanguageStore } from "@/features/settings/languageStore";
 import { getDateLocale } from "@/i18n/dateLocale";
 import { formatInTimeZone } from "date-fns-tz";
-import { LAYER_COLORS, LAYER_LABELS, type CalendarEvent } from "@/features/overview/types";
+import { LAYER_COLORS, type CalendarEvent } from "@/features/overview/types";
 
 const RECURRENCE_LABEL_KEYS: Record<string, string> = {
   daily:   "eventSheet.recurrence.labelDaily",
@@ -54,8 +54,8 @@ export function EventDetailSheet({ visible, event, timezone, onClose, onEdit, on
 
   const startDate = parseISO(event.startAt);
   const dateLabel = event.isAllDay
-    ? format(startDate, "EEEE d 'de' MMMM yyyy", { locale: getDateLocale(language) })
-    : format(startDate, "EEEE d 'de' MMMM", { locale: getDateLocale(language) }) +
+    ? format(startDate, t('dateFormat.dayMonthYear'), { locale: getDateLocale(language) })
+    : format(startDate, t('dateFormat.dayMonth'), { locale: getDateLocale(language) }) +
       " · " + formatInTimeZone(event.startAt, timezone, "HH:mm");
 
   const endLabel = !event.isAllDay
@@ -111,7 +111,7 @@ export function EventDetailSheet({ visible, event, timezone, onClose, onEdit, on
         <View style={s.metaRow}>
           <View style={[s.layerChip, { backgroundColor: accentColor + "20", borderColor: accentColor + "40" }]}>
             <View style={[s.layerDot, { backgroundColor: accentColor }]} />
-            <Text style={[s.layerChipTxt, { color: accentColor }]}>{LAYER_LABELS[event.layer]}</Text>
+            <Text style={[s.layerChipTxt, { color: accentColor }]}>{t(`layers.${event.layer}`)}</Text>
           </View>
           {isRecurring && (
             <View style={s.recurrenceChip}>

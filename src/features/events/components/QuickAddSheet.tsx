@@ -23,7 +23,7 @@ import { useEventsStore } from "../eventsStore";
 import { useCreateEvent } from "../useCreateEvent";
 import { useUpdateEvent } from "../useUpdateEvent";
 import { detectConflicts, getEventsForDay } from "@/features/overview/calendarUtils";
-import { LAYER_COLORS, LAYER_LABELS, type CalendarEvent, type Layer } from "@/features/overview/types";
+import { LAYER_COLORS, type CalendarEvent, type Layer } from "@/features/overview/types";
 
 const titleSchema = z.string().min(1);
 const LAYERS: Layer[] = ["family", "work", "personal"];
@@ -171,7 +171,7 @@ export function QuickAddSheet({
 
   // ── Render ────────────────────────────────────────────────────────────────
 
-  const headerDate = format(parseISO(activeDate), "EEEE d 'de' MMMM", { locale: getDateLocale(language) });
+  const headerDate = format(parseISO(activeDate), t('dateFormat.dayMonth'), { locale: getDateLocale(language) });
 
   return (
     <Modal visible={visible} transparent animationType="none" onRequestClose={onClose} statusBarTranslucent>
@@ -203,7 +203,7 @@ export function QuickAddSheet({
                 >
                   <View style={[s.layerChipDot, { backgroundColor: LAYER_COLORS[l] }]} />
                   <Text style={[s.layerChipTxt, selectedLayer === l && s.layerChipTxtActive]}>
-                    {LAYER_LABELS[l]}
+                    {t(`layers.${l}`)}
                   </Text>
                 </TouchableOpacity>
               ))}

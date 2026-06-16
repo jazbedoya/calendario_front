@@ -87,7 +87,7 @@ export function DayCheckSheet({ visible, date, onClose }: DayCheckSheetProps) {
   const dateLabel = (() => {
     try {
       const [y, m, d] = date.split("-").map(Number);
-      return format(new Date(y, m - 1, d), "EEEE d 'de' MMMM", { locale: getDateLocale(language) });
+      return format(new Date(y, m - 1, d), t('dateFormat.dayMonth'), { locale: getDateLocale(language) });
     } catch {
       return date;
     }

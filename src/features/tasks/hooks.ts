@@ -1,3 +1,4 @@
+import { Alert } from "react-native";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { subDays } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
@@ -57,9 +58,9 @@ export function useCreateTask() {
     onMutate: async (text) => {
       await qc.cancelQueries({ queryKey: qk });
       const previous = qc.getQueryData<DailyTask[]>(qk) ?? [];
-      // Add a temporary optimistic entry so the UI responds instantly
+      const optimisticId = `local-${Date.now()}`;
       const optimistic: DailyTask = {
-        id:         `local-${Date.now()}`,
+        id:         optimisticId,
         date:       today,
         text,
         done:       false,
@@ -67,16 +68,26 @@ export function useCreateTask() {
         created_at: new Date().toISOString(),
       };
       qc.setQueryData<DailyTask[]>(qk, [...previous, optimistic]);
-      return { previous };
+      return { previous, optimisticId };
+    },
+
+    onSuccess: (realTask, _vars, ctx) => {
+      // Upsert: remove optimistic entry (if still present) + any duplicate real id,
+      // then append the confirmed task. Handles the case where a concurrent GET
+      // already wiped the optimistic entry before onSuccess fired.
+      qc.setQueryData<DailyTask[]>(qk, (old = []) => {
+        const without = old.filter(
+          (t) => t.id !== ctx?.optimisticId && t.id !== realTask.id
+        );
+        return [...without, realTask].sort((a, b) => a.order - b.order);
+      });
     },
 
     onError: (_err, _vars, ctx) => {
-      if (ctx) qc.setQueryData(qk, ctx.previous);
-    },
-
-    // Replace the optimistic entry with the real server data
-    onSettled: () => {
-      qc.invalidateQueries({ queryKey: qk });
+      // Remove only the failed optimistic task — don't wipe the full cache snapshot,
+      // which would also remove other in-flight optimistic tasks.
+      if (ctx) qc.setQueryData<DailyTask[]>(qk, (old = []) => old.filter((t) => t.id !== ctx.optimisticId));
+      Alert.alert("Error", "No se pudo guardar la tarea. Comprueba tu conexión e inténtalo de nuevo.");
     },
   });
 }
@@ -89,8 +100,12 @@ export function useToggleTask() {
   const qc    = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, done }: { id: string; done: boolean }) =>
-      patchTaskApi(id, { done }),
+    mutationFn: ({ id, done }: { id: string; done: boolean }) => {
+      if (id.startsWith("local-")) return Promise.resolve({ id, done } as any);
+      return patchTaskApi(id, { done });
+    },
+
+    retry: 1,  // safe: setting done=true twice = idempotent
 
     onMutate: async ({ id, done }) => {
       await qc.cancelQueries({ queryKey: qk });
@@ -101,12 +116,16 @@ export function useToggleTask() {
       return { previous };
     },
 
-    onError: (_err, _vars, ctx) => {
-      if (ctx?.previous) qc.setQueryData(qk, ctx.previous);
+    onSuccess: (result, { id }) => {
+      // Use server-confirmed value to ensure UI reflects actual DB state.
+      qc.setQueryData<DailyTask[]>(qk, (old = []) =>
+        old.map((t) => (t.id === id ? { ...t, done: result.done } : t))
+      );
     },
 
-    onSettled: () => {
-      qc.invalidateQueries({ queryKey: qk });
+    onError: (_err, _vars, ctx) => {
+      if (ctx?.previous) qc.setQueryData(qk, ctx.previous);
+      Alert.alert("Error", "No se pudo guardar el cambio. Comprueba tu conexión e inténtalo de nuevo.");
     },
   });
 }
@@ -119,7 +138,11 @@ export function useDeleteTask() {
   const qc    = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => deleteTaskApi(id),
+    mutationFn: (id: string) => {
+      if (id.startsWith("local-")) return Promise.resolve();
+      return deleteTaskApi(id);
+    },
+    retry: 1,
 
     onMutate: async (id) => {
       await qc.cancelQueries({ queryKey: qk });
@@ -128,12 +151,14 @@ export function useDeleteTask() {
       return { previous };
     },
 
-    onError: (_err, _vars, ctx) => {
-      if (ctx?.previous) qc.setQueryData(qk, ctx.previous);
+    onSuccess: (_result, id) => {
+      // Direct cache update — no refetch, avoids wiping concurrent optimistic creates.
+      qc.setQueryData<DailyTask[]>(qk, (old = []) => old.filter((t) => t.id !== id));
     },
 
-    onSettled: () => {
-      qc.invalidateQueries({ queryKey: qk });
+    onError: (_err, _vars, ctx) => {
+      if (ctx?.previous) qc.setQueryData(qk, ctx.previous);
+      Alert.alert("Error", "No se pudo borrar la tarea. Comprueba tu conexión e inténtalo de nuevo.");
     },
   });
 }

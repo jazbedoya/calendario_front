@@ -47,9 +47,44 @@
     },
     "errors": {
       "wrongCredentials": "E-mail ou mot de passe incorrect",
+      "emailNotVerified": "Vérifiez votre e-mail avant de vous connecter. Consultez votre boîte de réception.",
       "serverError": "Erreur serveur, veuillez réessayer plus tard",
       "connectionError": "Impossible de se connecter au serveur",
       "unexpected": "Erreur inattendue, veuillez réessayer"
+    },
+    "emailVerified": {
+      "title": "Compte vérifié !",
+      "subtitle": "Vous pouvez maintenant vous connecter avec votre e-mail et mot de passe.",
+      "loginBtn": "Se connecter"
+    },
+    "pendingVerification": {
+      "title": "Vérifiez votre boîte mail",
+      "subtitle": "Nous avons envoyé un lien de vérification à :",
+      "instruction": "Appuyez sur le lien dans l'e-mail pour activer votre compte. Cela peut prendre quelques minutes.",
+      "resendBtn": "Renvoyer l'e-mail",
+      "resendCooldown": "Renvoyer dans {{seconds}}s",
+      "resentOk": "E-mail renvoyé !",
+      "backToLogin": "Retour à la connexion"
+    },
+    "forgotPw": {
+      "title": "Récupérer votre mot de passe",
+      "subtitle": "Entrez votre e-mail et nous vous enverrons les instructions",
+      "emailLabel": "E-mail",
+      "submitBtn": "Envoyer les instructions",
+      "successTitle": "Vérifiez votre boîte mail !",
+      "successSubtitle": "Nous vous avons envoyé un lien pour réinitialiser votre mot de passe.",
+      "backToLogin": "Retour à la connexion"
+    },
+    "resetPw": {
+      "title": "Nouveau mot de passe",
+      "subtitle": "Entrez votre nouveau mot de passe",
+      "tokenLabel": "Code de récupération",
+      "tokenPlaceholder": "Collez le code reçu par e-mail",
+      "passwordLabel": "Nouveau mot de passe",
+      "confirmLabel": "Confirmer le mot de passe",
+      "submitBtn": "Changer le mot de passe",
+      "errorMismatch": "Les mots de passe ne correspondent pas",
+      "errorToken": "Code invalide ou expiré"
     }
   },
   "onboarding": {
@@ -73,6 +108,7 @@
   "home": {
     "greeting": {
       "morning": "Bonjour",
+      "night": "Bonne nuit",
       "afternoon": "Bon après-midi",
       "evening": "Bonsoir"
     },
@@ -83,6 +119,15 @@
       "tasksPending_one": "{{count}} tâche en attente aujourd'hui",
       "tasksPending_other": "{{count}} tâches en attente aujourd'hui",
       "tasksUpToDate": "Tout est à jour aujourd'hui 🎉"
+    },
+    "nextEvent": {
+      "label": "Prochain",
+      "labelNow": "Maintenant",
+      "endsAt": "Termine à {{time}}",
+      "quietDay": "Journée tranquille devant 🐢",
+      "noEvents": "Aucun événement aujourd'hui",
+      "addHint": "Ajouter quelque chose ?",
+      "allDay": "Toute la journée"
     }
   },
   "calendar": {
@@ -94,7 +139,28 @@
     "viewMonth": "Mois",
     "viewWeek": "Semaine",
     "allDay": "Toute la journée",
-    "occupied": "Autres domaines"
+    "occupied": "Autres domaines",
+    "holiday": "Jour férié"
+  },
+  "holidays": {
+    "newYear":               "Jour de l'An",
+    "epiphany":              "Épiphanie",
+    "holyThursday":          "Jeudi Saint",
+    "goodFriday":            "Vendredi Saint",
+    "laborDay":              "Fête du Travail",
+    "assumption":            "Assomption",
+    "hispanicDay":           "Fête nationale d'Espagne",
+    "allSaints":             "Toussaint",
+    "constitutionDay":       "Jour de la Constitution",
+    "immaculateConception":  "Immaculée Conception",
+    "christmas":             "Noël",
+    "heroesDay":             "Jour des Héros",
+    "independenceEve":       "Veille de l'Indépendance",
+    "independenceDay":       "Fête nationale du Paraguay",
+    "chacoPeace":            "Paix du Chaco",
+    "asuncionDay":           "Fondation d'Asunción",
+    "boqueron":              "Bataille de Boquerón",
+    "caacupe":               "Vierge de Caacupé"
   },
   "eventSheet": {
     "titlePlaceholder": "Qu'est-ce qui se passe ?",
@@ -138,11 +204,12 @@
     "addPlaceholder": "Écrire une tâche..."
   },
   "mascot": {
-    "sleepy": "Reposez-vous bien. À demain !",
-    "excited": "Vous avez quelque chose bientôt. Allez !",
-    "lowEnergy": "Chaque jour compte. Vous pouvez le faire !",
-    "balanced": "Quelle journée équilibrée !",
-    "happy": "Prêt pour une belle journée !"
+    "morning":   ["Prêt pour une belle journée !", "Quelle belle matinée !", "Faisons de cette journée quelque chose de bien", "Bonne énergie du matin !"],
+    "afternoon": ["Allons-y doucement", "Que vous inspire cet après-midi ?", "Je suis là avec vous", "L'après-midi est à vous"],
+    "evening":   ["Ce fut une bonne journée", "Ralentissez progressivement", "Il est temps de souffler", "Vous pouvez vous reposer maintenant"],
+    "night":     ["Reposez-vous, on reprend demain", "C'est l'heure de dormir 🌙", "À demain 🐢", "Faites de beaux rêves"],
+    "excited":   "Vous avez quelque chose bientôt. Allez !",
+    "lowEnergy": "Chaque jour compte. Vous pouvez le faire !"
   },
   "celebration": {
     "messages": [
@@ -244,6 +311,11 @@
       "section": "Session",
       "logout": "Se déconnecter"
     },
+    "country": {
+      "section": "Pays des jours fériés",
+      "ES": "Espagne",
+      "PY": "Paraguay"
+    },
     "about": {
       "section": "À propos",
       "title": "À propos d'Avante"
@@ -267,5 +339,9 @@
     "missingScope": "Vous devez autoriser l'accès au calendrier dans Google.",
     "generic": "Impossible de connecter Google Agenda. Veuillez réessayer.",
     "backBtn": "Retour aux réglages"
+  },
+  "dateFormat": {
+    "dayMonth": "EEEE d MMMM",
+    "dayMonthYear": "EEEE d MMMM yyyy"
   }
 }

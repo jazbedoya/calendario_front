@@ -15,6 +15,8 @@ import { useTranslation } from "react-i18next";
 import { useAuthStore }              from "@/stores/authStore";
 import { useMascotStore }            from "@/features/mascot/mascotStore";
 import { useCelebrationSettings }    from "@/stores/celebrationSettingsStore";
+import { getHours } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 import { getMascotState }            from "@/features/mascot/getMascotState";
 import { Mascot } from "@/features/mascot/Mascot";
 import {
@@ -23,8 +25,11 @@ import {
   useDisconnectCalendar,
 } from "@/features/calendar/useCalendarSync";
 import { getCalendarConnectUrlApi } from "@/features/calendar/api";
+import { getGoogleRedirectUri } from "@/lib/getGoogleRedirectUri";
 import { useCalendarStore }          from "@/features/calendar/calendarStore";
 import { useLanguageStore }          from "@/features/settings/languageStore";
+import { useHolidayStore }           from "@/features/settings/holidayStore";
+import type { HolidayCountry }       from "@/features/overview/getHolidays";
 import { SUPPORTED_LANGUAGES, type SupportedLanguage } from "@/i18n";
 
 // ─── Row component ────────────────────────────────────────────────────────────
@@ -151,16 +156,53 @@ const lp = StyleSheet.create({
   pillTxtActive: { color: "#C8553D", fontWeight: "700" },
 });
 
+// ─── Country picker ───────────────────────────────────────────────────────────
+
+const COUNTRY_FLAGS: Record<HolidayCountry, string> = {
+  ES: "🇪🇸", PY: "🇵🇾",
+};
+
+const HOLIDAY_COUNTRIES: HolidayCountry[] = ["ES", "PY"];
+
+function CountryPicker() {
+  const { t } = useTranslation();
+  const { country, setCountry } = useHolidayStore();
+
+  return (
+    <View style={lp.row}>
+      {HOLIDAY_COUNTRIES.map((c, idx) => {
+        const active = c === country;
+        const isLast = idx === HOLIDAY_COUNTRIES.length - 1;
+        return (
+          <TouchableOpacity
+            key={c}
+            style={[lp.pill, active && lp.pillActive, !isLast && lp.pillBorder]}
+            onPress={() => setCountry(c)}
+            activeOpacity={0.7}
+          >
+            <Text style={lp.flag}>{COUNTRY_FLAGS[c]}</Text>
+            <Text style={[lp.pillTxt, active && lp.pillTxtActive]}>
+              {t(`settings.country.${c}`)}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+    </View>
+  );
+}
+
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
 export default function SettingsScreen() {
   const { t } = useTranslation();
   const router = useRouter();
-  const { logout } = useAuthStore();
+  const { logout, user } = useAuthStore();
   const { mascotName, setMascotName } = useMascotStore();
   const [editing, setEditing] = useState(false);
   const [draft,   setDraft]   = useState(mascotName);
-  const mascotState = getMascotState({ hourOfDay: new Date().getHours() });
+  const timezone    = user?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const localHour   = getHours(toZonedTime(new Date(), timezone));
+  const mascotState = getMascotState({ hourOfDay: localHour });
 
   const { hapticsEnabled, setHapticsEnabled } = useCelebrationSettings();
 
@@ -194,7 +236,7 @@ export default function SettingsScreen() {
     try {
       setConnecting(true);
       const redirectTo = Linking.createURL("calendar/connected");
-      const url = await getCalendarConnectUrlApi(redirectTo);
+      const url = await getCalendarConnectUrlApi(redirectTo, getGoogleRedirectUri());
       if (Platform.OS === "web") {
         window.location.href = url;
       } else {
@@ -354,10 +396,16 @@ export default function SettingsScreen() {
           <LanguagePicker />
         </View>
 
+        {/* ── País de festivos ────────────────────────────────── */}
+        <Text style={s.sectionLabel}>{t("settings.country.section")}</Text>
+        <View style={s.card}>
+          <CountryPicker />
+        </View>
+
         {/* ── Celebración ─────────────────────────────────────── */}
         <Text style={s.sectionLabel}>{t("settings.celebration.section")}</Text>
         <View style={s.card}>
-          <View style={[r.row, r.border]}>
+          <View style={r.row}>
             <View style={[r.iconBox, { backgroundColor: "#FFF4E8" }]}>
               <Ionicons name="phone-portrait-outline" size={17} color="#C8553D" />
             </View>
@@ -372,15 +420,6 @@ export default function SettingsScreen() {
               thumbColor="#FFFFFF"
             />
           </View>
-          <Row
-            icon="information-circle-outline"
-            iconBg="#F5F5F5"
-            iconColor="#AAAAAA"
-            label={t("settings.celebration.sound")}
-            sublabel={t("common.comingSoon")}
-            noChevron
-            last
-          />
         </View>
 
         {/* ── Sesión ──────────────────────────────────────────── */}

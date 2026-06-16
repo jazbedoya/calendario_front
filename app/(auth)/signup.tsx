@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
+import * as Linking from "expo-linking";
 import { Link, useRouter } from "expo-router";
 import { useState, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -57,16 +58,30 @@ export default function SignupScreen() {
 
   // ── lógica original intacta ───────────────────────────────────────────────
   const onSubmit = async (data: FormData) => {
-    try {
-      await signupApi({
+    const attempt = async () => {
+      const result = await signupApi({
         email: data.email,
         password: data.password,
         full_name: data.full_name,
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        redirect_to: Linking.createURL("email-verified"),
       });
-      router.replace("/(auth)/login" as any);
+      router.replace({ pathname: "/(auth)/pending-verification", params: { email: result.email } } as any);
+    };
+
+    try {
+      await attempt();
     } catch (err: unknown) {
       const axiosErr = err as any;
+      if (!axiosErr?.response) {
+        // Tunnel handshake — reintentar una vez
+        try { await attempt(); return; } catch (retryErr: unknown) {
+          const retryAxios = retryErr as any;
+          const msg = retryAxios?.response?.data?.detail ?? (retryErr instanceof Error ? retryErr.message : "Error desconocido");
+          setError("root", { message: msg });
+          return;
+        }
+      }
       const msg = axiosErr?.response?.data?.detail ?? (err instanceof Error ? err.message : "Error desconocido");
       setError("root", { message: msg });
     }
@@ -92,21 +107,22 @@ export default function SignupScreen() {
           {/* Tortuga + Títulos — ocultos en Android cuando el teclado está abierto */}
           {!(Platform.OS === "android" && keyboardVisible) && (
             <>
-              <Mascot name="" mood="excited" message="" size="large" showName={false} />
+              <Mascot name="" mood="happy" message="" size="large" showName={false} />
               <Text style={styles.title}>{t("auth.signup.title")}</Text>
               <Text style={styles.subtitle}>{t("auth.signup.subtitle")}</Text>
             </>
           )}
 
           {/* Botón Google */}
-          <Pressable
-            style={({ pressed }) => [styles.googleBtn, pressed && styles.googleBtnPressed]}
+          <TouchableOpacity
+            style={styles.googleBtn}
             onPress={() => promptAsync()}
             disabled={googleDisabled}
+            activeOpacity={0.8}
           >
-            <AntDesign name="google" size={18} color="#4285F4" />
+            <AntDesign name="google" size={20} color="#4285F4" />
             <Text style={styles.googleBtnText}>{t("auth.signup.googleBtn")}</Text>
-          </Pressable>
+          </TouchableOpacity>
 
           {/* Separador */}
           <View style={styles.divider}>
@@ -238,18 +254,23 @@ const styles = StyleSheet.create({
 
   // Google
   googleBtn: {
-    height: 52,
+    width: "100%",
+    height: 54,
     borderRadius: 16,
-    borderWidth: 1.5,
-    borderColor: Colors.border,
-    backgroundColor: Colors.surface,
+    borderWidth: 1,
+    borderColor: "#E5E5E5",
+    backgroundColor: "#FFFFFF",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 10,
+    gap: 12,
+    elevation: 1,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
   },
-  googleBtnPressed: { backgroundColor: "#F5F3F0" },
-  googleBtnText: { fontSize: 15, fontWeight: "600", color: Colors.textPrimary },
+  googleBtnText: { fontSize: 16, fontWeight: "600", color: "#1A1A1A" },
 
   // Separador
   divider: { flexDirection: "row", alignItems: "center", marginVertical: 20 },
@@ -296,7 +317,7 @@ const styles = StyleSheet.create({
   // Botón principal
   primaryBtn: {
     height: 54,
-    borderRadius: 18,
+    borderRadius: 16,
     backgroundColor: Colors.primary,
     alignItems: "center",
     justifyContent: "center",

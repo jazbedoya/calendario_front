@@ -28,5 +28,10 @@ export async function patchTaskApi(
 }
 
 export async function deleteTaskApi(id: string): Promise<void> {
-  await apiClient.delete(`/tasks/daily/${id}`);
+  try {
+    await apiClient.delete(`/tasks/daily/${id}`);
+  } catch (err: any) {
+    if (err?.response?.status === 404) return; // already deleted = success
+    throw err;
+  }
 }

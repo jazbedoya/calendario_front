@@ -37,12 +37,5 @@ export const mockHomeData: HomeData = {
       backgroundColor: "#FBF0EB",
       textColor: "#C8553D",
     },
-    {
-      id: "next-slot",
-      iconName: "calendar",
-      text: "Próximo hueco libre: 16:30",
-      backgroundColor: "#EFEFED",
-      textColor: "#1A1A1A",
-    },
   ],
 };

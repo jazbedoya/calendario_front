@@ -16,8 +16,10 @@ export async function getCalendarStatusApi(): Promise<CalendarStatus> {
   return res.data;
 }
 
-export async function getCalendarConnectUrlApi(redirectTo?: string): Promise<string> {
-  const params = redirectTo ? { redirect_to: redirectTo } : {};
+export async function getCalendarConnectUrlApi(redirectTo?: string, callbackUri?: string): Promise<string> {
+  const params: Record<string, string> = {};
+  if (redirectTo) params.redirect_to = redirectTo;
+  if (callbackUri) params.callback_uri = callbackUri;
   const res = await apiClient.get<{ url: string }>("/calendar/connect", { params });
   return res.data.url;
 }

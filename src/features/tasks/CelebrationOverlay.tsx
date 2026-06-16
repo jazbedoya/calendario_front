@@ -117,9 +117,14 @@ export function CelebrationOverlay({ visible, streak, onClose }: Props) {
       // Pick a random message
       idxRef.current = Math.floor(Math.random() * messages.length);
 
-      // Haptics
+      // Haptics — delayed 120ms so the modal finishes mounting before
+      // requesting the taptic engine (simultaneous Modal + animation drops it on iOS)
       if (hapticsEnabled) {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
+        setTimeout(() => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(
+            (e) => console.warn("[Haptics] failed:", e),
+          );
+        }, 120);
       }
 
       // Card spring-in

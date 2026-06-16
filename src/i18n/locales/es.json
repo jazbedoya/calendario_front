@@ -47,9 +47,44 @@
     },
     "errors": {
       "wrongCredentials": "Email o contraseña incorrectos",
+      "emailNotVerified": "Verifica tu email antes de entrar. Revisa tu bandeja de entrada.",
       "serverError": "Error en el servidor, intenta más tarde",
       "connectionError": "No se pudo conectar con el servidor",
       "unexpected": "Error inesperado, intenta de nuevo"
+    },
+    "emailVerified": {
+      "title": "¡Cuenta verificada!",
+      "subtitle": "Ya puedes iniciar sesión con tu email y contraseña.",
+      "loginBtn": "Iniciar sesión"
+    },
+    "pendingVerification": {
+      "title": "Revisa tu correo",
+      "subtitle": "Te enviamos un enlace de verificación a:",
+      "instruction": "Pulsa el enlace del email para activar tu cuenta. Puede tardar unos minutos.",
+      "resendBtn": "Reenviar email",
+      "resendCooldown": "Reenviar en {{seconds}}s",
+      "resentOk": "¡Email reenviado!",
+      "backToLogin": "Volver al inicio de sesión"
+    },
+    "forgotPw": {
+      "title": "Recupera tu contraseña",
+      "subtitle": "Introduce tu email y te enviaremos las instrucciones",
+      "emailLabel": "Email",
+      "submitBtn": "Enviar instrucciones",
+      "successTitle": "¡Revisa tu correo!",
+      "successSubtitle": "Te enviamos un enlace para restablecer tu contraseña. Pulsa el enlace del email para continuar.",
+      "backToLogin": "Volver al inicio de sesión"
+    },
+    "resetPw": {
+      "title": "Nueva contraseña",
+      "subtitle": "Introduce tu nueva contraseña",
+      "tokenLabel": "Código de recuperación",
+      "tokenPlaceholder": "Pega el código del email",
+      "passwordLabel": "Nueva contraseña",
+      "confirmLabel": "Confirmar contraseña",
+      "submitBtn": "Cambiar contraseña",
+      "errorMismatch": "Las contraseñas no coinciden",
+      "errorToken": "Código inválido o caducado"
     }
   },
   "onboarding": {
@@ -74,7 +109,8 @@
     "greeting": {
       "morning": "Buenos días",
       "afternoon": "Buenas tardes",
-      "evening": "Buenas noches"
+      "evening": "Buenas noches",
+      "night": "Buenas noches"
     },
     "area": {
       "weekHours": "{{hours}}h esta semana"
@@ -83,6 +119,15 @@
       "tasksPending_one": "{{count}} tarea pendiente hoy",
       "tasksPending_other": "{{count}} tareas pendientes hoy",
       "tasksUpToDate": "Tareas de hoy al día 🎉"
+    },
+    "nextEvent": {
+      "label": "Próximo",
+      "labelNow": "Ahora",
+      "endsAt": "Termina a las {{time}}",
+      "quietDay": "Día tranquilo por delante 🐢",
+      "noEvents": "Hoy no tienes eventos",
+      "addHint": "¿Añades algo?",
+      "allDay": "Todo el día"
     }
   },
   "calendar": {
@@ -94,7 +139,28 @@
     "viewMonth": "Mes",
     "viewWeek": "Semana",
     "allDay": "Todo el día",
-    "occupied": "Otras áreas ocupadas"
+    "occupied": "Otras áreas ocupadas",
+    "holiday": "Festivo"
+  },
+  "holidays": {
+    "newYear":               "Año Nuevo",
+    "epiphany":              "Reyes Magos",
+    "holyThursday":          "Jueves Santo",
+    "goodFriday":            "Viernes Santo",
+    "laborDay":              "Día del Trabajador",
+    "assumption":            "Asunción de la Virgen",
+    "hispanicDay":           "Fiesta Nacional de España",
+    "allSaints":             "Todos los Santos",
+    "constitutionDay":       "Día de la Constitución",
+    "immaculateConception":  "Inmaculada Concepción",
+    "christmas":             "Navidad",
+    "heroesDay":             "Día de los Héroes",
+    "independenceEve":       "Víspera de la Independencia",
+    "independenceDay":       "Día de la Independencia Nacional",
+    "chacoPeace":            "Paz del Chaco",
+    "asuncionDay":           "Fundación de Asunción",
+    "boqueron":              "Batalla del Boquerón",
+    "caacupe":               "Virgen de Caacupé"
   },
   "eventSheet": {
     "titlePlaceholder": "¿Qué tienes?",
@@ -138,11 +204,12 @@
     "addPlaceholder": "Escribe una tarea..."
   },
   "mascot": {
-    "sleepy": "Descansa bien. ¡Hasta mañana!",
-    "excited": "Tienes algo pronto. ¡Vamos!",
-    "lowEnergy": "Cada día cuenta. ¡Tú puedes!",
-    "balanced": "¡Qué día tan equilibrado!",
-    "happy": "¡Listo para un gran día!"
+    "morning":   ["¡Listo para un gran día!", "¡Qué bonita mañana!", "¡A por el día!", "Hoy puede ser un gran día"],
+    "afternoon": ["Vamos con calma", "¿Qué te apetece esta tarde?", "Aquí estoy contigo", "La tarde es tuya"],
+    "evening":   ["Ha sido un buen día", "Recoge poco a poco", "Hora de bajar el ritmo", "Ya puedes descansar"],
+    "night":     ["Descansa, mañana seguimos", "Es hora de dormir 🌙", "Te veo mañana 🐢", "Sueña bonito"],
+    "excited":   "Tienes algo pronto. ¡Vamos!",
+    "lowEnergy": "Cada día cuenta. ¡Tú puedes!"
   },
   "celebration": {
     "messages": [
@@ -244,6 +311,11 @@
       "section": "Sesión",
       "logout": "Cerrar sesión"
     },
+    "country": {
+      "section": "País de festivos",
+      "ES": "España",
+      "PY": "Paraguay"
+    },
     "about": {
       "section": "Acerca de",
       "title": "Acerca de Avante"
@@ -267,5 +339,9 @@
     "missingScope": "Necesitas autorizar el acceso al calendario en Google.",
     "generic": "No se pudo conectar Google Calendar. Inténtalo de nuevo.",
     "backBtn": "Volver a Ajustes"
+  },
+  "dateFormat": {
+    "dayMonth": "EEEE d 'de' MMMM",
+    "dayMonthYear": "EEEE d 'de' MMMM yyyy"
   }
 }

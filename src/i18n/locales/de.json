@@ -47,9 +47,44 @@
     },
     "errors": {
       "wrongCredentials": "Falsche E-Mail oder falsches Passwort",
+      "emailNotVerified": "Bitte bestätigen Sie Ihre E-Mail vor der Anmeldung. Überprüfen Sie Ihren Posteingang.",
       "serverError": "Serverfehler, bitte versuchen Sie es später erneut",
       "connectionError": "Verbindung zum Server fehlgeschlagen",
       "unexpected": "Unerwarteter Fehler, bitte versuchen Sie es erneut"
+    },
+    "emailVerified": {
+      "title": "Konto bestätigt!",
+      "subtitle": "Sie können sich jetzt mit Ihrer E-Mail und Ihrem Passwort anmelden.",
+      "loginBtn": "Anmelden"
+    },
+    "pendingVerification": {
+      "title": "E-Mail prüfen",
+      "subtitle": "Wir haben einen Bestätigungslink an folgende Adresse gesendet:",
+      "instruction": "Tippen Sie auf den Link in der E-Mail, um Ihr Konto zu aktivieren. Es kann einige Minuten dauern.",
+      "resendBtn": "E-Mail erneut senden",
+      "resendCooldown": "Erneut senden in {{seconds}}s",
+      "resentOk": "E-Mail erneut gesendet!",
+      "backToLogin": "Zurück zur Anmeldung"
+    },
+    "forgotPw": {
+      "title": "Passwort zurücksetzen",
+      "subtitle": "Geben Sie Ihre E-Mail ein und wir senden Ihnen Anweisungen",
+      "emailLabel": "E-Mail",
+      "submitBtn": "Anweisungen senden",
+      "successTitle": "E-Mail gesendet!",
+      "successSubtitle": "Wir haben Ihnen einen Link zum Zurücksetzen Ihres Passworts geschickt.",
+      "backToLogin": "Zurück zur Anmeldung"
+    },
+    "resetPw": {
+      "title": "Neues Passwort",
+      "subtitle": "Geben Sie Ihr neues Passwort ein",
+      "tokenLabel": "Wiederherstellungscode",
+      "tokenPlaceholder": "Code aus der E-Mail einfügen",
+      "passwordLabel": "Neues Passwort",
+      "confirmLabel": "Passwort bestätigen",
+      "submitBtn": "Passwort ändern",
+      "errorMismatch": "Passwörter stimmen nicht überein",
+      "errorToken": "Ungültiger oder abgelaufener Code"
     }
   },
   "onboarding": {
@@ -73,6 +108,7 @@
   "home": {
     "greeting": {
       "morning": "Guten Morgen",
+      "night": "Gute Nacht",
       "afternoon": "Guten Nachmittag",
       "evening": "Guten Abend"
     },
@@ -83,6 +119,15 @@
       "tasksPending_one": "{{count}} Aufgabe heute ausstehend",
       "tasksPending_other": "{{count}} Aufgaben heute ausstehend",
       "tasksUpToDate": "Heute alles erledigt 🎉"
+    },
+    "nextEvent": {
+      "label": "Nächster",
+      "labelNow": "Jetzt",
+      "endsAt": "Endet um {{time}}",
+      "quietDay": "Ruhiger Tag voraus 🐢",
+      "noEvents": "Heute keine Termine",
+      "addHint": "Etwas hinzufügen?",
+      "allDay": "Ganztägig"
     }
   },
   "calendar": {
@@ -94,7 +139,28 @@
     "viewMonth": "Monat",
     "viewWeek": "Woche",
     "allDay": "Ganztägig",
-    "occupied": "Andere Bereiche"
+    "occupied": "Andere Bereiche",
+    "holiday": "Feiertag"
+  },
+  "holidays": {
+    "newYear":               "Neujahr",
+    "epiphany":              "Heilige Drei Könige",
+    "holyThursday":          "Gründonnerstag",
+    "goodFriday":            "Karfreitag",
+    "laborDay":              "Tag der Arbeit",
+    "assumption":            "Mariä Himmelfahrt",
+    "hispanicDay":           "Spanischer Nationalfeiertag",
+    "allSaints":             "Allerheiligen",
+    "constitutionDay":       "Tag der Verfassung",
+    "immaculateConception":  "Mariä Empfängnis",
+    "christmas":             "Weihnachten",
+    "heroesDay":             "Heldengedenktag",
+    "independenceEve":       "Vorabend der Unabhängigkeit",
+    "independenceDay":       "Paraguayischer Unabhängigkeitstag",
+    "chacoPeace":            "Chacofrieden",
+    "asuncionDay":           "Gründung von Asunción",
+    "boqueron":              "Schlacht von Boquerón",
+    "caacupe":               "Jungfrau von Caacupé"
   },
   "eventSheet": {
     "titlePlaceholder": "Was passiert?",
@@ -138,11 +204,12 @@
     "addPlaceholder": "Aufgabe eingeben..."
   },
   "mascot": {
-    "sleepy": "Erholen Sie sich gut. Bis morgen!",
-    "excited": "Sie haben bald etwas. Los geht's!",
-    "lowEnergy": "Jeder Tag zählt. Sie schaffen das!",
-    "balanced": "Was für ein ausgeglichener Tag!",
-    "happy": "Bereit für einen großartigen Tag!"
+    "morning":   ["Bereit für einen großartigen Tag!", "Was für ein schöner Morgen!", "Lass den Tag zählen", "Gute Morgenenergie!"],
+    "afternoon": ["Immer schön ruhig", "Worauf haben Sie heute Nachmittag Lust?", "Ich bin für Sie da", "Der Nachmittag gehört Ihnen"],
+    "evening":   ["Es war ein guter Tag", "Schalten Sie langsam runter", "Zeit, das Tempo zu drosseln", "Sie können jetzt ruhen"],
+    "night":     ["Erholen Sie sich, morgen geht es weiter", "Zeit zu schlafen 🌙", "Bis morgen 🐢", "Träum was Schönes"],
+    "excited":   "Sie haben bald etwas. Los geht's!",
+    "lowEnergy": "Jeder Tag zählt. Sie schaffen das!"
   },
   "celebration": {
     "messages": [
@@ -244,6 +311,11 @@
       "section": "Sitzung",
       "logout": "Abmelden"
     },
+    "country": {
+      "section": "Land für Feiertage",
+      "ES": "Spanien",
+      "PY": "Paraguay"
+    },
     "about": {
       "section": "Über die App",
       "title": "Über Avante"
@@ -267,5 +339,9 @@
     "missingScope": "Sie müssen den Kalenderzugriff in Google gewähren.",
     "generic": "Google Kalender konnte nicht verbunden werden. Bitte versuchen Sie es erneut.",
     "backBtn": "Zurück zu den Einstellungen"
+  },
+  "dateFormat": {
+    "dayMonth": "EEEE, d. MMMM",
+    "dayMonthYear": "EEEE, d. MMMM yyyy"
   }
 }

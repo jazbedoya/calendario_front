@@ -1,4 +1,5 @@
-export type MascotMood = "happy" | "excited" | "sleepy" | "encouraging" | "balanced";
+export type MascotMood    = "happy" | "excited" | "sleepy" | "encouraging" | "balanced";
+export type TimeOfDay     = "morning" | "afternoon" | "evening" | "night";
 
 export interface MascotContext {
   hourOfDay: number;
@@ -8,12 +9,17 @@ export interface MascotContext {
 }
 
 export interface MascotState {
-  mood: MascotMood;
-  messageKey: string;
+  mood:       MascotMood;
+  messageKey: string;       // i18n key — may point to a string array
 }
 
-const QUIET_START = 22;
-const QUIET_END = 7;
+/** Pure function — testeable. */
+export function getTimeOfDay(hour: number): TimeOfDay {
+  if (hour >= 5  && hour < 12) return "morning";
+  if (hour >= 12 && hour < 19) return "afternoon";
+  if (hour >= 19 && hour < 22) return "evening";
+  return "night"; // 22:00 – 04:59
+}
 
 export function getMascotState(ctx: MascotContext): MascotState {
   const {
@@ -23,12 +29,14 @@ export function getMascotState(ctx: MascotContext): MascotState {
     todayEventCount = 0,
   } = ctx;
 
-  // 1. Quiet hours (22:00 – 07:00)
-  if (hourOfDay >= QUIET_START || hourOfDay < QUIET_END) {
-    return { mood: "sleepy", messageKey: "mascot.sleepy" };
+  const timeOfDay = getTimeOfDay(hourOfDay);
+
+  // 1. Noche: la hora manda siempre
+  if (timeOfDay === "night") {
+    return { mood: "sleepy", messageKey: "mascot.night" };
   }
 
-  // 2. Upcoming event within 30 minutes
+  // 2. Evento próximo (≤ 30 min)
   if (
     minutesUntilNextEvent !== undefined &&
     minutesUntilNextEvent >= 0 &&
@@ -37,16 +45,16 @@ export function getMascotState(ctx: MascotContext): MascotState {
     return { mood: "excited", messageKey: "mascot.excited" };
   }
 
-  // 3. Three or more low-energy days (encouraging, never scolding)
+  // 3. Varios días de baja energía
   if (recentLowEnergyDays >= 3) {
     return { mood: "encouraging", messageKey: "mascot.lowEnergy" };
   }
 
-  // 4. Balanced day (2–5 events is a healthy rhythm)
+  // 4. Día equilibrado (2–5 eventos) — mensaje según franja horaria
   if (todayEventCount >= 2 && todayEventCount <= 5) {
-    return { mood: "balanced", messageKey: "mascot.balanced" };
+    return { mood: "balanced", messageKey: `mascot.${timeOfDay}` };
   }
 
-  // 5. Default happy
-  return { mood: "happy", messageKey: "mascot.happy" };
+  // 5. Estado por defecto: franja horaria
+  return { mood: "happy", messageKey: `mascot.${timeOfDay}` };
 }

@@ -12,9 +12,14 @@ export async function signupApi(data: {
   password: string;
   full_name: string;
   timezone: string;
-}): Promise<TokenResponse> {
-  const response = await apiClient.post<TokenResponse>("/auth/signup", data);
+  redirect_to?: string;
+}): Promise<{ email: string }> {
+  const response = await apiClient.post<{ email: string }>("/auth/signup", data);
   return response.data;
+}
+
+export async function resendVerificationApi(email: string): Promise<void> {
+  await apiClient.post("/auth/resend-verification", { email });
 }
 
 export async function loginApi(data: {
@@ -42,6 +47,13 @@ export async function googleAuthApi(accessToken: string): Promise<TokenResponse>
   return response.data;
 }
 
+export async function getGoogleLoginUrlApi(redirectTo: string, callbackUri: string): Promise<string> {
+  const response = await apiClient.get<{ url: string }>("/auth/google/connect", {
+    params: { redirect_to: redirectTo, callback_uri: callbackUri },
+  });
+  return response.data.url;
+}
+
 export async function patchMeApi(data: {
   full_name?: string;
   timezone?: string;
@@ -57,4 +69,12 @@ export async function patchMeApi(data: {
 
 export async function logoutApi(): Promise<void> {
   await apiClient.post("/auth/logout");
+}
+
+export async function forgotPasswordApi(email: string): Promise<void> {
+  await apiClient.post("/auth/forgot-password", { email });
+}
+
+export async function resetPasswordApi(token: string, newPassword: string): Promise<void> {
+  await apiClient.post("/auth/reset-password", { token, new_password: newPassword });
 }

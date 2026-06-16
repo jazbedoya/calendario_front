@@ -34,13 +34,14 @@ import {
 import { useLanguageStore } from '@/features/settings/languageStore';
 import { getDateLocale } from '@/i18n/dateLocale';
 import { useTranslation } from 'react-i18next';
+import { useHolidayStore } from '@/features/settings/holidayStore';
+import { getHolidayMapForMonth } from '@/features/overview/getHolidays';
 import { useEventsStore } from '@/features/events/eventsStore';
 import { useDeleteEvent } from '@/features/events/useDeleteEvent';
 import { QuickAddSheet } from '@/features/events/components/QuickAddSheet';
 import { getLayersByDay, detectConflicts, getEventsForDay } from '@/features/overview/calendarUtils';
 import {
   LAYER_COLORS,
-  LAYER_LABELS,
   type Layer,
   type CalendarEvent,
   type Conflict,
@@ -53,7 +54,7 @@ import { EventDetailSheet } from '@/features/overview/components/EventDetailShee
 
 const BG             = '#F8F6F2';
 const TODAY_COLOR    = '#C8553D';
-const WEEKDAYS       = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+const HOLIDAY_GOLD   = '#C8A52A';
 const LAYER_ORDER: Layer[] = ['family', 'work', 'personal'];
 const USER_TIMEZONE  = 'Europe/Madrid';
 
@@ -121,6 +122,13 @@ export default function LayersScreen() {
     () => getLayersByDay(events, refDate, USER_TIMEZONE),
     [events, refDate],
   );
+
+  const holidayCountry  = useHolidayStore((s) => s.country);
+  const holidayMap      = useMemo(
+    () => getHolidayMapForMonth(holidayCountry, viewYear, viewMonth),
+    [holidayCountry, viewYear, viewMonth],
+  );
+  const selectedHoliday = selectedDate ? (holidayMap.get(selectedDate) ?? null) : null;
 
   const selectedEvents = useMemo(
     () => (selectedDate ? getEventsForDay(events, selectedDate, USER_TIMEZONE) : []),
@@ -211,8 +219,11 @@ export default function LayersScreen() {
   }, [selectedEvents, selectedConflicts, selectedDate]);
 
   const dateLocale = getDateLocale(language);
+  const weekdays = Array.from({ length: 7 }, (_, i) =>
+    format(new Date(2023, 0, 2 + i), 'EEEEE', { locale: dateLocale })
+  );
   const dayLabel = selectedDate
-    ? format(parseISO(selectedDate), "EEEE d 'de' MMMM", { locale: dateLocale })
+    ? format(parseISO(selectedDate), t('dateFormat.dayMonth'), { locale: dateLocale })
     : null;
 
   const monthName = format(new Date(viewYear, viewMonth, 1), 'MMMM', { locale: dateLocale });
@@ -307,16 +318,16 @@ export default function LayersScreen() {
           {LAYER_ORDER.map((layer) => (
             <View key={layer} style={styles.legendItem}>
               <View style={[styles.legendDot, { backgroundColor: LAYER_COLORS[layer] }]} />
-              <Text style={styles.legendLabel}>{LAYER_LABELS[layer]}</Text>
+              <Text style={styles.legendLabel}>{t(`layers.${layer}`)}</Text>
             </View>
           ))}
         </View>
 
         {/* ── Encabezado días semana ── */}
         <View style={styles.weekdayRow}>
-          {WEEKDAYS.map((d, i) => (
+          {weekdays.map((d, i) => (
             <Text
-              key={d}
+              key={i}
               style={[styles.weekdayLabel, { width: CELL_W }, (i === 5 || i === 6) && styles.weekdayLabelWeekend]}
             >
               {d}
@@ -339,9 +350,16 @@ export default function LayersScreen() {
                   const dominantLayer  = dots[0] ?? null;
                   const isWeekend      = day.getDay() === 0 || day.getDay() === 6;
                   const tintBg = dominantLayer && inMonth ? (LAYER_COLORS[dominantLayer] + '0D') : undefined;
+                  const isHoliday = inMonth && holidayMap.has(key);
 
                   return (
-                    <View key={key} style={{ width: CELL_W }}>
+                    <View
+                      key={key}
+                      style={[
+                        { width: CELL_W },
+                        isHoliday && styles.holidayCellBg,
+                      ]}
+                    >
                       <Pressable
                         style={({ pressed }) => [
                           styles.dayCell,
@@ -351,21 +369,23 @@ export default function LayersScreen() {
                         ]}
                         onPress={() => handleDayPress(day)}
                       >
-                        <View style={[
-                          styles.dayCircle,
-                          isTodayD && !isSelect && styles.todayCircle,
-                          isSelect && styles.selectedCircle,
-                        ]}>
-                          <Text style={[
-                            styles.dayText,
-                            !inMonth  && styles.outMonthText,
-                            isWeekend && inMonth && !isTodayD && !isSelect && styles.weekendText,
-                            isTodayD && !isSelect && styles.todayDayText,
-                            isSelect && styles.selectedDayText,
+                        <View style={styles.dayNumWrap}>
+                          <View style={[
+                            styles.dayCircle,
+                            isTodayD && !isSelect && styles.todayCircle,
+                            isSelect && styles.selectedCircle,
                           ]}>
-                            {format(day, 'd')}
-                          </Text>
-                          {isSelect && isTodayD && <View style={styles.todaySelectedDot} />}
+                            <Text style={[
+                              styles.dayText,
+                              !inMonth  && styles.outMonthText,
+                              isWeekend && inMonth && !isTodayD && !isSelect && styles.weekendText,
+                              isTodayD && !isSelect && styles.todayDayText,
+                              isSelect && styles.selectedDayText,
+                            ]}>
+                              {format(day, 'd')}
+                            </Text>
+                            {isSelect && isTodayD && <View style={styles.todaySelectedDot} />}
+                          </View>
                         </View>
                         <View style={styles.dots}>
                           {dots.slice(0, 3).map((l) => (
@@ -390,8 +410,9 @@ export default function LayersScreen() {
               const isSelect  = selectedDate === key;
               const isTodayD  = isToday(day);
               const layers    = layersByDay.get(key);
-              const dots      = layers ? LAYER_ORDER.filter((l) => layers.has(l)) : [];
-              const isWeekend = day.getDay() === 0 || day.getDay() === 6;
+              const dots          = layers ? LAYER_ORDER.filter((l) => layers.has(l)) : [];
+              const isWeekend     = day.getDay() === 0 || day.getDay() === 6;
+              const isHolidayWk   = holidayMap.has(key);
 
               return (
                 <Pressable
@@ -403,19 +424,22 @@ export default function LayersScreen() {
                   ]}
                   onPress={() => handleDayPress(day)}
                 >
-                  <View style={[
-                    styles.weekViewCircle,
-                    isTodayD && !isSelect && styles.todayCircle,
-                    isSelect && styles.selectedCircle,
-                  ]}>
-                    <Text style={[
-                      styles.weekViewDayNum,
-                      isWeekend && !isTodayD && !isSelect && styles.weekendText,
-                      isTodayD && !isSelect && styles.todayDayText,
-                      isSelect && styles.selectedDayText,
+                  {isHolidayWk && <View style={styles.holidayCellBgOverlay} />}
+                  <View style={styles.dayNumWrap}>
+                    <View style={[
+                      styles.weekViewCircle,
+                      isTodayD && !isSelect && styles.todayCircle,
+                      isSelect && styles.selectedCircle,
                     ]}>
-                      {format(day, 'd')}
-                    </Text>
+                      <Text style={[
+                        styles.weekViewDayNum,
+                        isWeekend && !isTodayD && !isSelect && styles.weekendText,
+                        isTodayD && !isSelect && styles.todayDayText,
+                        isSelect && styles.selectedDayText,
+                      ]}>
+                        {format(day, 'd')}
+                      </Text>
+                    </View>
                   </View>
                   <View style={styles.dots}>
                     {dots.slice(0, 3).map((l) => (
@@ -443,6 +467,14 @@ export default function LayersScreen() {
               </Text>
               <Text style={styles.panelDate}>{dayLabel}</Text>
             </View>
+
+            {selectedHoliday && (
+              <View style={styles.holidayRow}>
+                <View style={styles.holidayRowDot} />
+                <Text style={styles.holidayRowName}>{t(selectedHoliday.nameKey)}</Text>
+                <Text style={styles.holidayRowBadge}>{t('calendar.holiday')}</Text>
+              </View>
+            )}
 
             {searchQuery.trim() && filteredEvents.length === 0 ? (
               <Text style={styles.emptyTxt}>{t('calendar.noResults', { query: searchQuery })}</Text>
@@ -639,6 +671,26 @@ const styles = StyleSheet.create({
   weekViewDayNum: { fontSize: 17, fontWeight: '600', color: '#1A1A1A' },
 
   // Círculos del número (shared)
+  dayNumWrap: { position: 'relative' },
+  holidayCellBg:        { backgroundColor: '#FFD93D', borderRadius: 10, margin: 2 },
+  holidayCellBgOverlay: {
+    position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+    backgroundColor: '#FFD93D',
+    borderRadius: 12,
+  },
+
+  holidayRow: {
+    flexDirection: 'row', alignItems: 'center', gap: 10,
+    paddingVertical: 10,
+    borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: '#F0EDE8',
+  },
+  holidayRowDot:   { width: 8, height: 8, borderRadius: 4, backgroundColor: HOLIDAY_GOLD, flexShrink: 0 },
+  holidayRowName:  { flex: 1, fontSize: 14, color: '#1A1A1A', fontWeight: '500' },
+  holidayRowBadge: {
+    fontSize: 11, color: HOLIDAY_GOLD, fontWeight: '600',
+    backgroundColor: '#FDF8E8', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8,
+  },
+
   dayCircle: {
     width: 36, height: 36,
     borderRadius: 18,
