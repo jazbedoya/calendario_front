@@ -7,7 +7,6 @@ import { useAuthStore } from "@/stores/authStore";
 import { createTaskApi, deleteTaskApi, getStreakApi, getTodayTasksApi, patchTaskApi } from "./api";
 import type { DailyTask, StreakData } from "./api";
 import { enqueue, dequeue } from "@/lib/mutationQueue";
-import { recordCompletion } from "./useStreak";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -149,11 +148,6 @@ export function useToggleTask() {
         old.map((t) => (t.id === id ? { ...t, done: result.done } : t))
       );
       qc.invalidateQueries({ queryKey: STREAK_KEY });
-      // Persist local streak when all tasks are completed
-      const updated = qc.getQueryData<DailyTask[]>(qk) ?? [];
-      if (updated.length > 0 && updated.every((t) => t.done)) {
-        recordCompletion(today).catch(() => {});
-      }
     },
 
     onError: (_err, _vars, ctx) => {

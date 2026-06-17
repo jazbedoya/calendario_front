@@ -1,25 +1,16 @@
-import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useGetStreak, useGetTodayTasks } from "./hooks";
-import { getLocalStreak } from "./useStreak";
 
 export function StreakPill() {
   const { data: streakData }      = useGetStreak();
   const { data: todayTasks = [] } = useGetTodayTasks();
-  const [localStreak, setLocalStreak] = useState(0);
 
-  useEffect(() => {
-    getLocalStreak().then(setLocalStreak);
-  }, []);
-
-  const backendCount     = streakData?.current_streak ?? 0;
+  const count            = streakData?.current_streak ?? 0;
   const todayDoneLocally = todayTasks.length > 0 && todayTasks.every((t) => t.done);
 
-  // Si el backend ya respondió con datos, usarlo siempre (consistente con StreakBadge).
-  // Solo fallback a SecureStore/local si el backend aún no tiene datos (= 0).
-  const displayCount = backendCount > 0
-    ? backendCount
-    : Math.max(localStreak, todayDoneLocally ? 1 : 0);
+  // Misma lógica que StreakBadge: backend es la fuente de verdad.
+  // Único caso optimista: hoy está completo localmente pero backend aún no actualizó.
+  const displayCount = todayDoneLocally && count === 0 ? 1 : count;
 
   if (displayCount === 0) return null;
 
