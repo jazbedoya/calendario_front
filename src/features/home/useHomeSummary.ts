@@ -23,6 +23,6 @@ export function useHomeSummary() {
       const { data } = await apiClient.get("/home/summary");
       return data as HomeSummary;
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 0,
   });
 }
