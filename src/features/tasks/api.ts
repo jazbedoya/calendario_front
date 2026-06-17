@@ -30,6 +30,7 @@ export async function patchTaskApi(
 export interface StreakData {
   current_streak: number;
   longest_streak: number;
+  week_done: boolean[];  // 7 items, index 0 = Monday of current week
 }
 
 export async function getStreakApi(): Promise<StreakData> {
