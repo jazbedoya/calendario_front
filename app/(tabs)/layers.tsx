@@ -500,7 +500,7 @@ export default function LayersScreen() {
                       key={item.data.id + '-' + idx}
                       conflict={item.data}
                       timezone={USER_TIMEZONE}
-                      onResolve={(c) => openEdit(c.eventA)}
+                      onEdit={(ev) => openEdit(ev)}
                     />
                   ),
                 )

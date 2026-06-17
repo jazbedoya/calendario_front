@@ -3,17 +3,17 @@ import { Ionicons } from '@expo/vector-icons';
 import { parseISO } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
 import { useTranslation } from 'react-i18next';
-import { LAYER_COLORS, type Conflict } from '../types';
+import { LAYER_COLORS, type Conflict, type CalendarEvent } from '../types';
 
 interface ConflictCardProps {
   conflict: Conflict;
   timezone: string;
-  onResolve: (conflict: Conflict) => void;
+  onEdit: (event: CalendarEvent) => void;
 }
 
-export function ConflictCard({ conflict, timezone, onResolve }: ConflictCardProps) {
+export function ConflictCard({ conflict, timezone, onEdit }: ConflictCardProps) {
   const { t } = useTranslation();
-  const { type, eventA, eventB, marginMinutes } = conflict;
+  const { type, eventA, eventB } = conflict;
 
   const startTimeA = formatInTimeZone(parseISO(eventA.startAt), timezone, 'HH:mm');
   const startTimeB = formatInTimeZone(parseISO(eventB.startAt), timezone, 'HH:mm');
@@ -39,20 +39,15 @@ export function ConflictCard({ conflict, timezone, onResolve }: ConflictCardProp
         </Text>
       </View>
 
-      {/* Detalle de eventos */}
-      <Text style={styles.detail}>{eventA.title} · <Text style={styles.time}>{startTimeA}</Text></Text>
-      <Text style={styles.detail}>{eventB.title} · <Text style={styles.time}>{startTimeB}</Text></Text>
-
-      {/* Pie: botón Resolver */}
-      <View style={styles.footer}>
-        <TouchableOpacity
-          style={styles.resolveBtn}
-          onPress={() => onResolve(conflict)}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.resolveTxt}>{t('conflict.resolve')}</Text>
-        </TouchableOpacity>
-      </View>
+      {/* Detalle de eventos con botón editar por fila */}
+      <TouchableOpacity style={styles.eventRow} onPress={() => onEdit(eventA)} activeOpacity={0.7}>
+        <Text style={styles.detail} numberOfLines={1}>{eventA.title} · <Text style={styles.time}>{startTimeA}</Text></Text>
+        <Ionicons name="pencil-outline" size={14} color="#D97706" />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.eventRow} onPress={() => onEdit(eventB)} activeOpacity={0.7}>
+        <Text style={styles.detail} numberOfLines={1}>{eventB.title} · <Text style={styles.time}>{startTimeB}</Text></Text>
+        <Ionicons name="pencil-outline" size={14} color="#D97706" />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -86,29 +81,18 @@ const styles = StyleSheet.create({
     color: '#92400E',
     fontWeight: '400',
   },
+  eventRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 21,
+    gap: 8,
+  },
   detail: {
+    flex: 1,
     fontSize: 13,
     color: '#78350F',
-    marginLeft: 21,
   },
   time: {
     fontWeight: '700',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  resolveBtn: {
-    backgroundColor: '#F59E0B',
-    paddingHorizontal: 14,
-    paddingVertical: 5,
-    borderRadius: 8,
-  },
-  resolveTxt: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#FFFFFF',
   },
 });

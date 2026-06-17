@@ -316,12 +316,7 @@ export function AreaCalendarScreen({ layer, accent, accentLight, title }: Props)
                     key={c.id}
                     conflict={c}
                     timezone={USER_TZ}
-                    onResolve={(cx) => {
-                      const toEdit = cx.eventA.layer === layer ? cx.eventA
-                        : cx.eventB.layer === layer ? cx.eventB
-                        : cx.eventA;
-                      openEdit(toEdit);
-                    }}
+                    onEdit={(ev) => openEdit(ev)}
                   />
                 ))}
               </View>
