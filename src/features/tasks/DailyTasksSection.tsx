@@ -2,12 +2,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
-import { useGetTodayTasks, useGetYesterdayPending, useCreateTask, useToggleTask, useDeleteTask } from "./hooks";
+import { useGetTodayTasks, useGetYesterdayPending, useCreateTask, useToggleTask, useDeleteTask, useGetStreak } from "./hooks";
 import { TodayPath }            from "./TodayPath";
 import { TaskRow }              from "./TaskRow";
 import { AddTask }              from "./AddTask";
 import { CelebrationOverlay }   from "./CelebrationOverlay";
-import { recordCompletion }     from "./useStreak";
 import { useTodayDate }         from "./hooks";
 import type { MascotMood }      from "@/features/mascot/getMascotState";
 
@@ -37,9 +36,10 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
   // IDs de sugerencias de ayer ya añadidas (se ocultan individualmente)
   const [addedFromYesterday, setAddedFromYesterday] = useState<string[]>([]);
 
-  const { mutate: create  } = useCreateTask();
-  const { mutate: toggle                         } = useToggleTask();
-  const { mutate: remove                         } = useDeleteTask();
+  const { mutate: create } = useCreateTask();
+  const { mutate: toggle } = useToggleTask();
+  const { mutate: remove } = useDeleteTask();
+  const { data: streakData } = useGetStreak();
 
   const done  = tasks.filter((t) => t.done).length;
   const total = tasks.length;
@@ -48,9 +48,8 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
   const { msg, mood } = useMemo(() => progressMessage(done, total), [done, total]);
 
   // ── Celebración al completar todas ───────────────────────────────────────
-  const [celebrating,  setCelebrating]  = useState(false);
-  const [showModal,    setShowModal]    = useState(false);
-  const [streak,       setStreak]       = useState(1);
+  const [celebrating, setCelebrating] = useState(false);
+  const [showModal,   setShowModal]   = useState(false);
   const prevDone    = useRef(done);
   const prevTotal   = useRef(total);
   // Prevents re-triggering in the same session after closing + re-completing
@@ -67,8 +66,6 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
       alreadyFired.current = true;
       setCelebrating(true);
       setShowModal(true);
-      // Record streak asynchronously
-      recordCompletion(today).then(setStreak).catch(() => {});
     }
 
     // Reset guard if user unchecks a task
@@ -78,7 +75,7 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
 
     prevDone.current  = done;
     prevTotal.current = total;
-  }, [done, total, today]);
+  }, [done, total]);
 
   function handleCloseModal() {
     setShowModal(false);
@@ -160,7 +157,7 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
       {/* Modal de celebración — fuera del card para flotar sobre toda la app */}
       <CelebrationOverlay
         visible={showModal}
-        streak={streak}
+        streak={streakData?.current_streak ?? 1}
         onClose={handleCloseModal}
       />
     </>
