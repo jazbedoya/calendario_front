@@ -228,7 +228,13 @@
       { "title": "Tout coché !", "body": "C'est ça le vrai soin de soi 🏆" }
     ],
     "closeBtn": "Super !",
-    "streakFirst": "🔥 Ton premier jour de série ! Continue !",
+    "streakDay_1": "🔥 Ton premier jour de série de la semaine ! Continue !",
+    "streakDay_2": "🔥 Deuxième jour d'affilée ! Continue !",
+    "streakDay_3": "🔥 Troisième jour d'affilée ! Continue !",
+    "streakDay_4": "🔥 Quatrième jour d'affilée ! Continue !",
+    "streakDay_5": "🔥 Cinquième jour d'affilée ! Continue !",
+    "streakDay_6": "🔥 Sixième jour d'affilée ! Continue !",
+    "streakDay_7": "🔥 Félicitations ! Tu as complété ta semaine ! 🏆",
     "streak": "🔥 {{count}} jours de suite à prendre soin de vous"
   },
   "dayCheck": {

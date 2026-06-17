@@ -228,7 +228,13 @@
       { "title": "Alles abgehakt!", "body": "Das ist echte Selbstfürsorge 🏆" }
     ],
     "closeBtn": "Super!",
-    "streakFirst": "🔥 Dein erster Streak-Tag! Weiter so!",
+    "streakDay_1": "🔥 Dein erster Streak-Tag der Woche! Weiter so!",
+    "streakDay_2": "🔥 Zweiter Tag in Folge! Weiter so!",
+    "streakDay_3": "🔥 Dritter Tag in Folge! Weiter so!",
+    "streakDay_4": "🔥 Vierter Tag in Folge! Weiter so!",
+    "streakDay_5": "🔥 Fünfter Tag in Folge! Weiter so!",
+    "streakDay_6": "🔥 Sechster Tag in Folge! Weiter so!",
+    "streakDay_7": "🔥 Glückwunsch! Du hast deine Woche abgeschlossen! 🏆",
     "streak": "🔥 {{count}} Tage in Folge auf dich geachtet"
   },
   "dayCheck": {

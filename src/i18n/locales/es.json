@@ -228,7 +228,13 @@
       { "title": "¡Todo tachado!", "body": "Eso sí que es cuidarse bien 🏆" }
     ],
     "closeBtn": "¡Genial!",
-    "streakFirst": "🔥 ¡Tu primer día de racha! ¡Sigue así!",
+    "streakDay_1": "🔥 ¡Tu primer día de racha de la semana! ¡Sigue así!",
+    "streakDay_2": "🔥 ¡Tu segundo día de racha de la semana! ¡Sigue así!",
+    "streakDay_3": "🔥 ¡Tu tercer día de racha de la semana! ¡Sigue así!",
+    "streakDay_4": "🔥 ¡Tu cuarto día de racha de la semana! ¡Sigue así!",
+    "streakDay_5": "🔥 ¡Tu quinto día de racha de la semana! ¡Sigue así!",
+    "streakDay_6": "🔥 ¡Tu sexto día de racha de la semana! ¡Sigue así!",
+    "streakDay_7": "🔥 ¡Felicidades! Has completado tu semana con éxito 🏆",
     "streak": "🔥 {{count}} días seguidos cuidándote"
   },
   "dayCheck": {

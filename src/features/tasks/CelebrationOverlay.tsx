@@ -185,8 +185,8 @@ export function CelebrationOverlay({ visible, streak, onClose }: Props) {
           {/* Streak — siempre visible */}
           <View style={s.streakBadge}>
             <Text style={s.streakTxt}>
-              {streak <= 1
-                ? t("celebration.streakFirst")
+              {streak >= 1 && streak <= 7
+                ? t(`celebration.streakDay_${streak}`)
                 : t("celebration.streak", { count: streak })}
             </Text>
           </View>

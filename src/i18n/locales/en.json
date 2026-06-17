@@ -228,7 +228,13 @@
       { "title": "Everything checked off!", "body": "That's what real self-care looks like 🏆" }
     ],
     "closeBtn": "Awesome!",
-    "streakFirst": "🔥 Your first streak day! Keep it up!",
+    "streakDay_1": "🔥 Your first streak day of the week! Keep it up!",
+    "streakDay_2": "🔥 Second day in a row! Keep going!",
+    "streakDay_3": "🔥 Third day in a row! Keep going!",
+    "streakDay_4": "🔥 Fourth day in a row! Keep going!",
+    "streakDay_5": "🔥 Fifth day in a row! Keep going!",
+    "streakDay_6": "🔥 Sixth day in a row! Keep going!",
+    "streakDay_7": "🔥 Congratulations! You completed your week! 🏆",
     "streak": "🔥 {{count}} days in a row taking care of yourself"
   },
   "dayCheck": {
