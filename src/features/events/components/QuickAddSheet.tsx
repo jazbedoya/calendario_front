@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState, useMemo } from "react";
 import {
+  Alert,
   Modal,
   View,
   Text,
@@ -163,7 +164,10 @@ export function QuickAddSheet({
       onSaved?.(event);
       onClose();
     } catch {
-      onClose();
+      Alert.alert(
+        t('eventSheet.errorTitle'),
+        t('eventSheet.errorMsg'),
+      );
     } finally {
       setSaving(false);
     }
@@ -283,11 +287,11 @@ export function QuickAddSheet({
           {/* Aviso suave de conflicto */}
           {conflicts.length > 0 && (() => {
             const c = conflicts[0];
-            const other = c.eventA.id === "__draft__" ? c.eventB : c.eventA;
-            const otherTime = formatInTimeZone(parseISO(other.startAt), timezone, "HH:mm");
+            const timeA = formatInTimeZone(parseISO(c.eventA.startAt), timezone, "HH:mm");
+            const timeB = formatInTimeZone(parseISO(c.eventB.startAt), timezone, "HH:mm");
             const label = c.type === "overlap"
-              ? t('eventSheet.conflictOverlap', { time: otherTime, title: other.title })
-              : t('eventSheet.conflictTight',   { time: otherTime, title: other.title });
+              ? t('eventSheet.conflictOverlap', { titleA: c.eventA.title, timeA, titleB: c.eventB.title, timeB })
+              : t('eventSheet.conflictTight',   { titleA: c.eventA.title, timeA, titleB: c.eventB.title, timeB });
             return (
               <View style={s.warning}>
                 <Ionicons name="warning-outline" size={14} color="#D97706" />

@@ -177,8 +177,10 @@
     "saving": "Speichern…",
     "update": "Aktualisieren",
     "updating": "Aktualisieren…",
-    "conflictOverlap": "Konflikt um {{time}} · \"{{title}}\" belegt diesen Slot bereits · wird trotzdem gespeichert",
-    "conflictTight": "Enge Zeitplanung · \"{{title}}\" ist um {{time}} · wird trotzdem gespeichert",
+    "errorTitle": "Speichern fehlgeschlagen",
+    "errorMsg": "Überprüfe deine Verbindung und versuche es erneut.",
+    "conflictOverlap": "Überschneidung · «{{titleA}}» beginnt um {{timeA}} und «{{titleB}}» um {{timeB}} · wird trotzdem gespeichert",
+    "conflictTight": "Enge Zeitplanung · «{{titleA}}» um {{timeA}} und «{{titleB}}» um {{timeB}} · wird trotzdem gespeichert",
     "deleteTitle": "Ereignis löschen",
     "deleteSingleMsg": "\"{{title}}\" löschen?",
     "deleteRecurringMsg": "Was möchten Sie löschen?",
@@ -201,7 +203,8 @@
       "pending": "Von gestern:",
       "add": "+ Hinzufügen"
     },
-    "addPlaceholder": "Aufgabe eingeben..."
+    "addPlaceholder": "Aufgabe eingeben...",
+    "savedConfirm": "Aufgabe gespeichert!"
   },
   "mascot": {
     "morning":   ["Bereit für einen großartigen Tag!", "Was für ein schöner Morgen!", "Lass den Tag zählen", "Gute Morgenenergie!"],

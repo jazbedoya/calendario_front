@@ -177,8 +177,10 @@
     "saving": "Guardando…",
     "update": "Actualizar",
     "updating": "Actualizando…",
-    "conflictOverlap": "Conflicto a las {{time}} · \"{{title}}\" ya ocupa ese horario · se guardará igualmente",
-    "conflictTight": "Margen ajustado · \"{{title}}\" está a las {{time}} · se guardará igualmente",
+    "errorTitle": "No se pudo guardar",
+    "errorMsg": "Comprueba tu conexión e inténtalo de nuevo.",
+    "conflictOverlap": "Solapamiento · «{{titleA}}» empieza a las {{timeA}} y «{{titleB}}» a las {{timeB}} · se guardará igualmente",
+    "conflictTight": "Margen ajustado · «{{titleA}}» a las {{timeA}} y «{{titleB}}» a las {{timeB}} · se guardará igualmente",
     "deleteTitle": "Eliminar evento",
     "deleteSingleMsg": "¿Eliminar \"{{title}}\"?",
     "deleteRecurringMsg": "¿Qué quieres eliminar?",
@@ -201,7 +203,8 @@
       "pending": "Ayer pendiente:",
       "add": "+ Añadir"
     },
-    "addPlaceholder": "Escribe una tarea..."
+    "addPlaceholder": "Escribe una tarea...",
+    "savedConfirm": "¡Tarea guardada!"
   },
   "mascot": {
     "morning":   ["¡Listo para un gran día!", "¡Qué bonita mañana!", "¡A por el día!", "Hoy puede ser un gran día"],

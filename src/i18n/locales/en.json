@@ -177,8 +177,10 @@
     "saving": "Saving…",
     "update": "Update",
     "updating": "Updating…",
-    "conflictOverlap": "Conflict at {{time}} · \"{{title}}\" already occupies that slot · will save anyway",
-    "conflictTight": "Tight margin · \"{{title}}\" is at {{time}} · will save anyway",
+    "errorTitle": "Could not save",
+    "errorMsg": "Check your connection and try again.",
+    "conflictOverlap": "Overlap · «{{titleA}}» starts at {{timeA}} and «{{titleB}}» at {{timeB}} · will save anyway",
+    "conflictTight": "Tight margin · «{{titleA}}» at {{timeA}} and «{{titleB}}» at {{timeB}} · will save anyway",
     "deleteTitle": "Delete event",
     "deleteSingleMsg": "Delete \"{{title}}\"?",
     "deleteRecurringMsg": "What would you like to delete?",
@@ -201,7 +203,8 @@
       "pending": "From yesterday:",
       "add": "+ Add"
     },
-    "addPlaceholder": "Write a task..."
+    "addPlaceholder": "Write a task...",
+    "savedConfirm": "Task saved!"
   },
   "mascot": {
     "morning":   ["Ready for a great day!", "What a lovely morning!", "Let's make today count", "Good morning energy!"],

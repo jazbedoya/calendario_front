@@ -15,7 +15,7 @@ export function ConflictCard({ conflict, timezone, onResolve }: ConflictCardProp
   const { t } = useTranslation();
   const { type, eventA, eventB, marginMinutes } = conflict;
 
-  const endTimeA   = formatInTimeZone(parseISO(eventA.endAt),   timezone, 'HH:mm');
+  const startTimeA = formatInTimeZone(parseISO(eventA.startAt), timezone, 'HH:mm');
   const startTimeB = formatInTimeZone(parseISO(eventB.startAt), timezone, 'HH:mm');
 
   const typeLabel =
@@ -47,8 +47,8 @@ export function ConflictCard({ conflict, timezone, onResolve }: ConflictCardProp
       {/* Detalle de eventos */}
       <Text style={styles.detail}>
         <Text style={styles.quote}>"{eventA.title}"</Text>
-        {` ${t('conflict.ends')} `}
-        <Text style={styles.time}>{endTimeA}</Text>
+        {` ${t('conflict.starts')} `}
+        <Text style={styles.time}>{startTimeA}</Text>
       </Text>
       <Text style={styles.detail}>
         <Text style={styles.quote}>"{eventB.title}"</Text>

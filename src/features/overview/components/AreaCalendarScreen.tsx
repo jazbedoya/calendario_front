@@ -155,8 +155,7 @@ export function AreaCalendarScreen({ layer, accent, accentLight, title }: Props)
 
   function handleDay(day: Date) {
     const key = format(day, "yyyy-MM-dd");
-    setSelectedDate(key);
-    setSheetOpen(true);
+    setSelectedDate((prev) => (prev === key ? null : key));
   }
 
   const dateLocale = getDateLocale(language);

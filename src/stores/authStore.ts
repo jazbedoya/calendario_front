@@ -53,12 +53,24 @@ export const useAuthStore = create<AuthState>((set) => ({
     const token = await secureStore.getAccessToken();
     set({ accessToken: token, isAuthenticated: !!token, isLoading: false });
     if (token) {
-      try {
-        const user = await getMeApi();
-        set({ user });
-      } catch {
-        // Token expired or invalid — stays unauthenticated
-        set({ accessToken: null, isAuthenticated: false });
+      // Try up to 2 times — first request on Railway can be slow (cold start)
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          const user = await getMeApi();
+          set({ user });
+          break;
+        } catch (e: any) {
+          const status = e?.response?.status;
+          if (status === 401 || status === 403) {
+            // Token genuinely invalid — clear session
+            set({ accessToken: null, isAuthenticated: false });
+            break;
+          }
+          // Network error or server error — only clear on second failure
+          if (attempt === 1) {
+            set({ accessToken: null, isAuthenticated: false });
+          }
+        }
       }
     }
     return token;

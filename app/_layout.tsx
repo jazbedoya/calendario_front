@@ -3,7 +3,7 @@ import { Stack } from "expo-router";
 import { QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider, type Persister } from "@tanstack/react-query-persist-client";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import * as Linking from "expo-linking";
 import "../global.css";
 import "@/i18n";

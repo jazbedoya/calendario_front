@@ -177,8 +177,10 @@
     "saving": "Enregistrement…",
     "update": "Mettre à jour",
     "updating": "Mise à jour…",
-    "conflictOverlap": "Conflit à {{time}} · \"{{title}}\" occupe déjà ce créneau · sera enregistré quand même",
-    "conflictTight": "Marge serrée · \"{{title}}\" est à {{time}} · sera enregistré quand même",
+    "errorTitle": "Impossible d'enregistrer",
+    "errorMsg": "Vérifiez votre connexion et réessayez.",
+    "conflictOverlap": "Chevauchement · «{{titleA}}» commence à {{timeA}} et «{{titleB}}» à {{timeB}} · sera enregistré quand même",
+    "conflictTight": "Marge serrée · «{{titleA}}» à {{timeA}} et «{{titleB}}» à {{timeB}} · sera enregistré quand même",
     "deleteTitle": "Supprimer l'événement",
     "deleteSingleMsg": "Supprimer \"{{title}}\" ?",
     "deleteRecurringMsg": "Que souhaitez-vous supprimer ?",
@@ -201,7 +203,8 @@
       "pending": "D'hier :",
       "add": "+ Ajouter"
     },
-    "addPlaceholder": "Écrire une tâche..."
+    "addPlaceholder": "Écrire une tâche...",
+    "savedConfirm": "Tâche enregistrée !"
   },
   "mascot": {
     "morning":   ["Prêt pour une belle journée !", "Quelle belle matinée !", "Faisons de cette journée quelque chose de bien", "Bonne énergie du matin !"],
