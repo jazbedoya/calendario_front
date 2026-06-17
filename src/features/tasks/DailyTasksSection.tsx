@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useTranslation } from "react-i18next";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { useGetTodayTasks, useGetYesterdayPending, useCreateTask, useToggleTask, useDeleteTask, useGetStreak } from "./hooks";
 import { TodayPath }            from "./TodayPath";
 import { TaskRow }              from "./TaskRow";
@@ -39,7 +40,8 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
   const { mutate: create } = useCreateTask();
   const { mutate: toggle } = useToggleTask();
   const { mutate: remove } = useDeleteTask();
-  const { data: streakData } = useGetStreak();
+  const { data: streakData, refetch: refetchStreak } = useGetStreak();
+  const qc = useQueryClient();
 
   const done  = tasks.filter((t) => t.done).length;
   const total = tasks.length;
@@ -65,7 +67,7 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
     if (justFinished) {
       alreadyFired.current = true;
       setCelebrating(true);
-      setShowModal(true);
+      refetchStreak().finally(() => setShowModal(true));
     }
 
     // Reset guard if user unchecks a task

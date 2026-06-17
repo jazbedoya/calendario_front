@@ -41,7 +41,7 @@ export function useGetStreak() {
   return useQuery<StreakData>({
     queryKey: STREAK_KEY,
     queryFn:  getStreakApi,
-    staleTime: 60_000,
+    staleTime: 0,
     enabled:  isAuthenticated,
   });
 }
