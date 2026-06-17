@@ -4,6 +4,7 @@ import { toZonedTime } from "date-fns-tz";
 import { useTranslation } from "react-i18next";
 import { getDateLocale } from "@/i18n/dateLocale";
 import { useAuthStore } from "@/stores/authStore";
+import { StreakPill } from "@/features/tasks/StreakPill";
 
 interface GreetingProps {
   userName: string;
@@ -33,6 +34,7 @@ export function Greeting({ userName }: GreetingProps) {
         </Text>
         <Text style={styles.date}>{capitalizedDate}</Text>
       </View>
+      <StreakPill />
       <View style={styles.avatar}>
         <Text style={styles.avatarText}>{userName.charAt(0).toUpperCase()}</Text>
       </View>
@@ -43,11 +45,11 @@ export function Greeting({ userName }: GreetingProps) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 20,
     paddingTop: 16,
     paddingBottom: 20,
+    gap: 10,
   },
   textBlock: {
     flex: 1,

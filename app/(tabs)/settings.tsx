@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { StreakPill } from "@/features/tasks/StreakPill";
 import {
   View, Text, TextInput, TouchableOpacity,
   StyleSheet, Alert, ActivityIndicator, ScrollView, Platform,
@@ -283,7 +284,10 @@ export default function SettingsScreen() {
         contentContainerStyle={s.content}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={s.screenTitle}>{t("settings.title")}</Text>
+        <View style={s.titleRow}>
+          <Text style={s.screenTitle}>{t("settings.title")}</Text>
+          <StreakPill />
+        </View>
 
         {/* ── Tu tortuga ──────────────────────────────────────── */}
         <Text style={s.sectionLabel}>{t("settings.mascot.section")}</Text>
@@ -465,7 +469,8 @@ const s = StyleSheet.create({
   scroll:      { flex: 1 },
   content:     { paddingHorizontal: 20, paddingTop: 24, paddingBottom: 48 },
 
-  screenTitle: { fontSize: 28, fontWeight: "800", color: "#1A1A1A", marginBottom: 28, letterSpacing: -0.3 },
+  titleRow:    { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 28 },
+  screenTitle: { fontSize: 28, fontWeight: "800", color: "#1A1A1A", letterSpacing: -0.3 },
 
   sectionLabel: {
     fontSize: 11, fontWeight: "700", color: "#666666",

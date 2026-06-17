@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StreakPill } from "@/features/tasks/StreakPill";
 
 import { getHours } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
@@ -40,6 +41,11 @@ export default function StatsScreen() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
+          {/* Pill de racha — esquina superior derecha */}
+          <View style={s.pillRow}>
+            <StreakPill />
+          </View>
+
           {/* Tuga — estado según hora del día */}
           <View style={s.mascotCard}>
             <Mascot name={mascotName} mood={mascotState.mood} message={mascotMessage} />
@@ -61,6 +67,7 @@ const s = StyleSheet.create({
   safe:   { flex: 1, backgroundColor: "#F8F6F2" },
   flex:   { flex: 1 },
   scroll: { paddingHorizontal: 20, paddingTop: 16, gap: 16 },
+  pillRow: { alignItems: "flex-end" },
 
   mascotCard: {
     backgroundColor: "#FFFFFF",

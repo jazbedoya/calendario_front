@@ -3,8 +3,6 @@ import { View, Text, TouchableOpacity, StyleSheet, Platform, Keyboard } from "re
 import { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { StreakPill } from "@/features/tasks/StreakPill";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 
 const ICON_MAP: Record<string, keyof typeof Ionicons.glyphMap> = {
@@ -94,19 +92,13 @@ function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
 }
 
 export default function TabsLayout() {
-  const insets = useSafeAreaInsets();
   return (
-    <View style={{ flex: 1 }}>
-      <Tabs tabBar={(props) => <FloatingTabBar {...props} />} screenOptions={{ headerShown: false }}>
-        <Tabs.Screen name="index"    options={{ title: "Inicio" }} />
-        <Tabs.Screen name="layers"   options={{ title: "Vistas" }} />
-        <Tabs.Screen name="stats"    options={{ title: "Estadísticas" }} />
-        <Tabs.Screen name="settings" options={{ title: "Ajustes" }} />
-      </Tabs>
-      <View style={[styles.pillOverlay, { top: insets.top + 10 }]} pointerEvents="none">
-        <StreakPill />
-      </View>
-    </View>
+    <Tabs tabBar={(props) => <FloatingTabBar {...props} />} screenOptions={{ headerShown: false }}>
+      <Tabs.Screen name="index"    options={{ title: "Inicio" }} />
+      <Tabs.Screen name="layers"   options={{ title: "Vistas" }} />
+      <Tabs.Screen name="stats"    options={{ title: "Estadísticas" }} />
+      <Tabs.Screen name="settings" options={{ title: "Ajustes" }} />
+    </Tabs>
   );
 }
 
@@ -155,10 +147,5 @@ const styles = StyleSheet.create({
   },
   labelActive: {
     color: ACTIVE_COLOR,
-  },
-  pillOverlay: {
-    position: "absolute",
-    right: 20,
-    zIndex: 100,
   },
 });

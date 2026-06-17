@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef, useCallback } from 'react';
+import { StreakPill } from '@/features/tasks/StreakPill';
 import {
   View,
   Text,
@@ -277,21 +278,26 @@ export default function LayersScreen() {
         </View>
 
         {/* ── Toggle mes / semana ── */}
-        <View style={styles.modeToggle}>
-          <TouchableOpacity
-            style={[styles.modeBtn, viewMode === 'month' && styles.modeBtnActive]}
-            onPress={() => switchMode('month')}
-            activeOpacity={0.75}
-          >
-            <Text style={[styles.modeBtnTxt, viewMode === 'month' && styles.modeBtnTxtActive]}>{t('calendar.viewMonth')}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.modeBtn, viewMode === 'week' && styles.modeBtnActive]}
-            onPress={() => switchMode('week')}
-            activeOpacity={0.75}
-          >
-            <Text style={[styles.modeBtnTxt, viewMode === 'week' && styles.modeBtnTxtActive]}>{t('calendar.viewWeek')}</Text>
-          </TouchableOpacity>
+        <View style={styles.modeToggleRow}>
+          <View style={styles.modeToggle}>
+            <TouchableOpacity
+              style={[styles.modeBtn, viewMode === 'month' && styles.modeBtnActive]}
+              onPress={() => switchMode('month')}
+              activeOpacity={0.75}
+            >
+              <Text style={[styles.modeBtnTxt, viewMode === 'month' && styles.modeBtnTxtActive]}>{t('calendar.viewMonth')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.modeBtn, viewMode === 'week' && styles.modeBtnActive]}
+              onPress={() => switchMode('week')}
+              activeOpacity={0.75}
+            >
+              <Text style={[styles.modeBtnTxt, viewMode === 'week' && styles.modeBtnTxtActive]}>{t('calendar.viewWeek')}</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.pillAnchor} pointerEvents="none">
+            <StreakPill />
+          </View>
         </View>
 
         {/* ── Búsqueda ── */}
@@ -589,13 +595,22 @@ const styles = StyleSheet.create({
   },
 
   // ── Toggle ──
+  modeToggleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+    paddingHorizontal: 20,
+  },
   modeToggle: {
     flexDirection: 'row',
-    alignSelf: 'center',
     backgroundColor: '#EEEBE6',
     borderRadius: 20,
     padding: 3,
-    marginBottom: 12,
+  },
+  pillAnchor: {
+    position: 'absolute',
+    right: 20,
   },
   modeBtn: {
     paddingHorizontal: 18,
