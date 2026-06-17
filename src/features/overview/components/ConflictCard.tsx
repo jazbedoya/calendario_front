@@ -21,11 +21,6 @@ export function ConflictCard({ conflict, timezone, onResolve }: ConflictCardProp
   const typeLabel =
     type === 'overlap' ? t('conflict.overlap') : t('conflict.tight');
 
-  const marginText =
-    type === 'overlap'
-      ? t('conflict.overlapMin', { count: Math.abs(marginMinutes) })
-      : t('conflict.marginMin', { count: marginMinutes });
-
   return (
     <View style={styles.card}>
       {/* Cabecera */}
@@ -45,20 +40,11 @@ export function ConflictCard({ conflict, timezone, onResolve }: ConflictCardProp
       </View>
 
       {/* Detalle de eventos */}
-      <Text style={styles.detail}>
-        <Text style={styles.quote}>"{eventA.title}"</Text>
-        {` ${t('conflict.starts')} `}
-        <Text style={styles.time}>{startTimeA}</Text>
-      </Text>
-      <Text style={styles.detail}>
-        <Text style={styles.quote}>"{eventB.title}"</Text>
-        {` ${t('conflict.starts')} `}
-        <Text style={styles.time}>{startTimeB}</Text>
-      </Text>
+      <Text style={styles.detail}>{eventA.title} · <Text style={styles.time}>{startTimeA}</Text></Text>
+      <Text style={styles.detail}>{eventB.title} · <Text style={styles.time}>{startTimeB}</Text></Text>
 
-      {/* Pie: margen + botón */}
+      {/* Pie: botón Resolver */}
       <View style={styles.footer}>
-        <Text style={styles.marginText}>{marginText}</Text>
         <TouchableOpacity
           style={styles.resolveBtn}
           onPress={() => onResolve(conflict)}
@@ -105,23 +91,14 @@ const styles = StyleSheet.create({
     color: '#78350F',
     marginLeft: 21,
   },
-  quote: {
-    fontStyle: 'italic',
-  },
   time: {
     fontWeight: '700',
   },
   footer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     marginTop: 8,
-    marginLeft: 21,
-  },
-  marginText: {
-    fontSize: 12,
-    color: '#92400E',
-    fontStyle: 'italic',
   },
   resolveBtn: {
     backgroundColor: '#F59E0B',
