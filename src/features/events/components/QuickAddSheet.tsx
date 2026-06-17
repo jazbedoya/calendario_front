@@ -289,13 +289,13 @@ export function QuickAddSheet({
             const c = conflicts[0];
             const timeA = formatInTimeZone(parseISO(c.eventA.startAt), timezone, "HH:mm");
             const timeB = formatInTimeZone(parseISO(c.eventB.startAt), timezone, "HH:mm");
-            const label = c.type === "overlap"
-              ? t('eventSheet.conflictOverlap', { titleA: c.eventA.title, timeA, titleB: c.eventB.title, timeB })
-              : t('eventSheet.conflictTight',   { titleA: c.eventA.title, timeA, titleB: c.eventB.title, timeB });
             return (
               <View style={s.warning}>
-                <Ionicons name="warning-outline" size={14} color="#D97706" />
-                <Text style={s.warningTxt}>{label}</Text>
+                <Ionicons name="warning-outline" size={14} color="#D97706" style={{ marginTop: 2 }} />
+                <View style={{ flex: 1 }}>
+                  <Text style={s.warningTxt}>{c.eventA.title} · <Text style={s.warningTime}>{timeA}</Text></Text>
+                  <Text style={s.warningTxt}>{c.eventB.title} · <Text style={s.warningTime}>{timeB}</Text></Text>
+                </View>
               </View>
             );
           })()}
@@ -389,7 +389,8 @@ const s = StyleSheet.create({
     backgroundColor: "#FFFBEB", borderRadius: 10, padding: 12,
     borderLeftWidth: 3, borderLeftColor: "#F59E0B",
   },
-  warningTxt: { flex: 1, fontSize: 13, color: "#92400E", lineHeight: 19 },
+  warningTxt: { fontSize: 13, color: "#92400E", lineHeight: 19 },
+  warningTime: { fontWeight: "700" },
 
   saveBtn:         { paddingVertical: 15, borderRadius: 16, alignItems: "center" },
   saveBtnDisabled: { opacity: 0.4 },
