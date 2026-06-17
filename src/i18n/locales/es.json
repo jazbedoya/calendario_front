@@ -113,7 +113,21 @@
       "night": "Buenas noches"
     },
     "area": {
-      "weekHours": "{{hours}}h esta semana"
+      "family": {
+        "none": "Sin planes aún esta semana",
+        "one": "1 evento esta semana",
+        "other": "{{count}} eventos esta semana"
+      },
+      "work": {
+        "none": "Semana ligera",
+        "calm": "{{count}} reuniones · ritmo calmado",
+        "intense": "{{count}} reuniones · semana intensa"
+      },
+      "personal": {
+        "none": "Hazte un hueco esta semana",
+        "one": "1 momento para ti · sigue así",
+        "other": "{{count}} momentos para ti · sigue así"
+      }
     },
     "insight": {
       "tasksPending_one": "{{count}} tarea pendiente hoy",

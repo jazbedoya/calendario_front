@@ -44,11 +44,31 @@ export default function HomeScreen() {
   if (!initialized) return null;
   if (!onboardingDone) return <Redirect href="/onboarding" />;
 
-  // Áreas con subtítulos reales si hay datos del servidor
+  // Áreas con subtítulos reales basados en conteo de eventos esta semana
   const areasWithData = areas.map((area) => {
     if (!summary) return area;
-    const hrs = summary.week_hours_by_layer[area.layer as keyof typeof summary.week_hours_by_layer];
-    return { ...area, subtitle: t("home.area.weekHours", { hours: hrs.toFixed(1) }) };
+    const count = summary.week_events_by_layer[area.layer as keyof typeof summary.week_events_by_layer];
+    let subtitle: string;
+    if (area.layer === "family") {
+      subtitle = count === 0
+        ? t("home.area.family.none")
+        : count === 1
+          ? t("home.area.family.one")
+          : t("home.area.family.other", { count });
+    } else if (area.layer === "work") {
+      subtitle = count === 0
+        ? t("home.area.work.none")
+        : count >= 5
+          ? t("home.area.work.intense", { count })
+          : t("home.area.work.calm", { count });
+    } else {
+      subtitle = count === 0
+        ? t("home.area.personal.none")
+        : count === 1
+          ? t("home.area.personal.one")
+          : t("home.area.personal.other", { count });
+    }
+    return { ...area, subtitle };
   });
 
   // Insight de tareas pendientes

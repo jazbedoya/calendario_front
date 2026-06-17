@@ -113,7 +113,21 @@
       "evening": "Good evening"
     },
     "area": {
-      "weekHours": "{{hours}}h this week"
+      "family": {
+        "none": "No plans yet this week",
+        "one": "1 event this week",
+        "other": "{{count}} events this week"
+      },
+      "work": {
+        "none": "Light week",
+        "calm": "{{count}} meetings · calm pace",
+        "intense": "{{count}} meetings · busy week"
+      },
+      "personal": {
+        "none": "Make some time for yourself",
+        "one": "1 moment for you · keep it up",
+        "other": "{{count}} moments for you · keep it up"
+      }
     },
     "insight": {
       "tasksPending_one": "{{count}} task pending today",

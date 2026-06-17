@@ -12,7 +12,7 @@ export interface UpcomingEvent {
 
 export interface HomeSummary {
   upcoming_events: UpcomingEvent[];
-  week_hours_by_layer: { family: number; work: number; personal: number };
+  week_events_by_layer: { family: number; work: number; personal: number };
   today_tasks_pending: number;
 }
 

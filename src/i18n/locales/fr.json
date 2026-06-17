@@ -113,7 +113,21 @@
       "evening": "Bonsoir"
     },
     "area": {
-      "weekHours": "{{hours}}h cette semaine"
+      "family": {
+        "none": "Pas encore de plans cette semaine",
+        "one": "1 événement cette semaine",
+        "other": "{{count}} événements cette semaine"
+      },
+      "work": {
+        "none": "Semaine tranquille",
+        "calm": "{{count}} réunions · rythme calme",
+        "intense": "{{count}} réunions · semaine chargée"
+      },
+      "personal": {
+        "none": "Faites-vous une place cette semaine",
+        "one": "1 moment pour vous · continuez",
+        "other": "{{count}} moments pour vous · continuez"
+      }
     },
     "insight": {
       "tasksPending_one": "{{count}} tâche en attente aujourd'hui",
