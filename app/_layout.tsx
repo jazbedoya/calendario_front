@@ -1,8 +1,10 @@
 import { useEffect, useRef } from "react";
 import { Stack } from "expo-router";
-import { QueryClientProvider, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider, type Persister } from "@tanstack/react-query-persist-client";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform, StyleSheet } from "react-native";
 import * as Linking from "expo-linking";
 import * as Notifications from "expo-notifications";
@@ -20,10 +22,11 @@ if (typeof StyleSheet.setFlag === "function") {
   StyleSheet.setFlag("darkMode", "class");
 }
 
-// Persist cache to localStorage on web, skip on native (SecureStore is already persistent)
-const persister: Persister | null = Platform.OS === "web"
-  ? createSyncStoragePersister({ storage: typeof window !== "undefined" ? window.localStorage : undefined })
-  : null;
+// Persist cache: localStorage en web, AsyncStorage en nativo (24h max)
+const persister: Persister =
+  Platform.OS === "web"
+    ? createSyncStoragePersister({ storage: typeof window !== "undefined" ? window.localStorage : undefined })
+    : createAsyncStoragePersister({ storage: AsyncStorage, key: "rq-cache" });
 
 function AppShell() {
   const initializeMascot       = useMascotStore((s) => s.initialize);
@@ -87,19 +90,12 @@ function AppShell() {
 }
 
 export default function RootLayout() {
-  if (persister) {
-    return (
-      <PersistQueryClientProvider
-        client={queryClient}
-        persistOptions={{ persister, maxAge: 1000 * 60 * 60 * 24 }}
-      >
-        <AppShell />
-      </PersistQueryClientProvider>
-    );
-  }
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{ persister, maxAge: 1000 * 60 * 60 * 24 }}
+    >
       <AppShell />
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   );
 }
