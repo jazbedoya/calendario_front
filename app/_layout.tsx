@@ -73,6 +73,8 @@ function AppShell() {
       if (anyReplayed) {
         qc.invalidateQueries({ queryKey: ["daily-tasks"] });
         qc.invalidateQueries({ queryKey: ["task-streak"] });
+        qc.invalidateQueries({ queryKey: ["events"] });
+        qc.invalidateQueries({ queryKey: ["home-summary"] });
       }
     });
   }, [isAuthenticated, qc]);

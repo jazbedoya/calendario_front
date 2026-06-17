@@ -3,6 +3,7 @@ import { fromZonedTime } from "date-fns-tz";
 import { apiClient } from "@/lib/api";
 import { useEventsStore } from "./eventsStore";
 import type { CalendarEvent, Layer } from "@/features/overview/types";
+import { enqueue, dequeue } from "@/lib/mutationQueue";
 
 export interface CreateEventInput {
   title: string;
@@ -30,14 +31,17 @@ export function useCreateEvent() {
   return useMutation({
     mutationFn: async (input: CreateEventInput): Promise<CalendarEvent> => {
       const { startAt, endAt } = buildDates(input);
-      const { data } = await apiClient.post("/events", {
-        title:            input.title,
-        start_at:         startAt,
-        end_at:           endAt,
-        is_all_day:       false,
-        layer:            input.layer,
-        recurrence_rule:  input.recurrenceRule ?? null,
-      });
+      const payload = {
+        title:           input.title,
+        start_at:        startAt,
+        end_at:          endAt,
+        is_all_day:      false,
+        layer:           input.layer,
+        recurrence_rule: input.recurrenceRule ?? null,
+      };
+      const _id = await enqueue({ type: "create-event", ...payload });
+      const { data } = await apiClient.post("/events", payload);
+      await dequeue(_id);
       // Mapear respuesta snake_case → camelCase
       return {
         id:                 data.id,

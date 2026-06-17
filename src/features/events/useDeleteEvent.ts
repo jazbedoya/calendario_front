@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
 import { useEventsStore } from "./eventsStore";
+import { enqueue, dequeue } from "@/lib/mutationQueue";
 
 export interface DeleteEventInput {
   id: string;
@@ -14,7 +15,11 @@ export function useDeleteEvent() {
 
   return useMutation({
     mutationFn: async ({ id, deleteMode = "single" }: DeleteEventInput) => {
-      await apiClient.delete(`/events/${id}?delete_mode=${deleteMode}`);
+      if (!id.startsWith("local-")) {
+        const _id = await enqueue({ type: "delete-event", id, delete_mode: deleteMode });
+        await apiClient.delete(`/events/${id}?delete_mode=${deleteMode}`);
+        await dequeue(_id);
+      }
       return { id, deleteMode };
     },
     onSuccess: ({ id, deleteMode }) => {

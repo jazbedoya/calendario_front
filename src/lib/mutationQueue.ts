@@ -13,13 +13,16 @@
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createTaskApi, patchTaskApi, deleteTaskApi } from "@/features/tasks/api";
+import { apiClient } from "@/lib/api";
 
 const QUEUE_KEY = "avante_pending_task_mutations";
 
 export type PendingMutation =
   | { _id: string; type: "create"; date: string; text: string }
   | { _id: string; type: "toggle"; id: string; done: boolean }
-  | { _id: string; type: "delete"; id: string };
+  | { _id: string; type: "delete"; id: string }
+  | { _id: string; type: "create-event"; title: string; start_at: string; end_at: string; is_all_day: boolean; layer: string; recurrence_rule: string | null }
+  | { _id: string; type: "delete-event"; id: string; delete_mode: "single" | "all" };
 
 function makeId(): string {
   return `${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
@@ -77,6 +80,19 @@ export async function replayQueue(): Promise<boolean> {
       } else if (m.type === "delete") {
         if (!m.id.startsWith("local-")) {
           await deleteTaskApi(m.id);
+        }
+      } else if (m.type === "create-event") {
+        await apiClient.post("/events", {
+          title:           m.title,
+          start_at:        m.start_at,
+          end_at:          m.end_at,
+          is_all_day:      m.is_all_day,
+          layer:           m.layer,
+          recurrence_rule: m.recurrence_rule,
+        });
+      } else if (m.type === "delete-event") {
+        if (!m.id.startsWith("local-")) {
+          await apiClient.delete(`/events/${m.id}`, { params: { delete_mode: m.delete_mode } });
         }
       }
       await dequeue(m._id);
