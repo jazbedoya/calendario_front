@@ -1,16 +1,22 @@
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useGetStreak, useGetTodayTasks } from "./hooks";
+import { getLocalStreak } from "./useStreak";
 
 export function StreakPill() {
   const { data: streakData }      = useGetStreak();
   const { data: todayTasks = [] } = useGetTodayTasks();
+  const [localStreak, setLocalStreak] = useState(0);
 
-  const count = streakData?.current_streak ?? 0;
+  useEffect(() => {
+    getLocalStreak().then(setLocalStreak);
+  }, []);
 
-  // Show at least 1 immediately if all today's tasks are locally done
-  const todayDoneLocally =
-    todayTasks.length > 0 && todayTasks.every((t) => t.done);
-  const displayCount = todayDoneLocally && count === 0 ? 1 : count;
+  const backendCount     = streakData?.current_streak ?? 0;
+  const todayDoneLocally = todayTasks.length > 0 && todayTasks.every((t) => t.done);
+
+  // Usa el valor más alto disponible: backend, SecureStore local, o 1 si hoy está completo
+  const displayCount = Math.max(backendCount, localStreak, todayDoneLocally ? 1 : 0);
 
   if (displayCount === 0) return null;
 
