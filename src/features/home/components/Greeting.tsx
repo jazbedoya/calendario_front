@@ -34,9 +34,11 @@ export function Greeting({ userName }: GreetingProps) {
         </Text>
         <Text style={styles.date}>{capitalizedDate}</Text>
       </View>
-      <StreakPill />
-      <View style={styles.avatar}>
-        <Text style={styles.avatarText}>{userName.charAt(0).toUpperCase()}</Text>
+      <View style={styles.rightSection}>
+        <StreakPill />
+        <View style={styles.avatar}>
+          <Text style={styles.avatarText}>{userName.charAt(0).toUpperCase()}</Text>
+        </View>
       </View>
     </View>
   );
@@ -64,6 +66,12 @@ const styles = StyleSheet.create({
     color: "#8A8A8A",
     marginTop: 2,
   },
+  rightSection: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    flexShrink: 0,
+  },
   avatar: {
     width: 48,
     height: 48,
@@ -71,7 +79,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#EBE8F5",
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: 12,
   },
   avatarText: {
     fontSize: 18,

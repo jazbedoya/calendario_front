@@ -52,7 +52,7 @@ export function useGetTodayTasks() {
   return useQuery({
     queryKey: key(today),
     queryFn:  () => getTodayTasksApi(today),
-    staleTime: 60_000,
+    staleTime: 300_000,
     enabled:  isAuthenticated,
   });
 }

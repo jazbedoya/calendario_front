@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View, Animated } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import { useQueryClient } from "@tanstack/react-query";
@@ -12,6 +12,28 @@ import { useTodayDate }         from "./hooks";
 import type { MascotMood }      from "@/features/mascot/getMascotState";
 
 const ACCENT = "#C8553D";
+
+function TaskSkeleton() {
+  const opacity = useRef(new Animated.Value(0.4)).current;
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(opacity, { toValue: 1,   duration: 700, useNativeDriver: true }),
+        Animated.timing(opacity, { toValue: 0.4, duration: 700, useNativeDriver: true }),
+      ])
+    ).start();
+  }, []);
+  return (
+    <View style={s.list}>
+      {[0.75, 0.55, 0.65].map((w, i) => (
+        <View key={i} style={[s.skeletonRow, i > 0 && s.skeletonBorder]}>
+          <Animated.View style={[s.skeletonCircle, { opacity }]} />
+          <Animated.View style={[s.skeletonLine, { opacity, width: `${w * 100}%` as any }]} />
+        </View>
+      ))}
+    </View>
+  );
+}
 
 function useProgressMessage(t: ReturnType<typeof useTranslation>['t']) {
   return (done: number, total: number): { msg: string; mood: MascotMood } => {
@@ -88,7 +110,7 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
     <>
       <View style={s.card}>
         <Text style={s.title}>{t('tasks.sectionTitle')}</Text>
-        <Text style={s.subtitle}>{msg}</Text>
+        {!isLoading && <Text style={s.subtitle}>{msg}</Text>}
 
         {/* Camino con Tuga */}
         <TodayPath
@@ -105,13 +127,11 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
           </Text>
         )}
 
-        {/* Loading inicial */}
-        {isLoading && isPending && (
-          <ActivityIndicator size="small" color="#CCCCCC" style={{ marginVertical: 8 }} />
-        )}
+        {/* Skeleton mientras carga por primera vez */}
+        {isLoading && <TaskSkeleton />}
 
         {/* Lista */}
-        {tasks.length > 0 && (
+        {!isLoading && tasks.length > 0 && (
           <View style={s.list}>
             {tasks.map((task, i) => (
               <TaskRow
@@ -126,7 +146,7 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
           </View>
         )}
 
-        {/* Sugerencias de ayer — solo cuando hoy está vacío */}
+        {/* Sugerencias de ayer — solo cuando hoy está vacío y ya cargó */}
         {tasks.length === 0 && !isLoading && yesterdayPending
           .filter((yt) => !addedFromYesterday.includes(yt.id))
           .map((yt) => (
@@ -209,4 +229,28 @@ const s = StyleSheet.create({
     backgroundColor: "#F3ECE9",
   },
   yesterdayBtnText: { fontSize: 13, fontWeight: "700", color: "#C8553D" },
+
+  skeletonRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    gap: 12,
+    backgroundColor: "#FAFAF9",
+  },
+  skeletonBorder: {
+    borderTopWidth: 1,
+    borderTopColor: "#F0EDE9",
+  },
+  skeletonCircle: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: "#E8E4E0",
+  },
+  skeletonLine: {
+    height: 13,
+    borderRadius: 6,
+    backgroundColor: "#E8E4E0",
+  },
 });

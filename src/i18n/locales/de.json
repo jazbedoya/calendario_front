@@ -143,24 +143,24 @@
     "holiday": "Feiertag"
   },
   "holidays": {
-    "newYear":               "Neujahr",
-    "epiphany":              "Heilige Drei Könige",
-    "holyThursday":          "Gründonnerstag",
-    "goodFriday":            "Karfreitag",
-    "laborDay":              "Tag der Arbeit",
-    "assumption":            "Mariä Himmelfahrt",
-    "hispanicDay":           "Spanischer Nationalfeiertag",
-    "allSaints":             "Allerheiligen",
-    "constitutionDay":       "Tag der Verfassung",
-    "immaculateConception":  "Mariä Empfängnis",
-    "christmas":             "Weihnachten",
-    "heroesDay":             "Heldengedenktag",
-    "independenceEve":       "Vorabend der Unabhängigkeit",
-    "independenceDay":       "Paraguayischer Unabhängigkeitstag",
-    "chacoPeace":            "Chacofrieden",
-    "asuncionDay":           "Gründung von Asunción",
-    "boqueron":              "Schlacht von Boquerón",
-    "caacupe":               "Jungfrau von Caacupé"
+    "newYear": "Neujahr",
+    "epiphany": "Heilige Drei Könige",
+    "holyThursday": "Gründonnerstag",
+    "goodFriday": "Karfreitag",
+    "laborDay": "Tag der Arbeit",
+    "assumption": "Mariä Himmelfahrt",
+    "hispanicDay": "Spanischer Nationalfeiertag",
+    "allSaints": "Allerheiligen",
+    "constitutionDay": "Tag der Verfassung",
+    "immaculateConception": "Mariä Empfängnis",
+    "christmas": "Weihnachten",
+    "heroesDay": "Heldengedenktag",
+    "independenceEve": "Vorabend der Unabhängigkeit",
+    "independenceDay": "Paraguayischer Unabhängigkeitstag",
+    "chacoPeace": "Chacofrieden",
+    "asuncionDay": "Gründung von Asunción",
+    "boqueron": "Schlacht von Boquerón",
+    "caacupe": "Jungfrau von Caacupé"
   },
   "eventSheet": {
     "titlePlaceholder": "Was passiert?",
@@ -207,11 +207,31 @@
     "savedConfirm": "Aufgabe gespeichert!"
   },
   "mascot": {
-    "morning":   ["Bereit für einen großartigen Tag!", "Was für ein schöner Morgen!", "Lass den Tag zählen", "Gute Morgenenergie!"],
-    "afternoon": ["Immer schön ruhig", "Worauf haben Sie heute Nachmittag Lust?", "Ich bin für Sie da", "Der Nachmittag gehört Ihnen"],
-    "evening":   ["Es war ein guter Tag", "Schalten Sie langsam runter", "Zeit, das Tempo zu drosseln", "Sie können jetzt ruhen"],
-    "night":     ["Erholen Sie sich, morgen geht es weiter", "Zeit zu schlafen 🌙", "Bis morgen 🐢", "Träum was Schönes"],
-    "excited":   "Sie haben bald etwas. Los geht's!",
+    "morning": [
+      "Bereit für einen großartigen Tag!",
+      "Was für ein schöner Morgen!",
+      "Lass den Tag zählen",
+      "Gute Morgenenergie!"
+    ],
+    "afternoon": [
+      "Immer schön ruhig",
+      "Worauf haben Sie heute Nachmittag Lust?",
+      "Ich bin für Sie da",
+      "Der Nachmittag gehört Ihnen"
+    ],
+    "evening": [
+      "Es war ein guter Tag",
+      "Schalten Sie langsam runter",
+      "Zeit, das Tempo zu drosseln",
+      "Sie können jetzt ruhen"
+    ],
+    "night": [
+      "Erholen Sie sich, morgen geht es weiter",
+      "Zeit zu schlafen 🌙",
+      "Bis morgen 🐢",
+      "Träum was Schönes"
+    ],
+    "excited": "Sie haben bald etwas. Los geht's!",
     "lowEnergy": "Jeder Tag zählt. Sie schaffen das!"
   },
   "streak": {
@@ -221,11 +241,26 @@
   },
   "celebration": {
     "messages": [
-      { "title": "Heute alles geschafft!", "body": "Ich bin so stolz auf dich 🐢" },
-      { "title": "Tag abgeschlossen!", "body": "Jeder Schritt zählt und heute hast du alle gemacht 🎉" },
-      { "title": "Unglaublich!", "body": "Du hast heute wirklich gut auf dich geachtet 💚" },
-      { "title": "Du hast den Tag gemeistert!", "body": "Tuga tanzt vor Freude 🌟" },
-      { "title": "Alles abgehakt!", "body": "Das ist echte Selbstfürsorge 🏆" }
+      {
+        "title": "Heute alles geschafft!",
+        "body": "Ich bin so stolz auf dich 🐢"
+      },
+      {
+        "title": "Tag abgeschlossen!",
+        "body": "Jeder Schritt zählt und heute hast du alle gemacht 🎉"
+      },
+      {
+        "title": "Unglaublich!",
+        "body": "Du hast heute wirklich gut auf dich geachtet 💚"
+      },
+      {
+        "title": "Du hast den Tag gemeistert!",
+        "body": "Tuga tanzt vor Freude 🌟"
+      },
+      {
+        "title": "Alles abgehakt!",
+        "body": "Das ist echte Selbstfürsorge 🏆"
+      }
     ],
     "closeBtn": "Super!",
     "streakDay_1": "🔥 Dein erster Streak-Tag der Woche! Weiter so!",
@@ -246,9 +281,18 @@
     "savedText": "Gespeichert. Ihre Statistiken werden dies berücksichtigen.",
     "notesPlaceholder": "Etwas, das Sie von heute festhalten möchten (optional)",
     "energy": {
-      "good": { "label": "Gute Energie", "hint": "Ich fühlte mich stark und klar" },
-      "medium": { "label": "Anstrengend aber okay", "hint": "Viel zu tun, aber ich hab's geschafft" },
-      "bad": { "label": "Schwerer Tag", "hint": "Schwer, wenig Energie, viel Druck" }
+      "good": {
+        "label": "Gute Energie",
+        "hint": "Ich fühlte mich stark und klar"
+      },
+      "medium": {
+        "label": "Anstrengend aber okay",
+        "hint": "Viel zu tun, aber ich hab's geschafft"
+      },
+      "bad": {
+        "label": "Schwerer Tag",
+        "hint": "Schwer, wenig Energie, viel Druck"
+      }
     }
   },
   "emptyArea": {
@@ -333,7 +377,10 @@
     },
     "about": {
       "section": "Über die App",
-      "title": "Über Avante"
+      "title": "Über Avante",
+      "tagline": "Dein Kalender mit Seele",
+      "description": "Avante hilft dir, deine Zeit zu organisieren, ohne aus dem Blick zu verlieren, was wirklich zählt: die Balance zwischen Arbeit, Familie und dir selbst. Im Bereich Balance kannst du deine Wochenziele festlegen und deinen Fortschritt täglich verfolgen. {{mascotName}}, deine Schildkröte, begleitet dich und feiert jeden Erfolg mit dir.",
+      "version": "Version"
     }
   },
   "about": {

@@ -143,24 +143,24 @@
     "holiday": "Festivo"
   },
   "holidays": {
-    "newYear":               "Año Nuevo",
-    "epiphany":              "Reyes Magos",
-    "holyThursday":          "Jueves Santo",
-    "goodFriday":            "Viernes Santo",
-    "laborDay":              "Día del Trabajador",
-    "assumption":            "Asunción de la Virgen",
-    "hispanicDay":           "Fiesta Nacional de España",
-    "allSaints":             "Todos los Santos",
-    "constitutionDay":       "Día de la Constitución",
-    "immaculateConception":  "Inmaculada Concepción",
-    "christmas":             "Navidad",
-    "heroesDay":             "Día de los Héroes",
-    "independenceEve":       "Víspera de la Independencia",
-    "independenceDay":       "Día de la Independencia Nacional",
-    "chacoPeace":            "Paz del Chaco",
-    "asuncionDay":           "Fundación de Asunción",
-    "boqueron":              "Batalla del Boquerón",
-    "caacupe":               "Virgen de Caacupé"
+    "newYear": "Año Nuevo",
+    "epiphany": "Reyes Magos",
+    "holyThursday": "Jueves Santo",
+    "goodFriday": "Viernes Santo",
+    "laborDay": "Día del Trabajador",
+    "assumption": "Asunción de la Virgen",
+    "hispanicDay": "Fiesta Nacional de España",
+    "allSaints": "Todos los Santos",
+    "constitutionDay": "Día de la Constitución",
+    "immaculateConception": "Inmaculada Concepción",
+    "christmas": "Navidad",
+    "heroesDay": "Día de los Héroes",
+    "independenceEve": "Víspera de la Independencia",
+    "independenceDay": "Día de la Independencia Nacional",
+    "chacoPeace": "Paz del Chaco",
+    "asuncionDay": "Fundación de Asunción",
+    "boqueron": "Batalla del Boquerón",
+    "caacupe": "Virgen de Caacupé"
   },
   "eventSheet": {
     "titlePlaceholder": "¿Qué tienes?",
@@ -207,11 +207,31 @@
     "savedConfirm": "¡Tarea guardada!"
   },
   "mascot": {
-    "morning":   ["¡Listo para un gran día!", "¡Qué bonita mañana!", "¡A por el día!", "Hoy puede ser un gran día"],
-    "afternoon": ["Vamos con calma", "¿Qué te apetece esta tarde?", "Aquí estoy contigo", "La tarde es tuya"],
-    "evening":   ["Ha sido un buen día", "Recoge poco a poco", "Hora de bajar el ritmo", "Ya puedes descansar"],
-    "night":     ["Descansa, mañana seguimos", "Es hora de dormir 🌙", "Te veo mañana 🐢", "Sueña bonito"],
-    "excited":   "Tienes algo pronto. ¡Vamos!",
+    "morning": [
+      "¡Listo para un gran día!",
+      "¡Qué bonita mañana!",
+      "¡A por el día!",
+      "Hoy puede ser un gran día"
+    ],
+    "afternoon": [
+      "Vamos con calma",
+      "¿Qué te apetece esta tarde?",
+      "Aquí estoy contigo",
+      "La tarde es tuya"
+    ],
+    "evening": [
+      "Ha sido un buen día",
+      "Recoge poco a poco",
+      "Hora de bajar el ritmo",
+      "Ya puedes descansar"
+    ],
+    "night": [
+      "Descansa, mañana seguimos",
+      "Es hora de dormir 🌙",
+      "Te veo mañana 🐢",
+      "Sueña bonito"
+    ],
+    "excited": "Tienes algo pronto. ¡Vamos!",
     "lowEnergy": "Cada día cuenta. ¡Tú puedes!"
   },
   "streak": {
@@ -221,11 +241,26 @@
   },
   "celebration": {
     "messages": [
-      { "title": "¡Lo lograste todo hoy!", "body": "Estoy muy orgullosa de ti 🐢" },
-      { "title": "¡Día completado!", "body": "Cada paso cuenta y hoy diste todos 🎉" },
-      { "title": "¡Increíble!", "body": "Te cuidaste de verdad hoy 💚" },
-      { "title": "¡Hoy ganaste el día!", "body": "Tuga baila de alegría 🌟" },
-      { "title": "¡Todo tachado!", "body": "Eso sí que es cuidarse bien 🏆" }
+      {
+        "title": "¡Lo lograste todo hoy!",
+        "body": "Estoy muy orgullosa de ti 🐢"
+      },
+      {
+        "title": "¡Día completado!",
+        "body": "Cada paso cuenta y hoy diste todos 🎉"
+      },
+      {
+        "title": "¡Increíble!",
+        "body": "Te cuidaste de verdad hoy 💚"
+      },
+      {
+        "title": "¡Hoy ganaste el día!",
+        "body": "Tuga baila de alegría 🌟"
+      },
+      {
+        "title": "¡Todo tachado!",
+        "body": "Eso sí que es cuidarse bien 🏆"
+      }
     ],
     "closeBtn": "¡Genial!",
     "streakDay_1": "🔥 ¡Tu primer día de racha de la semana! ¡Sigue así!",
@@ -246,9 +281,18 @@
     "savedText": "Registrado. Las estadísticas ya lo recogen.",
     "notesPlaceholder": "Algo que quieras recordar de hoy (opcional)",
     "energy": {
-      "good": { "label": "Buena energía", "hint": "Me sentí con fuerza y claridad" },
-      "medium": { "label": "Tirante pero bien", "hint": "Cargado, pero lo saqué adelante" },
-      "bad": { "label": "Día duro", "hint": "Pesado, poca energía, mucha presión" }
+      "good": {
+        "label": "Buena energía",
+        "hint": "Me sentí con fuerza y claridad"
+      },
+      "medium": {
+        "label": "Tirante pero bien",
+        "hint": "Cargado, pero lo saqué adelante"
+      },
+      "bad": {
+        "label": "Día duro",
+        "hint": "Pesado, poca energía, mucha presión"
+      }
     }
   },
   "emptyArea": {
@@ -333,7 +377,10 @@
     },
     "about": {
       "section": "Acerca de",
-      "title": "Acerca de Avante"
+      "title": "Acerca de Avante",
+      "tagline": "Tu calendario con alma",
+      "description": "Avante te ayuda a organizar tu tiempo sin perder de vista lo que importa: el equilibrio entre tu trabajo, tu familia y tú. En la sección Equilibrio puedes marcar tus metas semanales y ver cómo avanzas día a día. {{mascotName}}, tu tortuga, te acompaña para celebrar tus logros y animarte cuando lo necesitas.",
+      "version": "Versión"
     }
   },
   "about": {

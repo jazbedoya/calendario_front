@@ -446,14 +446,19 @@ export default function SettingsScreen() {
         {/* ── Acerca de ────────────────────────────────────── */}
         <Text style={s.sectionLabel}>{t("settings.about.section")}</Text>
         <View style={s.card}>
-          <Row
-            icon="information-circle-outline"
-            iconBg="#F0F4FF"
-            iconColor="#4A6FA5"
-            label={t("settings.about.title")}
-            onPress={() => router.push("/about")}
-            last
-          />
+          <View style={s.aboutBlock}>
+            <View style={s.aboutHeader}>
+              <View style={s.aboutIconBox}>
+                <Ionicons name="leaf-outline" size={18} color="#4A6FA5" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={s.aboutTitle}>{t("settings.about.title")}</Text>
+                <Text style={s.aboutTagline}>{t("settings.about.tagline")}</Text>
+              </View>
+            </View>
+            <Text style={s.aboutDescription}>{t("settings.about.description", { mascotName })}</Text>
+            <Text style={s.aboutVersion}>{t("settings.about.version")} 1.0.0</Text>
+          </View>
         </View>
 
         <View style={{ height: 40 }} />
@@ -524,4 +529,17 @@ const s = StyleSheet.create({
     fontSize: 14, color: "#6A6A6A", lineHeight: 20,
     padding: 18, paddingBottom: 14,
   },
+
+  aboutBlock: { padding: 20, gap: 14 },
+  aboutHeader: { flexDirection: "row", alignItems: "center", gap: 14 },
+  aboutIconBox: {
+    width: 40, height: 40, borderRadius: 12,
+    backgroundColor: "#EEF2FF",
+    alignItems: "center", justifyContent: "center",
+    flexShrink: 0,
+  },
+  aboutTitle:       { fontSize: 15, fontWeight: "700", color: "#1A1A1A" },
+  aboutTagline:     { fontSize: 12, color: "#8A8A8A", marginTop: 2 },
+  aboutDescription: { fontSize: 14, color: "#4A4A4A", lineHeight: 22 },
+  aboutVersion:     { fontSize: 12, color: "#BBBBBB", textAlign: "right" },
 });

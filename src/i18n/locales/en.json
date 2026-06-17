@@ -143,24 +143,24 @@
     "holiday": "Public holiday"
   },
   "holidays": {
-    "newYear":               "New Year's Day",
-    "epiphany":              "Epiphany",
-    "holyThursday":          "Holy Thursday",
-    "goodFriday":            "Good Friday",
-    "laborDay":              "Labour Day",
-    "assumption":            "Assumption Day",
-    "hispanicDay":           "Spain's National Day",
-    "allSaints":             "All Saints' Day",
-    "constitutionDay":       "Constitution Day",
-    "immaculateConception":  "Immaculate Conception",
-    "christmas":             "Christmas",
-    "heroesDay":             "Heroes' Day",
-    "independenceEve":       "Independence Eve",
-    "independenceDay":       "Independence Day",
-    "chacoPeace":            "Chaco Peace",
-    "asuncionDay":           "Founding of Asunción",
-    "boqueron":              "Battle of Boquerón",
-    "caacupe":               "Virgin of Caacupé"
+    "newYear": "New Year's Day",
+    "epiphany": "Epiphany",
+    "holyThursday": "Holy Thursday",
+    "goodFriday": "Good Friday",
+    "laborDay": "Labour Day",
+    "assumption": "Assumption Day",
+    "hispanicDay": "Spain's National Day",
+    "allSaints": "All Saints' Day",
+    "constitutionDay": "Constitution Day",
+    "immaculateConception": "Immaculate Conception",
+    "christmas": "Christmas",
+    "heroesDay": "Heroes' Day",
+    "independenceEve": "Independence Eve",
+    "independenceDay": "Independence Day",
+    "chacoPeace": "Chaco Peace",
+    "asuncionDay": "Founding of Asunción",
+    "boqueron": "Battle of Boquerón",
+    "caacupe": "Virgin of Caacupé"
   },
   "eventSheet": {
     "titlePlaceholder": "What's happening?",
@@ -207,11 +207,31 @@
     "savedConfirm": "Task saved!"
   },
   "mascot": {
-    "morning":   ["Ready for a great day!", "What a lovely morning!", "Let's make today count", "Good morning energy!"],
-    "afternoon": ["Take it steady", "What do you feel like this afternoon?", "I'm right here with you", "The afternoon is yours"],
-    "evening":   ["It's been a good day", "Wind down slowly", "Time to slow the pace", "You can rest now"],
-    "night":     ["Rest up, we continue tomorrow", "Time to sleep 🌙", "See you tomorrow 🐢", "Sweet dreams"],
-    "excited":   "You've got something soon. Let's go!",
+    "morning": [
+      "Ready for a great day!",
+      "What a lovely morning!",
+      "Let's make today count",
+      "Good morning energy!"
+    ],
+    "afternoon": [
+      "Take it steady",
+      "What do you feel like this afternoon?",
+      "I'm right here with you",
+      "The afternoon is yours"
+    ],
+    "evening": [
+      "It's been a good day",
+      "Wind down slowly",
+      "Time to slow the pace",
+      "You can rest now"
+    ],
+    "night": [
+      "Rest up, we continue tomorrow",
+      "Time to sleep 🌙",
+      "See you tomorrow 🐢",
+      "Sweet dreams"
+    ],
+    "excited": "You've got something soon. Let's go!",
     "lowEnergy": "Every day counts. You've got this!"
   },
   "streak": {
@@ -221,11 +241,26 @@
   },
   "celebration": {
     "messages": [
-      { "title": "You did it all today!", "body": "I'm so proud of you 🐢" },
-      { "title": "Day complete!", "body": "Every step matters and today you took them all 🎉" },
-      { "title": "Amazing!", "body": "You really looked after yourself today 💚" },
-      { "title": "You owned today!", "body": "Tuga is dancing with joy 🌟" },
-      { "title": "Everything checked off!", "body": "That's what real self-care looks like 🏆" }
+      {
+        "title": "You did it all today!",
+        "body": "I'm so proud of you 🐢"
+      },
+      {
+        "title": "Day complete!",
+        "body": "Every step matters and today you took them all 🎉"
+      },
+      {
+        "title": "Amazing!",
+        "body": "You really looked after yourself today 💚"
+      },
+      {
+        "title": "You owned today!",
+        "body": "Tuga is dancing with joy 🌟"
+      },
+      {
+        "title": "Everything checked off!",
+        "body": "That's what real self-care looks like 🏆"
+      }
     ],
     "closeBtn": "Awesome!",
     "streakDay_1": "🔥 Your first streak day of the week! Keep it up!",
@@ -246,9 +281,18 @@
     "savedText": "Saved. Your stats will reflect this.",
     "notesPlaceholder": "Anything you want to remember from today (optional)",
     "energy": {
-      "good": { "label": "Good energy", "hint": "I felt strong and clear-headed" },
-      "medium": { "label": "Tough but okay", "hint": "Busy, but I got through it" },
-      "bad": { "label": "Hard day", "hint": "Heavy, low energy, lots of pressure" }
+      "good": {
+        "label": "Good energy",
+        "hint": "I felt strong and clear-headed"
+      },
+      "medium": {
+        "label": "Tough but okay",
+        "hint": "Busy, but I got through it"
+      },
+      "bad": {
+        "label": "Hard day",
+        "hint": "Heavy, low energy, lots of pressure"
+      }
     }
   },
   "emptyArea": {
@@ -333,7 +377,10 @@
     },
     "about": {
       "section": "About",
-      "title": "About Avante"
+      "title": "About Avante",
+      "tagline": "Your calendar with soul",
+      "description": "Avante helps you organise your time without losing sight of what matters: the balance between work, family, and yourself. In the Balance section you can set your weekly goals and track your progress day by day. {{mascotName}}, your turtle, walks alongside you to celebrate your wins and cheer you on.",
+      "version": "Version"
     }
   },
   "about": {

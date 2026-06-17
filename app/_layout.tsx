@@ -5,6 +5,7 @@ import { PersistQueryClientProvider, type Persister } from "@tanstack/react-quer
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { Platform, StyleSheet } from "react-native";
 import * as Linking from "expo-linking";
+import * as Notifications from "expo-notifications";
 import "../global.css";
 import "@/i18n";
 import { queryClient } from "@/lib/queryClient";
@@ -32,6 +33,17 @@ function AppShell() {
   const initializeHolidays     = useHolidayStore((s) => s.initialize);
   const isAuthenticated        = useAuthStore((s) => s.isAuthenticated);
   const qc = useQueryClient();
+
+  // Cancela notificaciones de "¿cómo estuvo tu día?" que pudieran haber
+  // quedado programadas en el dispositivo desde versiones anteriores.
+  useEffect(() => {
+    if (Platform.OS === "web") return;
+    Notifications.getAllScheduledNotificationsAsync().then((scheduled) => {
+      scheduled
+        .filter((n) => n.content.data?.type === "day_check")
+        .forEach((n) => Notifications.cancelScheduledNotificationAsync(n.identifier));
+    });
+  }, []);
 
   useEffect(() => {
     async function init() {
