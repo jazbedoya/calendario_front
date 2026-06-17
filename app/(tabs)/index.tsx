@@ -46,8 +46,8 @@ export default function HomeScreen() {
 
   // Áreas con subtítulos reales basados en conteo de eventos esta semana
   const areasWithData = areas.map((area) => {
-    if (!summary) return area;
-    const count = summary.week_events_by_layer?.[area.layer as keyof typeof summary.week_events_by_layer] ?? 0;
+    if (!summary?.week_events_by_layer) return { ...area, subtitle: "" };
+    const count = summary.week_events_by_layer[area.layer as keyof typeof summary.week_events_by_layer] ?? 0;
     let subtitle: string;
     if (area.layer === "family") {
       subtitle = count === 0
