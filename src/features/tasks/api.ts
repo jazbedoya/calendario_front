@@ -27,6 +27,16 @@ export async function patchTaskApi(
   return data;
 }
 
+export interface StreakData {
+  current_streak: number;
+  longest_streak: number;
+}
+
+export async function getStreakApi(): Promise<StreakData> {
+  const { data } = await apiClient.get<StreakData>("/tasks/streak");
+  return data;
+}
+
 export async function deleteTaskApi(id: string): Promise<void> {
   try {
     await apiClient.delete(`/tasks/daily/${id}`);

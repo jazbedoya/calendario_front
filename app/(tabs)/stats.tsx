@@ -10,6 +10,7 @@ import { useMascotMessage }  from "@/features/mascot/useMascotMessage";
 import { Mascot }            from "@/features/mascot/Mascot";
 import { useAuthStore }      from "@/stores/authStore";
 import { DailyTasksSection } from "@/features/tasks/DailyTasksSection";
+import { StreakBadge }       from "@/features/tasks/StreakBadge";
 
 export default function StatsScreen() {
   const { mascotName } = useMascotStore();
@@ -42,6 +43,7 @@ export default function StatsScreen() {
           {/* Tuga — estado según hora del día */}
           <View style={s.mascotCard}>
             <Mascot name={mascotName} mood={mascotState.mood} message={mascotMessage} />
+            <StreakBadge />
           </View>
 
           {/* Tareas de hoy — contenido principal */}

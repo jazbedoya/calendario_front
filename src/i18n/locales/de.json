@@ -214,6 +214,11 @@
     "excited":   "Sie haben bald etwas. Los geht's!",
     "lowEnergy": "Jeder Tag zählt. Sie schaffen das!"
   },
+  "streak": {
+    "badge_one": "🔥 {{count}} Tag",
+    "badge_other": "🔥 {{count}} Tage",
+    "start": "Starte deine Serie heute 🔥"
+  },
   "celebration": {
     "messages": [
       { "title": "Heute alles geschafft!", "body": "Ich bin so stolz auf dich 🐢" },

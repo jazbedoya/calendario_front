@@ -4,8 +4,8 @@ import { subDays } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 
 import { useAuthStore } from "@/stores/authStore";
-import { createTaskApi, deleteTaskApi, getTodayTasksApi, patchTaskApi } from "./api";
-import type { DailyTask } from "./api";
+import { createTaskApi, deleteTaskApi, getStreakApi, getTodayTasksApi, patchTaskApi } from "./api";
+import type { DailyTask, StreakData } from "./api";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -17,6 +17,8 @@ export function useTodayDate(): string {
 function key(today: string) {
   return ["daily-tasks", today] as const;
 }
+
+const STREAK_KEY = ["task-streak"] as const;
 
 // ── Fetch ─────────────────────────────────────────────────────────────────────
 
@@ -31,6 +33,16 @@ export function useGetYesterdayPending() {
     staleTime: 300_000,
     enabled:  isAuthenticated,
     select:   (tasks: DailyTask[]) => tasks.filter((t) => !t.done),
+  });
+}
+
+export function useGetStreak() {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  return useQuery<StreakData>({
+    queryKey: STREAK_KEY,
+    queryFn:  getStreakApi,
+    staleTime: 60_000,
+    enabled:  isAuthenticated,
   });
 }
 
@@ -72,15 +84,13 @@ export function useCreateTask() {
     },
 
     onSuccess: (realTask, _vars, ctx) => {
-      // Upsert: remove optimistic entry (if still present) + any duplicate real id,
-      // then append the confirmed task. Handles the case where a concurrent GET
-      // already wiped the optimistic entry before onSuccess fired.
       qc.setQueryData<DailyTask[]>(qk, (old = []) => {
         const without = old.filter(
           (t) => t.id !== ctx?.optimisticId && t.id !== realTask.id
         );
         return [...without, realTask].sort((a, b) => a.order - b.order);
       });
+      qc.invalidateQueries({ queryKey: STREAK_KEY });
     },
 
     onError: (_err, _vars, ctx) => {
@@ -117,10 +127,10 @@ export function useToggleTask() {
     },
 
     onSuccess: (result, { id }) => {
-      // Use server-confirmed value to ensure UI reflects actual DB state.
       qc.setQueryData<DailyTask[]>(qk, (old = []) =>
         old.map((t) => (t.id === id ? { ...t, done: result.done } : t))
       );
+      qc.invalidateQueries({ queryKey: STREAK_KEY });
     },
 
     onError: (_err, _vars, ctx) => {
