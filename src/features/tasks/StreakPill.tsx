@@ -15,8 +15,11 @@ export function StreakPill() {
   const backendCount     = streakData?.current_streak ?? 0;
   const todayDoneLocally = todayTasks.length > 0 && todayTasks.every((t) => t.done);
 
-  // Usa el valor más alto disponible: backend, SecureStore local, o 1 si hoy está completo
-  const displayCount = Math.max(backendCount, localStreak, todayDoneLocally ? 1 : 0);
+  // Si el backend ya respondió con datos, usarlo siempre (consistente con StreakBadge).
+  // Solo fallback a SecureStore/local si el backend aún no tiene datos (= 0).
+  const displayCount = backendCount > 0
+    ? backendCount
+    : Math.max(localStreak, todayDoneLocally ? 1 : 0);
 
   if (displayCount === 0) return null;
 
