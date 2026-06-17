@@ -6,6 +6,7 @@ import { formatInTimeZone } from "date-fns-tz";
 import { useAuthStore } from "@/stores/authStore";
 import { createTaskApi, deleteTaskApi, getStreakApi, getTodayTasksApi, patchTaskApi } from "./api";
 import type { DailyTask, StreakData } from "./api";
+import { enqueue, dequeue } from "@/lib/mutationQueue";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -65,7 +66,16 @@ export function useCreateTask() {
   const qc    = useQueryClient();
 
   return useMutation({
-    mutationFn: (text: string) => createTaskApi(today, text),
+    mutationFn: async (text: string) => {
+      const _id = await enqueue({ type: "create", date: today, text });
+      try {
+        const result = await createTaskApi(today, text);
+        await dequeue(_id);
+        return result;
+      } catch (e) {
+        throw e; // queda en la cola para el próximo arranque
+      }
+    },
 
     onMutate: async (text) => {
       await qc.cancelQueries({ queryKey: qk });
@@ -110,9 +120,16 @@ export function useToggleTask() {
   const qc    = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, done }: { id: string; done: boolean }) => {
+    mutationFn: async ({ id, done }: { id: string; done: boolean }) => {
       if (id.startsWith("local-")) return Promise.resolve({ id, done } as any);
-      return patchTaskApi(id, { done });
+      const _id = await enqueue({ type: "toggle", id, done });
+      try {
+        const result = await patchTaskApi(id, { done });
+        await dequeue(_id);
+        return result;
+      } catch (e) {
+        throw e;
+      }
     },
 
     retry: 1,  // safe: setting done=true twice = idempotent
@@ -148,9 +165,15 @@ export function useDeleteTask() {
   const qc    = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => {
+    mutationFn: async (id: string) => {
       if (id.startsWith("local-")) return Promise.resolve();
-      return deleteTaskApi(id);
+      const _id = await enqueue({ type: "delete", id });
+      try {
+        await deleteTaskApi(id);
+        await dequeue(_id);
+      } catch (e) {
+        throw e;
+      }
     },
     retry: 1,
 

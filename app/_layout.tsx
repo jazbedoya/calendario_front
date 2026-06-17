@@ -16,6 +16,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { useCelebrationSettings } from "@/stores/celebrationSettingsStore";
 import { useLanguageStore } from "@/features/settings/languageStore";
 import { useHolidayStore } from "@/features/settings/holidayStore";
+import { replayQueue } from "@/lib/mutationQueue";
 
 // NativeWind web requires darkMode to be set to 'class' at runtime
 if (typeof StyleSheet.setFlag === "function") {
@@ -62,6 +63,19 @@ function AppShell() {
     }
     init();
   }, [initializeAuth, initializeMascot, initializeCelebration, initializeLanguage]);
+
+  // Replaya mutaciones pendientes (WAL) al autenticarse
+  const replayed = useRef(false);
+  useEffect(() => {
+    if (!isAuthenticated || replayed.current) return;
+    replayed.current = true;
+    replayQueue().then((anyReplayed) => {
+      if (anyReplayed) {
+        qc.invalidateQueries({ queryKey: ["daily-tasks"] });
+        qc.invalidateQueries({ queryKey: ["task-streak"] });
+      }
+    });
+  }, [isAuthenticated, qc]);
 
   // Limpiar toda la caché de queries al cerrar sesión (isAuthenticated: true → false)
   const prevIsAuth = useRef<boolean | null>(null);
