@@ -228,6 +228,7 @@
       { "title": "¡Todo tachado!", "body": "Eso sí que es cuidarse bien 🏆" }
     ],
     "closeBtn": "¡Genial!",
+    "streakFirst": "🔥 ¡Tu primer día de racha! ¡Sigue así!",
     "streak": "🔥 {{count}} días seguidos cuidándote"
   },
   "dayCheck": {

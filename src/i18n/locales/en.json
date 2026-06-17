@@ -228,6 +228,7 @@
       { "title": "Everything checked off!", "body": "That's what real self-care looks like 🏆" }
     ],
     "closeBtn": "Awesome!",
+    "streakFirst": "🔥 Your first streak day! Keep it up!",
     "streak": "🔥 {{count}} days in a row taking care of yourself"
   },
   "dayCheck": {

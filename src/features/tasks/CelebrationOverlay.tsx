@@ -182,12 +182,14 @@ export function CelebrationOverlay({ visible, streak, onClose }: Props) {
           <Text style={s.title}>{msg.title}</Text>
           <Text style={s.body}>{msg.body}</Text>
 
-          {/* Streak */}
-          {streak >= 2 && (
-            <View style={s.streakBadge}>
-              <Text style={s.streakTxt}>{t("celebration.streak", { count: streak })}</Text>
-            </View>
-          )}
+          {/* Streak — siempre visible */}
+          <View style={s.streakBadge}>
+            <Text style={s.streakTxt}>
+              {streak <= 1
+                ? t("celebration.streakFirst")
+                : t("celebration.streak", { count: streak })}
+            </Text>
+          </View>
 
           {/* Close button */}
           <TouchableOpacity style={s.btn} onPress={onClose} activeOpacity={0.8}>
