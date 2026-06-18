@@ -92,12 +92,13 @@ function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
 }
 
 export default function TabsLayout() {
+  const { t } = useTranslation();
   return (
     <Tabs tabBar={(props) => <FloatingTabBar {...props} />} screenOptions={{ headerShown: false }}>
-      <Tabs.Screen name="index"    options={{ title: "Inicio" }} />
-      <Tabs.Screen name="layers"   options={{ title: "Vistas" }} />
-      <Tabs.Screen name="stats"    options={{ title: "Estadísticas" }} />
-      <Tabs.Screen name="settings" options={{ title: "Ajustes" }} />
+      <Tabs.Screen name="index"    options={{ title: t("tabs.home") }} />
+      <Tabs.Screen name="layers"   options={{ title: t("tabs.all") }} />
+      <Tabs.Screen name="stats"    options={{ title: t("tabs.balance") }} />
+      <Tabs.Screen name="settings" options={{ title: t("tabs.settings") }} />
     </Tabs>
   );
 }
