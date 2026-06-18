@@ -103,11 +103,13 @@ export function useCreateTask() {
       qc.invalidateQueries({ queryKey: STREAK_KEY });
     },
 
-    onError: (_err, _vars, ctx) => {
+    onError: (err: any, _vars, ctx) => {
       // Remove only the failed optimistic task — don't wipe the full cache snapshot,
       // which would also remove other in-flight optimistic tasks.
       if (ctx) qc.setQueryData<DailyTask[]>(qk, (old = []) => old.filter((t) => t.id !== ctx.optimisticId));
-      Alert.alert("Error", "No se pudo guardar la tarea. Comprueba tu conexión e inténtalo de nuevo.");
+      const status = err?.response?.status;
+      const detail = status ? ` (${status})` : (err?.code ? ` (${err.code})` : "");
+      Alert.alert("Error", `No se pudo guardar la tarea${detail}. Comprueba tu conexión e inténtalo de nuevo.`);
     },
   });
 }
