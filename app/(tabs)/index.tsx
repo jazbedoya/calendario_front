@@ -27,7 +27,8 @@ export default function HomeScreen() {
   const { mascotName, onboardingDone, initialized } = useMascotStore();
   const user = useAuthStore((s) => s.user);
   const timezone   = user?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const localHour  = getHours(toZonedTime(new Date(), timezone));
+  const deviceTz   = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const localHour  = getHours(toZonedTime(new Date(), deviceTz));
   const mascotState = getMascotState({ hourOfDay: localHour });
   const mascotMessage = useMascotMessage(mascotState.messageKey);
   const qc = useQueryClient();

@@ -13,8 +13,8 @@ interface GreetingProps {
 export function Greeting({ userName }: GreetingProps) {
   const { t, i18n } = useTranslation();
   const user      = useAuthStore((s) => s.user);
-  const timezone  = user?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const hour      = getHours(toZonedTime(new Date(), timezone));
+  const deviceTz  = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const hour      = getHours(toZonedTime(new Date(), deviceTz));
   const greeting  =
     hour >= 5  && hour < 12 ? t("home.greeting.morning") :
     hour >= 12 && hour < 19 ? t("home.greeting.afternoon") :

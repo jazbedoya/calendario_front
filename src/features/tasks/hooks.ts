@@ -11,7 +11,7 @@ import { enqueue, dequeue } from "@/lib/mutationQueue";
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 export function useTodayDate(): string {
-  const tz = useAuthStore((s) => s.user?.timezone ?? "UTC");
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
   return formatInTimeZone(new Date(), tz, "yyyy-MM-dd");
 }
 
@@ -24,7 +24,7 @@ const STREAK_KEY = ["task-streak"] as const;
 // ── Fetch ─────────────────────────────────────────────────────────────────────
 
 export function useGetYesterdayPending() {
-  const tz              = useAuthStore((s) => s.user?.timezone ?? "UTC");
+  const tz              = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const yesterday       = formatInTimeZone(subDays(new Date(), 1), tz, "yyyy-MM-dd");
 

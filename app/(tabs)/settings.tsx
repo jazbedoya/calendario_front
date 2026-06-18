@@ -201,8 +201,8 @@ export default function SettingsScreen() {
   const { mascotName, setMascotName } = useMascotStore();
   const [editing, setEditing] = useState(false);
   const [draft,   setDraft]   = useState(mascotName);
-  const timezone    = user?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const localHour   = getHours(toZonedTime(new Date(), timezone));
+  const deviceTz    = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const localHour   = getHours(toZonedTime(new Date(), deviceTz));
   const mascotState = getMascotState({ hourOfDay: localHour });
 
   const { hapticsEnabled, setHapticsEnabled } = useCelebrationSettings();

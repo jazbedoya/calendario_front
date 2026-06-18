@@ -16,8 +16,8 @@ import { StreakBadge }       from "@/features/tasks/StreakBadge";
 export default function StatsScreen() {
   const { mascotName } = useMascotStore();
   const user           = useAuthStore((s) => s.user);
-  const timezone       = user?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const localHour      = getHours(toZonedTime(new Date(), timezone));
+  const deviceTz       = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const localHour      = getHours(toZonedTime(new Date(), deviceTz));
   const mascotState    = getMascotState({ hourOfDay: localHour });
   const mascotMessage  = useMascotMessage(mascotState.messageKey);
 

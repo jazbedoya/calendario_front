@@ -2,7 +2,7 @@ import * as Linking from "expo-linking";
 import * as WebBrowser from "expo-web-browser";
 import { useRef } from "react";
 import { useRouter } from "expo-router";
-import { getMeApi } from "@/features/auth/api";
+import { getMeApi, patchMeApi } from "@/features/auth/api";
 import { getGoogleRedirectUri } from "@/lib/getGoogleRedirectUri";
 import { useAuthStore } from "@/stores/authStore";
 import { useMascotStore } from "@/features/mascot/mascotStore";
@@ -80,6 +80,11 @@ export function useGoogleAuth(onError?: (msg: string) => void) {
         const me = await getMeApi();
         setUser(me);
         await syncMascotName(me.mascot_name);
+        // Sync device timezone to backend
+        const deviceTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (deviceTz && deviceTz !== me.timezone) {
+          patchMeApi({ timezone: deviceTz }).catch(() => {});
+        }
         const isNewAccount = Date.now() - new Date(me.created_at).getTime() < 120_000;
         if (isNewAccount) {
           router.replace("/onboarding");
