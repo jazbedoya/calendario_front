@@ -394,7 +394,9 @@
       "title": "About Avante",
       "tagline": "Your calendar with soul",
       "description": "Avante helps you organise your time without losing sight of what matters: the balance between work, family, and yourself. In the Balance section you can set your weekly goals and track your progress day by day. {{mascotName}}, your turtle, walks alongside you to celebrate your wins and cheer you on.",
-      "version": "Version"
+      "version": "Version",
+      "credits": "Animations",
+      "creditsText": "Turtle animations by Bashir Ahmad and other authors via LottieFiles. Lottie Simple License."
     }
   },
   "about": {

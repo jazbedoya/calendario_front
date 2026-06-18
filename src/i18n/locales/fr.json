@@ -394,7 +394,9 @@
       "title": "À propos d'Avante",
       "tagline": "Votre calendrier avec âme",
       "description": "Avante vous aide à organiser votre temps sans perdre de vue ce qui compte : l'équilibre entre le travail, la famille et vous-même. Dans la section Équilibre, vous pouvez définir vos objectifs hebdomadaires et suivre votre progression jour après jour. {{mascotName}}, votre tortue, vous accompagne pour célébrer vos réussites.",
-      "version": "Version"
+      "version": "Version",
+      "credits": "Animations",
+      "creditsText": "Animations de tortue par Bashir Ahmad et d'autres auteurs via LottieFiles. Licence Lottie Simple License."
     }
   },
   "about": {

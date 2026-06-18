@@ -457,6 +457,10 @@ export default function SettingsScreen() {
               </View>
             </View>
             <Text style={s.aboutDescription}>{t("settings.about.description", { mascotName })}</Text>
+            <View style={s.creditsBlock}>
+              <Text style={s.creditsTitle}>{t("settings.about.credits")}</Text>
+              <Text style={s.creditsText}>{t("settings.about.creditsText")}</Text>
+            </View>
             <Text style={s.aboutVersion}>{t("settings.about.version")} 1.0.0</Text>
           </View>
         </View>
@@ -541,5 +545,8 @@ const s = StyleSheet.create({
   aboutTitle:       { fontSize: 15, fontWeight: "700", color: "#1A1A1A" },
   aboutTagline:     { fontSize: 12, color: "#8A8A8A", marginTop: 2 },
   aboutDescription: { fontSize: 14, color: "#4A4A4A", lineHeight: 22 },
+  creditsBlock:     { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: "#EFEFEF", paddingTop: 12 },
+  creditsTitle:     { fontSize: 12, fontWeight: "600", color: "#8A8A8A", marginBottom: 4 },
+  creditsText:      { fontSize: 12, color: "#AAAAAA", lineHeight: 18 },
   aboutVersion:     { fontSize: 12, color: "#BBBBBB", textAlign: "right" },
 });

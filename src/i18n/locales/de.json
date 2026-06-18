@@ -394,7 +394,9 @@
       "title": "Über Avante",
       "tagline": "Dein Kalender mit Seele",
       "description": "Avante hilft dir, deine Zeit zu organisieren, ohne aus dem Blick zu verlieren, was wirklich zählt: die Balance zwischen Arbeit, Familie und dir selbst. Im Bereich Balance kannst du deine Wochenziele festlegen und deinen Fortschritt täglich verfolgen. {{mascotName}}, deine Schildkröte, begleitet dich und feiert jeden Erfolg mit dir.",
-      "version": "Version"
+      "version": "Version",
+      "credits": "Animationen",
+      "creditsText": "Schildkröten-Animationen von Bashir Ahmad und anderen Autoren über LottieFiles. Lottie Simple License."
     }
   },
   "about": {

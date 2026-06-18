@@ -394,7 +394,9 @@
       "title": "Acerca de Avante",
       "tagline": "Tu calendario con alma",
       "description": "Avante te ayuda a organizar tu tiempo sin perder de vista lo que importa: el equilibrio entre tu trabajo, tu familia y tú. En la sección Equilibrio puedes marcar tus metas semanales y ver cómo avanzas día a día. {{mascotName}}, tu tortuga, te acompaña para celebrar tus logros y animarte cuando lo necesitas.",
-      "version": "Versión"
+      "version": "Versión",
+      "credits": "Animaciones",
+      "creditsText": "Animaciones de tortuga por Bashir Ahmad y otros autores vía LottieFiles. Licencia Lottie Simple License."
     }
   },
   "about": {
