@@ -71,10 +71,12 @@ function AppShell() {
     replayed.current = true;
     replayQueue().then((anyReplayed) => {
       if (anyReplayed) {
-        qc.invalidateQueries({ queryKey: ["daily-tasks"] });
-        qc.invalidateQueries({ queryKey: ["task-streak"] });
-        qc.invalidateQueries({ queryKey: ["events"] });
-        qc.invalidateQueries({ queryKey: ["home-summary"] });
+        // refetchType:'none' marks as stale without triggering an immediate background
+        // fetch — prevents race with concurrent optimistic mutations.
+        qc.invalidateQueries({ queryKey: ["daily-tasks"],  refetchType: "none" });
+        qc.invalidateQueries({ queryKey: ["task-streak"],  refetchType: "none" });
+        qc.invalidateQueries({ queryKey: ["events"],       refetchType: "none" });
+        qc.invalidateQueries({ queryKey: ["home-summary"], refetchType: "none" });
       }
     });
   }, [isAuthenticated, qc]);
