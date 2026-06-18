@@ -64,14 +64,14 @@ export const useAuthStore = create<AuthState>((set) => ({
         } catch (e: any) {
           const status = e?.response?.status;
           if (status === 401 || status === 403) {
-            // Token genuinely invalid — clear session
+            // Token genuinely invalid — clear session and cache
+            queryClient.clear();
+            await secureStore.clearTokens();
             set({ accessToken: null, isAuthenticated: false });
             break;
           }
-          // Network error or server error — only clear on second failure
-          if (attempt === 1) {
-            set({ accessToken: null, isAuthenticated: false });
-          }
+          // Network/server error: keep authenticated so cached data stays visible.
+          // The token is still valid — the server is just temporarily unavailable.
         }
       }
     }
