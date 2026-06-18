@@ -79,15 +79,6 @@ function AppShell() {
     });
   }, [isAuthenticated, qc]);
 
-  // Limpiar toda la caché de queries al cerrar sesión (isAuthenticated: true → false)
-  const prevIsAuth = useRef<boolean | null>(null);
-  useEffect(() => {
-    if (prevIsAuth.current === true && !isAuthenticated) {
-      qc.clear();
-    }
-    prevIsAuth.current = isAuthenticated;
-  }, [isAuthenticated, qc]);
-
   // Deep link listener: recibe el callback de Google Calendar OAuth
   useEffect(() => {
     const sub = Linking.addEventListener("url", ({ url }) => {

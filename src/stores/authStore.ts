@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { getMeApi, logoutApi } from "@/features/auth/api";
 import { secureStore } from "@/lib/secure-store";
+import { queryClient } from "@/lib/queryClient";
 
 export interface AuthUser {
   id: string;
@@ -46,6 +47,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       // ignore — backend may already have revoked the token
     }
     await secureStore.clearTokens();
+    queryClient.clear();
     set({ user: null, accessToken: null, isAuthenticated: false });
   },
 
