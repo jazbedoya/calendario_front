@@ -4,6 +4,7 @@ import * as SecureStore from "expo-secure-store";
 const KEYS = {
   ACCESS_TOKEN: "access_token",
   REFRESH_TOKEN: "refresh_token",
+  USER_CACHE: "auth_user_cache",
 } as const;
 
 const isNative = Platform.OS !== "web";
@@ -45,10 +46,17 @@ export const secureStore = {
   async setRefreshToken(token: string): Promise<void> {
     await setItem(KEYS.REFRESH_TOKEN, token);
   },
+  async getCachedUser(): Promise<string | null> {
+    return getItem(KEYS.USER_CACHE);
+  },
+  async setCachedUser(user: object): Promise<void> {
+    await setItem(KEYS.USER_CACHE, JSON.stringify(user));
+  },
   async clearTokens(): Promise<void> {
     await Promise.all([
       deleteItem(KEYS.ACCESS_TOKEN),
       deleteItem(KEYS.REFRESH_TOKEN),
+      deleteItem(KEYS.USER_CACHE),
     ]);
   },
 };

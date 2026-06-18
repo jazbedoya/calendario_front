@@ -38,7 +38,10 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ accessToken, isAuthenticated: true });
   },
 
-  setUser: (user) => set({ user }),
+  setUser: (user) => {
+    set({ user });
+    secureStore.setCachedUser(user).catch(() => {});
+  },
 
   logout: async () => {
     try {
@@ -52,28 +55,28 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   initialize: async () => {
-    const token = await secureStore.getAccessToken();
-    set({ accessToken: token, isAuthenticated: !!token, isLoading: false });
+    const [token, cachedUserRaw] = await Promise.all([
+      secureStore.getAccessToken(),
+      secureStore.getCachedUser(),
+    ]);
+    const cachedUser: AuthUser | null = cachedUserRaw ? JSON.parse(cachedUserRaw) : null;
+    // Set state immediately — no network call needed to show the app
+    set({ accessToken: token, isAuthenticated: !!token, user: cachedUser, isLoading: false });
+
+    // Refresh user profile in background without blocking the UI
     if (token) {
-      // Try up to 2 times — first request on Railway can be slow (cold start)
-      for (let attempt = 0; attempt < 2; attempt++) {
-        try {
-          const user = await getMeApi();
-          set({ user });
-          break;
-        } catch (e: any) {
-          const status = e?.response?.status;
-          if (status === 401 || status === 403) {
-            // Token genuinely invalid — clear session and cache
-            queryClient.clear();
-            await secureStore.clearTokens();
-            set({ accessToken: null, isAuthenticated: false });
-            break;
-          }
-          // Network/server error: keep authenticated so cached data stays visible.
-          // The token is still valid — the server is just temporarily unavailable.
+      getMeApi().then((user) => {
+        set({ user });
+        secureStore.setCachedUser(user).catch(() => {});
+      }).catch(async (e: any) => {
+        const status = e?.response?.status;
+        if (status === 401 || status === 403) {
+          queryClient.clear();
+          await secureStore.clearTokens();
+          set({ accessToken: null, isAuthenticated: false, user: null });
         }
-      }
+        // Network error: keep session alive with cached user data
+      });
     }
     return token;
   },
