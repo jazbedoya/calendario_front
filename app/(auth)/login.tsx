@@ -67,8 +67,8 @@ export default function LoginScreen() {
       const me = await getMeApi();
       setUser(me);
       await syncMascotName(me.mascot_name);
-      if (me.mascot_name === "Tuga") {
-        // Usuario nuevo — dejar que onboarding complete el flujo
+      const isNewAccount = Date.now() - new Date(me.created_at).getTime() < 120_000;
+      if (isNewAccount) {
         router.replace("/onboarding");
       } else {
         await completeOnboarding();

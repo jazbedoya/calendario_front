@@ -1,6 +1,7 @@
 {
   "cli": {
-    "version": ">= 10.0.0"
+    "version": ">= 10.0.0",
+    "appVersionSource": "remote"
   },
   "build": {
     "development": {
@@ -17,7 +18,13 @@
       }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://calendariobackend-production.up.railway.app",
+        "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "412267573077-bcnihn2b97212e16jhor0aurqf7k99rs.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID": "412267573077-bcnihn2b97212e16jhor0aurqf7k99rs.apps.googleusercontent.com",
+        "EXPO_PUBLIC_GOOGLE_REDIRECT_URI": "https://calendariobackend-production.up.railway.app/auth/google/callback"
+      }
     }
   },
   "submit": {

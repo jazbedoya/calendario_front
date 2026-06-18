@@ -13,6 +13,7 @@ export interface AuthUser {
   weekly_intentions: any;
   weekly_intentions_week: string | null; // "yyyy-MM-dd"
   language: string;
+  created_at: string; // ISO datetime
 }
 
 interface AuthState {

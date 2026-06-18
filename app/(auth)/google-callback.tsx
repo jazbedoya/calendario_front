@@ -53,8 +53,13 @@ export default function GoogleCallbackScreen() {
         const me = await getMeApi();
         setUser(me);
         await syncMascotName(me.mascot_name);
-        await completeOnboarding();
-        router.replace("/");
+        const isNewAccount = Date.now() - new Date(me.created_at).getTime() < 120_000;
+        if (isNewAccount) {
+          router.replace("/onboarding");
+        } else {
+          await completeOnboarding();
+          router.replace("/");
+        }
       })
       .catch((e) => {
         setErrorMsg(`Error al verificar con el servidor: ${e?.message ?? "desconocido"}`);
