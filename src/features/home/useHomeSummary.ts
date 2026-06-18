@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
+import { useAuthStore } from "@/stores/authStore";
 
 export interface UpcomingEvent {
   id: string;
@@ -17,6 +18,7 @@ export interface HomeSummary {
 }
 
 export function useHomeSummary() {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   return useQuery<HomeSummary>({
     queryKey: ["home-summary"],
     queryFn: async () => {
@@ -24,5 +26,6 @@ export function useHomeSummary() {
       return data as HomeSummary;
     },
     staleTime: 0,
+    enabled: isAuthenticated,
   });
 }
