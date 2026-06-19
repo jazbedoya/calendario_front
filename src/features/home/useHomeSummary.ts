@@ -25,7 +25,7 @@ export function useHomeSummary() {
       const { data } = await apiClient.get("/home/summary");
       return data as HomeSummary;
     },
-    staleTime: 0,
+    staleTime: 300_000,
     enabled: isAuthenticated,
   });
 }
