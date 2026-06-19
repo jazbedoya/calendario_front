@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import * as Sentry from "@sentry/react-native";
 import { Stack } from "expo-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider, type Persister } from "@tanstack/react-query-persist-client";
@@ -10,6 +11,12 @@ import * as Linking from "expo-linking";
 import * as Notifications from "expo-notifications";
 import "../global.css";
 import "@/i18n";
+
+Sentry.init({
+  dsn: "https://3e0efbe6262f580720a75ce7f733d23a@o4511591698071552.ingest.de.sentry.io/4511591712817232",
+  tracesSampleRate: 0.2,
+  enabled: !__DEV__,
+});
 import { queryClient } from "@/lib/queryClient";
 import { useMascotStore } from "@/features/mascot/mascotStore";
 import { useAuthStore } from "@/stores/authStore";
@@ -98,7 +105,7 @@ function AppShell() {
   );
 }
 
-export default function RootLayout() {
+function RootLayout() {
   return (
     <PersistQueryClientProvider
       client={queryClient}
@@ -108,3 +115,5 @@ export default function RootLayout() {
     </PersistQueryClientProvider>
   );
 }
+
+export default Sentry.wrap(RootLayout);

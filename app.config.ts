@@ -44,6 +44,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     ],
     "expo-secure-store",
+    [
+      "@sentry/react-native/expo",
+      {
+        organization: "avante-jy",
+        project: "react-native",
+      },
+    ],
   ],
   experiments: {
     typedRoutes: true,
