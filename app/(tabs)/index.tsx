@@ -14,6 +14,7 @@ import { mockHomeData } from "@/features/home/mockData";
 import { getHours } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
 import { Mascot } from "@/features/mascot/Mascot";
+import { TugaAnimation } from "@/features/mascot/TugaAnimation";
 import { getMascotState } from "@/features/mascot/getMascotState";
 import { useMascotMessage } from "@/features/mascot/useMascotMessage";
 import { useMascotStore } from "@/features/mascot/mascotStore";
@@ -42,7 +43,11 @@ export default function HomeScreen() {
     setRefreshing(false);
   }, [qc]);
 
-  if (!initialized) return null;
+  if (!initialized) return (
+    <View style={{ flex: 1, backgroundColor: "#FAF9F7", alignItems: "center", justifyContent: "center" }}>
+      <TugaAnimation state="idle" size={80} />
+    </View>
+  );
   if (!onboardingDone) return <Redirect href="/onboarding" />;
 
   // Áreas con subtítulos reales basados en conteo de eventos esta semana

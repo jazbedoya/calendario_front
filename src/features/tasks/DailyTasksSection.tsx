@@ -120,6 +120,13 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
           onCelebrationEnd={() => setCelebrating(false)}
         />
 
+        {/* Hint visual cuando no hay tareas */}
+        {!isLoading && total === 0 && (
+          <View style={s.emptyHint}>
+            <Text style={s.emptyIcon}>📝</Text>
+          </View>
+        )}
+
         {/* Contador */}
         {total > 0 && (
           <Text style={s.counter}>
@@ -187,6 +194,8 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
 }
 
 const s = StyleSheet.create({
+  emptyHint: { alignItems: "center", paddingVertical: 4 },
+  emptyIcon: { fontSize: 28 },
   card: {
     backgroundColor: "#FFFFFF",
     borderRadius: 22,
