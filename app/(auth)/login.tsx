@@ -17,6 +17,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as Linking from "expo-linking";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
 import { loginApi, getMeApi } from "@/features/auth/api";
@@ -223,7 +224,11 @@ export default function LoginScreen() {
           </View>
 
           <View style={styles.legalBlock}>
-            <Text style={styles.legalLinks}>{t("auth.login.privacy")}</Text>
+            <View style={styles.legalRow}>
+              <Text style={styles.legalLink} onPress={() => Linking.openURL("https://jazbedoya.github.io/avante-legal/privacy.html")}>Privacy Policy</Text>
+              <Text style={styles.legalDot}> · </Text>
+              <Text style={styles.legalLink} onPress={() => Linking.openURL("https://jazbedoya.github.io/avante-legal/terms.html")}>Terms of Service</Text>
+            </View>
             <Text style={styles.legalCopy}>{t("auth.login.copyright")}</Text>
           </View>
         </ScrollView>
@@ -354,6 +359,8 @@ const styles = StyleSheet.create({
 
   // Pie legal
   legalBlock: { alignItems: "center", marginTop: 24, gap: 4 },
-  legalLinks: { fontSize: 11, color: Colors.textMuted },
+  legalRow:   { flexDirection: "row", alignItems: "center" },
+  legalLink:  { fontSize: 11, color: Colors.textMuted, textDecorationLine: "underline" },
+  legalDot:   { fontSize: 11, color: "#CCCCCC" },
   legalCopy:  { fontSize: 11, color: "#CCCCCC" },
 });
