@@ -60,7 +60,6 @@ export function useCreateEvent() {
     onSuccess: (event) => {
       addEvent(event);
       qc.invalidateQueries({ queryKey: ["events"] });
-      qc.invalidateQueries({ queryKey: ["home-summary"] });
       import("./useScheduleEventReminder").then(({ scheduleEventReminder }) => {
         scheduleEventReminder(event.id, event.title, event.startAt).catch(() => {});
       });

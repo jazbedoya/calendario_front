@@ -20,6 +20,7 @@ export function useCalendarStatus() {
       });
       return data;
     },
+    staleTime: 300_000,
   });
 }
 

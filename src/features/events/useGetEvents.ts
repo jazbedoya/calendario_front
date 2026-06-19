@@ -29,7 +29,7 @@ export function useGetEvents(year: number, month: number) {
       const { data } = await apiClient.get<any[]>("/events", { params: { start, end } });
       return data.map(mapEvent);
     },
-    staleTime: 60_000,
+    staleTime: 300_000,
     enabled: isAuthenticated,
   });
 }

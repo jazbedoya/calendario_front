@@ -51,7 +51,6 @@ export function useUpdateEvent() {
     onSuccess: (event) => {
       updateEvent(event);
       qc.invalidateQueries({ queryKey: ["events"] });
-      qc.invalidateQueries({ queryKey: ["home-summary"] });
       import("./useScheduleEventReminder").then(({ cancelEventReminder, scheduleEventReminder }) => {
         cancelEventReminder(event.id)
           .then(() => scheduleEventReminder(event.id, event.title, event.startAt))

@@ -1,5 +1,5 @@
 import { View, ScrollView, StyleSheet, Platform, RefreshControl } from "react-native";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { Redirect, router } from "expo-router";
@@ -51,7 +51,7 @@ export default function HomeScreen() {
   if (!onboardingDone) return <Redirect href="/onboarding" />;
 
   // Áreas con subtítulos reales basados en conteo de eventos esta semana
-  const areasWithData = areas.map((area) => {
+  const areasWithData = useMemo(() => areas.map((area) => {
     if (!summary?.week_events_by_layer) return { ...area, subtitle: "" };
     const count = summary.week_events_by_layer[area.layer as keyof typeof summary.week_events_by_layer] ?? 0;
     let subtitle: string;
@@ -75,16 +75,16 @@ export default function HomeScreen() {
           : t("home.area.personal.other", { count });
     }
     return { ...area, subtitle };
-  });
+  }), [areas, summary, t]);
 
   // Insight de tareas pendientes
-  const insightsWithData = insights.map((ins) => {
+  const insightsWithData = useMemo(() => insights.map((ins) => {
     if (ins.id === "focus" && summary) {
       const n = summary.today_tasks_pending;
       return { ...ins, text: n === 0 ? t("home.insight.tasksUpToDate") : t("home.insight.tasksPending", { count: n }) };
     }
     return ins;
-  });
+  }), [insights, summary, t]);
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>

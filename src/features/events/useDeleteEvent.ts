@@ -34,7 +34,6 @@ export function useDeleteEvent() {
         removeEvent(id);
       }
       qc.invalidateQueries({ queryKey: ["events"] });
-      qc.invalidateQueries({ queryKey: ["home-summary"] });
       import("./useScheduleEventReminder").then(({ cancelEventReminder }) => {
         cancelEventReminder(id).catch(() => {});
       });

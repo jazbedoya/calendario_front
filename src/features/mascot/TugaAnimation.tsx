@@ -79,7 +79,6 @@ export function TugaAnimation({ state, size = 120, style, loop = true, onFinish 
 
   return (
     <LottieView
-      key={state}
       source={ANIMATIONS[state]}
       autoPlay
       loop={loop}

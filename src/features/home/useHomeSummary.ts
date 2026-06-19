@@ -26,6 +26,7 @@ export function useHomeSummary() {
       return data as HomeSummary;
     },
     staleTime: 300_000,
+    refetchOnWindowFocus: true,
     enabled: isAuthenticated,
   });
 }
