@@ -25,6 +25,13 @@
       "privacy": "Privacy Policy · Terms of Service",
       "copyright": "© 2026 Avante Wellness"
     },
+    "googleError": {
+      "accessDenied": "Access denied. Please try again.",
+      "cancelled": "Sign in cancelled.",
+      "server": "Google server error. Try again later.",
+      "noToken": "Could not complete authentication.",
+      "generic": "Error signing in with Google."
+    },
     "signup": {
       "title": "Welcome to Avante",
       "subtitle": "Let's take care of your time together",
@@ -92,7 +99,9 @@
     "subtitle": "Your companion on this journey. She'll celebrate every win with you.",
     "mascotMessage": "Hi! So happy to meet you.",
     "nameLabel": "Give her a name",
-    "startBtn": "Get started"
+    "startBtn": "Get started",
+    "errorTitle": "Could not save",
+    "errorMsg": "Check your connection and try again."
   },
   "tabs": {
     "home": "Home",
@@ -150,6 +159,11 @@
     "eventsTitle": "Today's events",
     "noEvents": "No events",
     "noScheduled": "Nothing scheduled for this day.",
+    "addEvent": "Add event",
+    "addFirst": "+ Add an event",
+    "clearSearch": "Clear search",
+    "previous": "Previous",
+    "next": "Next",
     "viewMonth": "Month",
     "viewWeek": "Week",
     "allDay": "All day",
@@ -218,7 +232,11 @@
       "add": "+ Add"
     },
     "addPlaceholder": "Write a task...",
-    "savedConfirm": "Task saved!"
+    "savedConfirm": "Task saved!",
+    "deleteTitle": "Delete task",
+    "deleteMsg": "Delete \"{{task}}\"?",
+    "deleteConfirm": "Delete",
+    "deleteLabel": "Delete {{task}}"
   },
   "mascot": {
     "morning": [
@@ -365,7 +383,9 @@
       "disconnectMsg": "Synced events will be removed. Continue?",
       "disconnectConfirm": "Disconnect",
       "connectError": "Could not start connection with Google Calendar.",
-      "errorTitle": "Error"
+      "errorTitle": "Error",
+      "syncDone": "Sync complete ({{count}} events)",
+      "disconnectedToast": "Google Calendar disconnected"
     },
     "celebration": {
       "section": "Celebration",

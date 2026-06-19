@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { StreakPill } from "@/features/tasks/StreakPill";
 import {
   View, Text, TextInput, TouchableOpacity,
@@ -64,6 +64,16 @@ export default function SettingsScreen() {
   const { language, setLanguage } = useLanguageStore();
   const { country, setCountry }   = useHolidayStore();
   const { hapticsEnabled, setHapticsEnabled } = useCelebrationSettings();
+  const [toast, setToast] = useState<string | null>(null);
+  const toastTimer = useRef<ReturnType<typeof setTimeout>>();
+
+  function showToast(msg: string) {
+    setToast(msg);
+    clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => setToast(null), 2500);
+  }
+
+  useEffect(() => () => clearTimeout(toastTimer.current), []);
 
   const qc = useQueryClient();
   const { isConnecting, setConnecting } = useCalendarStore();
@@ -102,12 +112,15 @@ export default function SettingsScreen() {
   }
 
   function handleDisconnect() {
+    const doDisconnect = () => disconnectMutation.mutate(undefined, {
+      onSuccess: () => showToast(t("settings.calendar.disconnectedToast")),
+    });
     if (Platform.OS === "web") {
-      if (window.confirm(t("settings.calendar.disconnectMsg"))) disconnectMutation.mutate();
+      if (window.confirm(t("settings.calendar.disconnectMsg"))) doDisconnect();
     } else {
       Alert.alert(t("settings.calendar.disconnectTitle"), t("settings.calendar.disconnectMsg"), [
         { text: t("common.cancel"), style: "cancel" },
-        { text: t("settings.calendar.disconnectConfirm"), style: "destructive", onPress: () => disconnectMutation.mutate() },
+        { text: t("settings.calendar.disconnectConfirm"), style: "destructive", onPress: doDisconnect },
       ]);
     }
   }
@@ -260,7 +273,9 @@ export default function SettingsScreen() {
               <View style={s.calActions}>
                 <TouchableOpacity
                   style={s.calActionBtn}
-                  onPress={() => syncMutation.mutate()}
+                  onPress={() => syncMutation.mutate(undefined, {
+                    onSuccess: (data) => showToast(t("settings.calendar.syncDone", { count: data.synced })),
+                  })}
                   disabled={syncMutation.isPending}
                   activeOpacity={0.7}
                 >
@@ -399,6 +414,14 @@ export default function SettingsScreen() {
 
         <View style={{ height: 50 }} />
       </ScrollView>
+
+      {/* Toast banner */}
+      {toast && (
+        <View style={s.toast}>
+          <Ionicons name="checkmark-circle" size={16} color="#4CAF50" />
+          <Text style={s.toastTxt}>{toast}</Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -547,6 +570,17 @@ const s = StyleSheet.create({
   aboutFooter:  { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: "#F0EDE8", paddingTop: 10, marginTop: 4 },
   aboutCredits: { fontSize: 11, color: "#BBBBBB", lineHeight: 16 },
   aboutVersion: { fontSize: 11, color: "#CCCCCC", textAlign: "right", marginTop: 6 },
+
+  // ── Toast ──
+  toast: {
+    position: "absolute", bottom: 100, left: 20, right: 20,
+    flexDirection: "row", alignItems: "center", gap: 8,
+    backgroundColor: "#FFFFFF", borderRadius: 14,
+    paddingHorizontal: 16, paddingVertical: 12,
+    shadowColor: "#000", shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12, shadowRadius: 12, elevation: 6,
+  },
+  toastTxt: { fontSize: 14, fontWeight: "500", color: "#1A1A1A", flex: 1 },
 
   // ── Logout ──
   logoutBtn: {

@@ -253,6 +253,8 @@ export default function LayersScreen() {
             onPress={() => viewMode === 'month' ? changeMonth('prev') : changeWeek('prev')}
             style={styles.navBtn}
             hitSlop={{ top: 14, bottom: 14, left: 14, right: 14 }}
+            accessibilityRole="button"
+            accessibilityLabel={t('calendar.previous')}
           >
             <Ionicons name="chevron-back" size={22} color="#1A1A1A" />
           </TouchableOpacity>
@@ -272,6 +274,8 @@ export default function LayersScreen() {
             onPress={() => viewMode === 'month' ? changeMonth('next') : changeWeek('next')}
             style={styles.navBtn}
             hitSlop={{ top: 14, bottom: 14, left: 14, right: 14 }}
+            accessibilityRole="button"
+            accessibilityLabel={t('calendar.next')}
           >
             <Ionicons name="chevron-forward" size={22} color="#1A1A1A" />
           </TouchableOpacity>
@@ -483,9 +487,21 @@ export default function LayersScreen() {
             )}
 
             {searchQuery.trim() && filteredEvents.length === 0 ? (
-              <Text style={styles.emptyTxt}>{t('calendar.noResults', { query: searchQuery })}</Text>
+              <View style={styles.emptyState}>
+                <Ionicons name="search-outline" size={28} color="#D4CEC8" />
+                <Text style={styles.emptyTxt}>{t('calendar.noResults', { query: searchQuery })}</Text>
+                <TouchableOpacity onPress={() => setSearchQuery('')} activeOpacity={0.7}>
+                  <Text style={styles.emptyAction}>{t('calendar.clearSearch')}</Text>
+                </TouchableOpacity>
+              </View>
             ) : timelineItems.length === 0 ? (
-              <Text style={styles.emptyTxt}>{t('calendar.noScheduled')}</Text>
+              <View style={styles.emptyState}>
+                <Ionicons name="calendar-outline" size={28} color="#D4CEC8" />
+                <Text style={styles.emptyTxt}>{t('calendar.noScheduled')}</Text>
+                <TouchableOpacity onPress={openCreate} activeOpacity={0.7} accessibilityRole="button" accessibilityLabel={t('calendar.addEvent')}>
+                  <Text style={styles.emptyAction}>{t('calendar.addFirst')}</Text>
+                </TouchableOpacity>
+              </View>
             ) : (
               timelineItems
                 .filter((item) =>
@@ -516,7 +532,13 @@ export default function LayersScreen() {
       </ScrollView>
 
       {/* ── FAB añadir evento ── */}
-      <TouchableOpacity style={styles.fab} activeOpacity={0.85} onPress={openCreate}>
+      <TouchableOpacity
+        style={styles.fab}
+        activeOpacity={0.85}
+        onPress={openCreate}
+        accessibilityRole="button"
+        accessibilityLabel={t('calendar.addEvent')}
+      >
         <Ionicons name="add" size={28} color="#FFFFFF" />
       </TouchableOpacity>
 
@@ -759,9 +781,16 @@ const styles = StyleSheet.create({
   },
   panelTitle: { fontSize: 16, fontWeight: '700', color: '#1A1A1A', letterSpacing: 0.2 },
   panelDate:  { fontSize: 13, color: '#AAAAAA', textTransform: 'capitalize' },
+  emptyState: {
+    alignItems: 'center', paddingVertical: 20, gap: 8,
+  },
   emptyTxt: {
     fontSize: 14, color: '#BBBBBB',
-    textAlign: 'center', paddingVertical: 20,
+    textAlign: 'center',
+  },
+  emptyAction: {
+    fontSize: 14, fontWeight: '600', color: TODAY_COLOR,
+    paddingVertical: 6, paddingHorizontal: 16,
   },
 
   // ── FAB ──

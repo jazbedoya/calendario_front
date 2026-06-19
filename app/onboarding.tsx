@@ -7,6 +7,8 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
@@ -17,13 +19,21 @@ import { useMascotStore } from "@/features/mascot/mascotStore";
 export default function OnboardingScreen() {
   const { t } = useTranslation();
   const [name, setName] = useState("Tuga");
+  const [saving, setSaving] = useState(false);
   const { setMascotName, completeOnboarding } = useMascotStore();
 
   async function handleStart() {
-    const trimmed = name.trim() || "Tuga";
-    await setMascotName(trimmed);
-    await completeOnboarding();
-    router.replace("/(tabs)");
+    if (saving) return;
+    setSaving(true);
+    try {
+      const trimmed = name.trim() || "Tuga";
+      await setMascotName(trimmed);
+      await completeOnboarding();
+      router.replace("/(tabs)");
+    } catch {
+      setSaving(false);
+      Alert.alert(t("onboarding.errorTitle"), t("onboarding.errorMsg"));
+    }
   }
 
   return (
@@ -59,8 +69,19 @@ export default function OnboardingScreen() {
             onSubmitEditing={handleStart}
           />
 
-          <TouchableOpacity style={styles.button} onPress={handleStart} activeOpacity={0.85}>
-            <Text style={styles.buttonText}>{t('onboarding.startBtn')}</Text>
+          <TouchableOpacity
+            style={[styles.button, saving && styles.buttonDisabled]}
+            onPress={handleStart}
+            activeOpacity={0.85}
+            disabled={saving}
+            accessibilityRole="button"
+            accessibilityLabel={t('onboarding.startBtn')}
+          >
+            {saving ? (
+              <ActivityIndicator color="#FFFFFF" size="small" />
+            ) : (
+              <Text style={styles.buttonText}>{t('onboarding.startBtn')}</Text>
+            )}
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -124,6 +145,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#4CAF50",
     alignItems: "center",
     justifyContent: "center",
+  },
+  buttonDisabled: {
+    opacity: 0.7,
   },
   buttonText: {
     fontSize: 16,

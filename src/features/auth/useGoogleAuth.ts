@@ -2,6 +2,7 @@ import * as Linking from "expo-linking";
 import * as WebBrowser from "expo-web-browser";
 import { useRef } from "react";
 import { useRouter } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { getMeApi, patchMeApi } from "@/features/auth/api";
 import { getGoogleRedirectUri } from "@/lib/getGoogleRedirectUri";
 import { useAuthStore } from "@/stores/authStore";
@@ -27,8 +28,17 @@ function _buildGoogleAuthUrl(redirectTo: string, callbackUri: string): string {
   return `https://accounts.google.com/o/oauth2/v2/auth?${qs}`;
 }
 
+const GOOGLE_ERROR_KEYS: Record<string, string> = {
+  access_denied:          "auth.googleError.accessDenied",
+  popup_closed_by_user:   "auth.googleError.cancelled",
+  interaction_required:   "auth.googleError.cancelled",
+  server_error:           "auth.googleError.server",
+  temporarily_unavailable:"auth.googleError.server",
+};
+
 export function useGoogleAuth(onError?: (msg: string) => void) {
   const router = useRouter();
+  const { t } = useTranslation();
   const { setTokens, setUser } = useAuthStore();
   const syncMascotName     = useMascotStore((s) => s.syncMascotName);
   const completeOnboarding = useMascotStore((s) => s.completeOnboarding);
@@ -62,7 +72,9 @@ export function useGoogleAuth(onError?: (msg: string) => void) {
       console.log("[GoogleAuth] deep-link params:", JSON.stringify(params));
 
       if (params.error) {
-        onErrorRef.current?.(`Error de Google: ${params.error}`);
+        const errorCode = String(params.error);
+        const msgKey = GOOGLE_ERROR_KEYS[errorCode] ?? "auth.googleError.generic";
+        onErrorRef.current?.(t(msgKey));
         return;
       }
 
@@ -70,7 +82,7 @@ export function useGoogleAuth(onError?: (msg: string) => void) {
       const refreshToken = params.refresh_token as string | undefined;
 
       if (!accessToken || !refreshToken) {
-        onErrorRef.current?.("No se pudo obtener el token");
+        onErrorRef.current?.(t("auth.googleError.noToken"));
         return;
       }
 
@@ -106,7 +118,7 @@ export function useGoogleAuth(onError?: (msg: string) => void) {
       }
     } catch (e: any) {
       console.error("[GoogleAuth] error:", e?.message);
-      onErrorRef.current?.("Error al iniciar sesión con Google");
+      onErrorRef.current?.(t("auth.googleError.generic"));
     } finally {
       launchingRef.current = false;
     }

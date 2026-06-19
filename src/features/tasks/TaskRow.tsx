@@ -1,5 +1,6 @@
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import type { DailyTask } from "./api";
 
 interface Props {
@@ -11,24 +12,29 @@ interface Props {
 }
 
 export function TaskRow({ task, accent, onToggle, onDelete, isLast }: Props) {
+  const { t } = useTranslation();
+
   function confirmDelete() {
     Alert.alert(
-      "Borrar tarea",
-      `¿Borrar "${task.text}"?`,
+      t("tasks.deleteTitle"),
+      t("tasks.deleteMsg", { task: task.text }),
       [
-        { text: "Cancelar", style: "cancel" },
-        { text: "Borrar",   style: "destructive", onPress: onDelete },
+        { text: t("common.cancel"), style: "cancel" },
+        { text: t("tasks.deleteConfirm"), style: "destructive", onPress: onDelete },
       ],
     );
   }
 
   return (
-    <View style={[s.row, !isLast && s.border]}>
+    <View style={[s.row, !isLast && s.border]} accessibilityRole="none">
       {/* Checkbox */}
       <TouchableOpacity
         onPress={onToggle}
         activeOpacity={0.75}
         style={[s.checkbox, task.done && { backgroundColor: accent, borderColor: accent }]}
+        accessibilityRole="checkbox"
+        accessibilityState={{ checked: task.done }}
+        accessibilityLabel={task.text}
       >
         {task.done && <Ionicons name="checkmark" size={12} color="#FFFFFF" />}
       </TouchableOpacity>
@@ -43,7 +49,13 @@ export function TaskRow({ task, accent, onToggle, onDelete, isLast }: Props) {
       </Text>
 
       {/* Delete */}
-      <TouchableOpacity onPress={confirmDelete} style={s.del} hitSlop={12}>
+      <TouchableOpacity
+        onPress={confirmDelete}
+        style={s.del}
+        hitSlop={12}
+        accessibilityRole="button"
+        accessibilityLabel={t("tasks.deleteLabel", { task: task.text })}
+      >
         <Ionicons name="trash-outline" size={15} color="#D4CEC8" />
       </TouchableOpacity>
     </View>

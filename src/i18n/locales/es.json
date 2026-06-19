@@ -25,6 +25,13 @@
       "privacy": "Privacy Policy · Terms of Service",
       "copyright": "© 2026 Avante Wellness"
     },
+    "googleError": {
+      "accessDenied": "Se denegó el acceso. Inténtalo de nuevo.",
+      "cancelled": "Inicio de sesión cancelado.",
+      "server": "Error en el servidor de Google. Inténtalo más tarde.",
+      "noToken": "No se pudo completar la autenticación.",
+      "generic": "Error al iniciar sesión con Google."
+    },
     "signup": {
       "title": "Bienvenida a Avante",
       "subtitle": "Vamos a cuidar tu tiempo juntos",
@@ -92,7 +99,9 @@
     "subtitle": "Tu compañera en este viaje. Ella celebrará contigo cada logro.",
     "mascotMessage": "¡Hola! Me alegra conocerte.",
     "nameLabel": "Dale un nombre",
-    "startBtn": "Empezar"
+    "startBtn": "Empezar",
+    "errorTitle": "No se pudo guardar",
+    "errorMsg": "Comprueba tu conexión e inténtalo de nuevo."
   },
   "tabs": {
     "home": "Inicio",
@@ -154,7 +163,12 @@
     "viewWeek": "Semana",
     "allDay": "Todo el día",
     "occupied": "Otras áreas ocupadas",
-    "holiday": "Festivo"
+    "holiday": "Festivo",
+    "addEvent": "Añadir evento",
+    "addFirst": "+ Añadir un evento",
+    "clearSearch": "Limpiar búsqueda",
+    "previous": "Anterior",
+    "next": "Siguiente"
   },
   "holidays": {
     "newYear": "Año Nuevo",
@@ -218,7 +232,11 @@
       "add": "+ Añadir"
     },
     "addPlaceholder": "Escribe una tarea...",
-    "savedConfirm": "¡Tarea guardada!"
+    "savedConfirm": "¡Tarea guardada!",
+    "deleteTitle": "Borrar tarea",
+    "deleteMsg": "¿Borrar \"{{task}}\"?",
+    "deleteConfirm": "Borrar",
+    "deleteLabel": "Borrar {{task}}"
   },
   "mascot": {
     "morning": [
@@ -365,7 +383,9 @@
       "disconnectMsg": "Se eliminarán los eventos sincronizados. ¿Continuar?",
       "disconnectConfirm": "Desconectar",
       "connectError": "No se pudo iniciar la conexión con Google Calendar.",
-      "errorTitle": "Error"
+      "errorTitle": "Error",
+      "syncDone": "Sincronización completada ({{count}} eventos)",
+      "disconnectedToast": "Google Calendar desconectado"
     },
     "celebration": {
       "section": "Celebración",
