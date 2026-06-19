@@ -2,7 +2,7 @@ import { useState } from "react";
 import { StreakPill } from "@/features/tasks/StreakPill";
 import {
   View, Text, TextInput, TouchableOpacity,
-  StyleSheet, Alert, ActivityIndicator, ScrollView, Platform,
+  StyleSheet, Alert, ActivityIndicator, ScrollView, Platform, Share,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -19,7 +19,7 @@ import { useCelebrationSettings }    from "@/stores/celebrationSettingsStore";
 import { getHours } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
 import { getMascotState }            from "@/features/mascot/getMascotState";
-import { Mascot } from "@/features/mascot/Mascot";
+import { TugaAnimation, MOOD_TO_STATE } from "@/features/mascot/TugaAnimation";
 import {
   useCalendarStatus,
   useSyncCalendar,
@@ -33,131 +33,14 @@ import { useHolidayStore }           from "@/features/settings/holidayStore";
 import type { HolidayCountry }       from "@/features/overview/getHolidays";
 import { SUPPORTED_LANGUAGES, type SupportedLanguage } from "@/i18n";
 
-// ─── Row component ────────────────────────────────────────────────────────────
+// ─── Constants ───────────────────────────────────────────────────────────────
 
-interface RowProps {
-  icon: keyof typeof Ionicons.glyphMap;
-  iconBg: string;
-  iconColor?: string;
-  label: string;
-  sublabel?: string;
-  onPress?: () => void;
-  rightText?: string;
-  destructive?: boolean;
-  disabled?: boolean;
-  loading?: boolean;
-  noChevron?: boolean;
-  last?: boolean;
-}
-
-function Row({
-  icon, iconBg, iconColor, label, sublabel,
-  onPress, rightText, destructive, disabled, loading, noChevron, last,
-}: RowProps) {
-  const iColor = destructive ? "#C8553D" : (iconColor ?? "#555555");
-  return (
-    <TouchableOpacity
-      style={[r.row, !last && r.border]}
-      onPress={onPress}
-      disabled={disabled || loading || !onPress}
-      activeOpacity={0.6}
-    >
-      <View style={[r.iconBox, { backgroundColor: iconBg }]}>
-        <Ionicons name={icon} size={17} color={iColor} />
-      </View>
-      <View style={r.labelWrap}>
-        <Text style={[r.label, destructive && r.labelRed]}>{label}</Text>
-        {sublabel ? <Text style={r.sublabel}>{sublabel}</Text> : null}
-      </View>
-      {loading ? (
-        <ActivityIndicator size="small" color="#AAAAAA" style={r.right} />
-      ) : rightText ? (
-        <Text style={r.rightText}>{rightText}</Text>
-      ) : noChevron ? null : (
-        <Ionicons name="chevron-forward" size={14} color="#CCCCCC" style={r.right} />
-      )}
-    </TouchableOpacity>
-  );
-}
-
-const r = StyleSheet.create({
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 18,
-    paddingVertical: 16,
-    backgroundColor: "#FFFFFF",
-  },
-  border:   { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: "#EFEFEF" },
-  iconBox:  { width: 36, height: 36, borderRadius: 10, alignItems: "center", justifyContent: "center", marginRight: 14 },
-  labelWrap:{ flex: 1 },
-  label:    { fontSize: 15, fontWeight: "500", color: "#1A1A1A" },
-  labelRed: { color: "#C8553D" },
-  sublabel: { fontSize: 12, color: "#8A8A8A", marginTop: 2 },
-  right:    { marginLeft: 8 },
-  rightText:{ fontSize: 13, color: "#8A8A8A", marginLeft: 8 },
-});
-
-// ─── Language picker ──────────────────────────────────────────────────────────
+const ACCENT = "#C8553D";
+const BG = "#F8F6F2";
 
 const LANG_ICONS: Record<SupportedLanguage, string> = {
   es: "🇪🇸", en: "🇬🇧", fr: "🇫🇷", de: "🇩🇪",
 };
-
-function LanguagePicker() {
-  const { t } = useTranslation();
-  const { language, setLanguage } = useLanguageStore();
-
-  return (
-    <View style={lp.row}>
-      {SUPPORTED_LANGUAGES.map((lang, idx) => {
-        const active = lang === language;
-        const isLast = idx === SUPPORTED_LANGUAGES.length - 1;
-        return (
-          <TouchableOpacity
-            key={lang}
-            style={[lp.pill, active && lp.pillActive, !isLast && lp.pillBorder]}
-            onPress={() => setLanguage(lang)}
-            activeOpacity={0.7}
-          >
-            <Text style={lp.flag}>{LANG_ICONS[lang]}</Text>
-            <Text style={[lp.pillTxt, active && lp.pillTxtActive]}>
-              {t(`settings.language.${lang}`)}
-            </Text>
-          </TouchableOpacity>
-        );
-      })}
-    </View>
-  );
-}
-
-const lp = StyleSheet.create({
-  row: {
-    flexDirection: "row",
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    gap: 10,
-    flexWrap: "wrap",
-  },
-  pill: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 7,
-    paddingHorizontal: 16,
-    paddingVertical: 11,
-    borderRadius: 22,
-    backgroundColor: "#F5F5F5",
-    borderWidth: 1.5,
-    borderColor: "transparent",
-  },
-  pillActive:    { backgroundColor: "#FFF3E8", borderColor: "#C8553D", borderWidth: 2 },
-  pillBorder:    {},
-  flag:          { fontSize: 17 },
-  pillTxt:       { fontSize: 14, fontWeight: "500", color: "#5A5A5A" },
-  pillTxtActive: { color: "#C8553D", fontWeight: "700" },
-});
-
-// ─── Country picker ───────────────────────────────────────────────────────────
 
 const COUNTRY_FLAGS: Record<HolidayCountry, string> = {
   ES: "🇪🇸", PY: "🇵🇾",
@@ -165,34 +48,7 @@ const COUNTRY_FLAGS: Record<HolidayCountry, string> = {
 
 const HOLIDAY_COUNTRIES: HolidayCountry[] = ["ES", "PY"];
 
-function CountryPicker() {
-  const { t } = useTranslation();
-  const { country, setCountry } = useHolidayStore();
-
-  return (
-    <View style={lp.row}>
-      {HOLIDAY_COUNTRIES.map((c, idx) => {
-        const active = c === country;
-        const isLast = idx === HOLIDAY_COUNTRIES.length - 1;
-        return (
-          <TouchableOpacity
-            key={c}
-            style={[lp.pill, active && lp.pillActive, !isLast && lp.pillBorder]}
-            onPress={() => setCountry(c)}
-            activeOpacity={0.7}
-          >
-            <Text style={lp.flag}>{COUNTRY_FLAGS[c]}</Text>
-            <Text style={[lp.pillTxt, active && lp.pillTxtActive]}>
-              {t(`settings.country.${c}`)}
-            </Text>
-          </TouchableOpacity>
-        );
-      })}
-    </View>
-  );
-}
-
-// ─── Screen ───────────────────────────────────────────────────────────────────
+// ─── Screen ──────────────────────────────────────────────────────────────────
 
 export default function SettingsScreen() {
   const { t } = useTranslation();
@@ -205,6 +61,8 @@ export default function SettingsScreen() {
   const localHour   = getHours(toZonedTime(new Date(), deviceTz));
   const mascotState = getMascotState({ hourOfDay: localHour });
 
+  const { language, setLanguage } = useLanguageStore();
+  const { country, setCountry }   = useHolidayStore();
   const { hapticsEnabled, setHapticsEnabled } = useCelebrationSettings();
 
   const qc = useQueryClient();
@@ -213,11 +71,7 @@ export default function SettingsScreen() {
   const syncMutation       = useSyncCalendar();
   const disconnectMutation = useDisconnectCalendar();
 
-  function startEdit() {
-    setDraft(mascotName);
-    setEditing(true);
-  }
-
+  function startEdit() { setDraft(mascotName); setEditing(true); }
   async function saveEdit() {
     const trimmed = draft.trim();
     if (!trimmed) {
@@ -227,11 +81,7 @@ export default function SettingsScreen() {
     await setMascotName(trimmed);
     setEditing(false);
   }
-
-  function cancelEdit() {
-    setDraft(mascotName);
-    setEditing(false);
-  }
+  function cancelEdit() { setDraft(mascotName); setEditing(false); }
 
   async function handleConnectCalendar() {
     try {
@@ -253,52 +103,51 @@ export default function SettingsScreen() {
 
   function handleDisconnect() {
     if (Platform.OS === "web") {
-      if (window.confirm(t("settings.calendar.disconnectMsg"))) {
-        disconnectMutation.mutate();
-      }
+      if (window.confirm(t("settings.calendar.disconnectMsg"))) disconnectMutation.mutate();
     } else {
-      Alert.alert(
-        t("settings.calendar.disconnectTitle"),
-        t("settings.calendar.disconnectMsg"),
-        [
-          { text: t("common.cancel"), style: "cancel" },
-          { text: t("settings.calendar.disconnectConfirm"), style: "destructive", onPress: () => disconnectMutation.mutate() },
-        ],
-      );
+      Alert.alert(t("settings.calendar.disconnectTitle"), t("settings.calendar.disconnectMsg"), [
+        { text: t("common.cancel"), style: "cancel" },
+        { text: t("settings.calendar.disconnectConfirm"), style: "destructive", onPress: () => disconnectMutation.mutate() },
+      ]);
     }
   }
 
   function formatLastSync(iso: string | null | undefined): string {
     if (!iso) return "–";
-    return new Date(iso).toLocaleString(undefined, {
-      day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit",
-    });
+    return new Date(iso).toLocaleString(undefined, { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
   }
 
   const isConnected = calStatus?.connected ?? false;
 
   return (
     <SafeAreaView style={s.safe} edges={["top"]}>
-      <ScrollView
-        style={s.scroll}
-        contentContainerStyle={s.content}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView style={s.scroll} contentContainerStyle={s.content} showsVerticalScrollIndicator={false}>
+
+        {/* ── Header ── */}
         <View style={s.titleRow}>
           <Text style={s.screenTitle}>{t("settings.title")}</Text>
           <StreakPill />
         </View>
 
-        {/* ── Tu tortuga ──────────────────────────────────────── */}
-        <Text style={s.sectionLabel}>{t("settings.mascot.section")}</Text>
+        {/* ══════════════════════════════════════════════════════
+            MASCOTA — card compacta horizontal
+            ══════════════════════════════════════════════════════ */}
         <View style={s.card}>
-          <View style={s.tugaBox}>
-            <Mascot name={mascotName} mood={mascotState.mood} message="" size="small" showName />
+          <View style={s.mascotRow}>
+            <View style={s.mascotFrame}>
+              <TugaAnimation state={MOOD_TO_STATE[mascotState.mood]} size={56} />
+            </View>
+            <View style={s.mascotInfo}>
+              <Text style={s.mascotName}>{mascotName}</Text>
+              <Text style={s.mascotHint}>{t("settings.mascot.section")}</Text>
+            </View>
+            {!editing && (
+              <TouchableOpacity style={s.mascotEditBtn} onPress={startEdit} activeOpacity={0.7}>
+                <Ionicons name="pencil-outline" size={15} color={ACCENT} />
+              </TouchableOpacity>
+            )}
           </View>
-
-          <View style={s.cardDivider} />
-
-          {editing ? (
+          {editing && (
             <View style={s.editBlock}>
               <TextInput
                 style={s.input}
@@ -312,241 +161,399 @@ export default function SettingsScreen() {
                 returnKeyType="done"
                 onSubmitEditing={saveEdit}
               />
-              <TouchableOpacity style={s.saveBtn} onPress={saveEdit} activeOpacity={0.8}>
-                <Text style={s.saveBtnTxt}>{t("settings.mascot.saveBtn")}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={s.cancelLink} onPress={cancelEdit}>
-                <Text style={s.cancelLinkTxt}>{t("settings.mascot.cancelBtn")}</Text>
-              </TouchableOpacity>
+              <View style={s.editBtns}>
+                <TouchableOpacity style={s.saveBtn} onPress={saveEdit} activeOpacity={0.8}>
+                  <Text style={s.saveBtnTxt}>{t("settings.mascot.saveBtn")}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={cancelEdit} activeOpacity={0.7}>
+                  <Text style={s.cancelTxt}>{t("settings.mascot.cancelBtn")}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          ) : (
-            <Row
-              icon="pencil-outline"
-              iconBg="#E8F5E9"
-              iconColor="#4CAF50"
-              label={t("settings.mascot.changeName")}
-              onPress={startEdit}
-              last
-            />
           )}
         </View>
 
-        {/* ── Google Calendar ─────────────────────────────────── */}
+        {/* ══════════════════════════════════════════════════════
+            PREFERENCIAS — idioma, país, haptics en una sola card
+            ══════════════════════════════════════════════════════ */}
+        <Text style={s.sectionLabel}>{t("settings.language.section")}</Text>
+        <View style={s.card}>
+          {/* Idioma */}
+          <View style={s.prefRow}>
+            <View style={[s.prefIcon, { backgroundColor: "#EEF2FF" }]}>
+              <Ionicons name="language-outline" size={16} color="#4A6FA5" />
+            </View>
+            <View style={s.pillGroup}>
+              {SUPPORTED_LANGUAGES.map((lang) => {
+                const active = lang === language;
+                return (
+                  <TouchableOpacity
+                    key={lang}
+                    style={[s.pill, active && s.pillActive]}
+                    onPress={() => setLanguage(lang)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={s.pillFlag}>{LANG_ICONS[lang]}</Text>
+                    <Text style={[s.pillTxt, active && s.pillTxtActive]}>
+                      {t(`settings.language.${lang}`)}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </View>
+
+          <View style={s.divider} />
+
+          {/* País festivos */}
+          <View style={s.prefRow}>
+            <View style={[s.prefIcon, { backgroundColor: "#FFF8E8" }]}>
+              <Ionicons name="flag-outline" size={16} color="#C8A52A" />
+            </View>
+            <Text style={s.prefLabel}>{t("settings.country.section")}</Text>
+            <View style={s.pillGroup}>
+              {HOLIDAY_COUNTRIES.map((c) => {
+                const active = c === country;
+                return (
+                  <TouchableOpacity
+                    key={c}
+                    style={[s.pill, active && s.pillActive]}
+                    onPress={() => setCountry(c)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={s.pillFlag}>{COUNTRY_FLAGS[c]}</Text>
+                    <Text style={[s.pillTxt, active && s.pillTxtActive]}>
+                      {t(`settings.country.${c}`)}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </View>
+
+          {/* Haptics hidden for now */}
+        </View>
+
+        {/* ══════════════════════════════════════════════════════
+            GOOGLE CALENDAR
+            ══════════════════════════════════════════════════════ */}
         <Text style={s.sectionLabel}>{t("settings.calendar.section")}</Text>
         <View style={s.card}>
           {isConnected ? (
             <>
-              <View style={s.accountRow}>
-                <View style={s.statusDotWrap}>
-                  <View style={s.statusDot} />
-                </View>
+              <View style={s.calConnected}>
+                <View style={s.calDot} />
                 <View style={{ flex: 1 }}>
-                  <View style={s.accountEmailRow}>
-                    <Text style={s.accountEmail}>{calStatus?.google_email}</Text>
-                    <View style={s.connectedBadge}>
-                      <Text style={s.connectedBadgeTxt}>{t("settings.calendar.connected")}</Text>
+                  <View style={s.calEmailRow}>
+                    <Text style={s.calEmail}>{calStatus?.google_email}</Text>
+                    <View style={s.calBadge}>
+                      <Text style={s.calBadgeTxt}>{t("settings.calendar.connected")}</Text>
                     </View>
                   </View>
-                  <Text style={s.accountMeta}>
+                  <Text style={s.calMeta}>
                     {calStatus?.last_synced_at
                       ? `${t("settings.calendar.lastSync", { date: formatLastSync(calStatus.last_synced_at) })}${syncMutation.isSuccess ? `  ·  ${t("settings.calendar.imported", { count: syncMutation.data.synced })}` : ""}`
                       : t("settings.calendar.noSync")}
                   </Text>
                 </View>
               </View>
-              <View style={s.cardDivider} />
-              <Row
-                icon="refresh-outline"
-                iconBg="#E3F2FD"
-                iconColor="#1976D2"
-                label={t("settings.calendar.sync")}
-                onPress={() => syncMutation.mutate()}
-                loading={syncMutation.isPending}
-                disabled={syncMutation.isPending}
-              />
-              <Row
-                icon="unlink-outline"
-                iconBg="#FDECEC"
-                label={t("settings.calendar.disconnect")}
-                onPress={handleDisconnect}
-                disabled={disconnectMutation.isPending}
-                loading={disconnectMutation.isPending}
-                destructive
-                noChevron
-                last
-              />
+              <View style={s.calActions}>
+                <TouchableOpacity
+                  style={s.calActionBtn}
+                  onPress={() => syncMutation.mutate()}
+                  disabled={syncMutation.isPending}
+                  activeOpacity={0.7}
+                >
+                  {syncMutation.isPending
+                    ? <ActivityIndicator size="small" color="#1976D2" />
+                    : <Ionicons name="refresh-outline" size={16} color="#1976D2" />}
+                  <Text style={[s.calActionTxt, { color: "#1976D2" }]}>{t("settings.calendar.sync")}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={s.calActionBtn}
+                  onPress={handleDisconnect}
+                  disabled={disconnectMutation.isPending}
+                  activeOpacity={0.7}
+                >
+                  {disconnectMutation.isPending
+                    ? <ActivityIndicator size="small" color={ACCENT} />
+                    : <Ionicons name="unlink-outline" size={16} color={ACCENT} />}
+                  <Text style={[s.calActionTxt, { color: ACCENT }]}>{t("settings.calendar.disconnect")}</Text>
+                </TouchableOpacity>
+              </View>
             </>
           ) : (
-            <>
-              <Text style={s.calDesc}>{t("settings.calendar.description")}</Text>
-              <View style={s.cardDivider} />
-              <Row
-                icon="calendar-outline"
-                iconBg="#F3F3F3"
-                iconColor="#1A1A1A"
-                label={t("settings.calendar.connect")}
-                onPress={handleConnectCalendar}
-                loading={isConnecting}
-                disabled={isConnecting}
-                last
-              />
-            </>
+            <TouchableOpacity
+              style={s.calConnect}
+              onPress={handleConnectCalendar}
+              disabled={isConnecting}
+              activeOpacity={0.7}
+            >
+              {isConnecting ? (
+                <ActivityIndicator size="small" color="#1A1A1A" />
+              ) : (
+                <Ionicons name="logo-google" size={18} color="#1A1A1A" />
+              )}
+              <View style={{ flex: 1 }}>
+                <Text style={s.calConnectTxt}>{t("settings.calendar.connect")}</Text>
+                <Text style={s.calConnectHint}>{t("settings.calendar.description")}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={16} color="#CCCCCC" />
+            </TouchableOpacity>
           )}
         </View>
 
-        {/* ── Idioma ──────────────────────────────────────────── */}
-        <Text style={s.sectionLabel}>{t("settings.language.section")}</Text>
-        <View style={s.card}>
-          <LanguagePicker />
-        </View>
-
-        {/* ── País de festivos ────────────────────────────────── */}
-        <Text style={s.sectionLabel}>{t("settings.country.section")}</Text>
-        <View style={s.card}>
-          <CountryPicker />
-        </View>
-
-        {/* ── Celebración ─────────────────────────────────────── */}
-        <Text style={s.sectionLabel}>{t("settings.celebration.section")}</Text>
-        <View style={s.card}>
-          <View style={r.row}>
-            <View style={[r.iconBox, { backgroundColor: "#FFF4E8" }]}>
-              <Ionicons name="phone-portrait-outline" size={17} color="#C8553D" />
+        {/* ══════════════════════════════════════════════════════
+            APOYAR (solo Android/web)
+            ══════════════════════════════════════════════════════ */}
+        {Platform.OS !== "ios" ? (
+          <>
+            <Text style={s.sectionLabel}>{t("settings.support.section")}</Text>
+            <View style={[s.card, s.supportCard]}>
+              <View style={s.supportRow}>
+                <Text style={s.supportEmoji}>☕</Text>
+                <View style={{ flex: 1 }}>
+                  <Text style={s.supportTitle}>{t("settings.support.title")}</Text>
+                  <Text style={s.supportDesc}>{t("settings.support.description")}</Text>
+                </View>
+              </View>
+              <TouchableOpacity
+                style={s.supportBtn}
+                onPress={() => Linking.openURL("https://ko-fi.com/jazmin_bedoya")}
+                activeOpacity={0.85}
+              >
+                <Text style={s.supportBtnTxt}>{t("settings.support.button")}</Text>
+              </TouchableOpacity>
             </View>
-            <View style={r.labelWrap}>
-              <Text style={r.label}>{t("settings.celebration.haptics")}</Text>
-              <Text style={r.sublabel}>{t("settings.celebration.hapticsHint")}</Text>
+          </>
+        ) : (
+          <>
+            <Text style={s.sectionLabel}>{t("settings.community.section")}</Text>
+            <View style={s.card}>
+              <TouchableOpacity
+                style={s.communityRow}
+                onPress={() => {
+                  // TODO: replace with actual App Store URL
+                  Linking.openURL("https://apps.apple.com/app/id0000000000");
+                }}
+                activeOpacity={0.7}
+              >
+                <View style={[s.prefIcon, { backgroundColor: "#FFF8E8" }]}>
+                  <Ionicons name="star-outline" size={16} color="#E8A317" />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={s.communityLabel}>{t("settings.community.review")}</Text>
+                  <Text style={s.communityHint}>{t("settings.community.reviewHint")}</Text>
+                </View>
+                <Ionicons name="chevron-forward" size={14} color="#CCCCCC" />
+              </TouchableOpacity>
+              <View style={s.divider} />
+              <TouchableOpacity
+                style={s.communityRow}
+                onPress={() => {
+                  const message = t("settings.community.shareMessage");
+                  Share.share({ message }).catch(() => {});
+                }}
+                activeOpacity={0.7}
+              >
+                <View style={[s.prefIcon, { backgroundColor: "#EEF6EE" }]}>
+                  <Ionicons name="share-outline" size={16} color="#4CAF50" />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={s.communityLabel}>{t("settings.community.share")}</Text>
+                  <Text style={s.communityHint}>{t("settings.community.shareHint")}</Text>
+                </View>
+                <Ionicons name="chevron-forward" size={14} color="#CCCCCC" />
+              </TouchableOpacity>
             </View>
-            <Switch
-              value={hapticsEnabled}
-              onValueChange={setHapticsEnabled}
-              trackColor={{ false: "#E0E0E0", true: "#C8553D" }}
-              thumbColor="#FFFFFF"
-            />
-          </View>
-        </View>
+          </>
+        )}
 
-        {/* ── Sesión ──────────────────────────────────────────── */}
-        <Text style={s.sectionLabel}>{t("settings.session.section")}</Text>
-        <View style={s.card}>
-          <Row
-            icon="log-out-outline"
-            iconBg="#FDECEC"
-            label={t("settings.session.logout")}
-            onPress={async () => {
-              await logout();
-              router.replace("/(auth)/login");
-            }}
-            destructive
-            noChevron
-            last
-          />
-        </View>
-
-        {/* ── Acerca de ────────────────────────────────────── */}
+        {/* ══════════════════════════════════════════════════════
+            ACERCA DE
+            ══════════════════════════════════════════════════════ */}
         <Text style={s.sectionLabel}>{t("settings.about.section")}</Text>
         <View style={s.card}>
           <View style={s.aboutBlock}>
-            <View style={s.aboutHeader}>
-              <View style={s.aboutIconBox}>
-                <Ionicons name="leaf-outline" size={18} color="#4A6FA5" />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={s.aboutTitle}>{t("settings.about.title")}</Text>
-                <Text style={s.aboutTagline}>{t("settings.about.tagline")}</Text>
-              </View>
+            <Text style={s.aboutTitle}>{t("settings.about.title")}</Text>
+            <Text style={s.aboutTagline}>{t("settings.about.tagline")}</Text>
+            <Text style={s.aboutDesc}>{t("settings.about.description", { mascotName })}</Text>
+            <View style={s.aboutFooter}>
+              <Text style={s.aboutCredits}>{t("settings.about.creditsText")}</Text>
+              <Text style={s.aboutVersion}>{t("settings.about.version")} 1.0.0</Text>
             </View>
-            <Text style={s.aboutDescription}>{t("settings.about.description", { mascotName })}</Text>
-            <View style={s.creditsBlock}>
-              <Text style={s.creditsTitle}>{t("settings.about.credits")}</Text>
-              <Text style={s.creditsText}>{t("settings.about.creditsText")}</Text>
-            </View>
-            <Text style={s.aboutVersion}>{t("settings.about.version")} 1.0.0</Text>
           </View>
         </View>
 
-        <View style={{ height: 40 }} />
+        {/* ══════════════════════════════════════════════════════
+            CERRAR SESIÓN
+            ══════════════════════════════════════════════════════ */}
+        <TouchableOpacity
+          style={s.logoutBtn}
+          onPress={async () => { await logout(); router.replace("/(auth)/login"); }}
+          activeOpacity={0.7}
+        >
+          <Ionicons name="log-out-outline" size={17} color={ACCENT} />
+          <Text style={s.logoutTxt}>{t("settings.session.logout")}</Text>
+        </TouchableOpacity>
+
+        <View style={{ height: 50 }} />
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
+// ─── Styles ──────────────────────────────────────────────────────────────────
 
 const s = StyleSheet.create({
-  safe:        { flex: 1, backgroundColor: "#F8F6F2" },
-  scroll:      { flex: 1 },
-  content:     { paddingHorizontal: 20, paddingTop: 24, paddingBottom: 48 },
+  safe:    { flex: 1, backgroundColor: BG },
+  scroll:  { flex: 1 },
+  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 48 },
 
-  titleRow:    { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 28 },
+  // Header
+  titleRow:    { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 24 },
   screenTitle: { fontSize: 28, fontWeight: "800", color: "#1A1A1A", letterSpacing: -0.3 },
 
   sectionLabel: {
-    fontSize: 11, fontWeight: "700", color: "#666666",
+    fontSize: 11, fontWeight: "700", color: "#999999",
     textTransform: "uppercase", letterSpacing: 1.2,
-    marginBottom: 10, marginLeft: 4, marginTop: 32,
+    marginBottom: 8, marginLeft: 4, marginTop: 28,
   },
 
   card: {
     backgroundColor: "#FFFFFF",
-    borderRadius: 18,
+    borderRadius: 20,
     overflow: "hidden",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
     elevation: 2,
   },
 
-  cardDivider: { height: StyleSheet.hairlineWidth, backgroundColor: "#EFEFEF" },
+  divider: { height: StyleSheet.hairlineWidth, backgroundColor: "#F0EDE8", marginLeft: 56 },
 
-  tugaBox: { alignItems: "center", paddingTop: 20, paddingBottom: 12 },
+  // ── Mascot ──
+  mascotRow: {
+    flexDirection: "row", alignItems: "center",
+    padding: 16, gap: 14,
+  },
+  mascotFrame: {
+    width: 64, height: 64, borderRadius: 20,
+    backgroundColor: "#F8F6F2",
+    alignItems: "center", justifyContent: "center",
+    borderWidth: 1, borderColor: "rgba(0,0,0,0.06)",
+  },
+  mascotInfo: { flex: 1 },
+  mascotName: { fontSize: 17, fontWeight: "700", color: "#1A1A1A" },
+  mascotHint: { fontSize: 12, color: "#AAAAAA", marginTop: 2 },
+  mascotEditBtn: {
+    width: 36, height: 36, borderRadius: 12,
+    backgroundColor: "#FFF3EE", alignItems: "center", justifyContent: "center",
+  },
 
-  editBlock: { padding: 18, gap: 10 },
+  editBlock: { paddingHorizontal: 16, paddingBottom: 16, gap: 10 },
   input: {
-    height: 48, borderRadius: 12,
-    borderWidth: 1.5, borderColor: "#E0DDD8",
-    paddingHorizontal: 14, fontSize: 16, color: "#1A1A1A",
+    height: 46, borderRadius: 12,
+    borderWidth: 1.5, borderColor: "#E8E5E0",
+    paddingHorizontal: 14, fontSize: 15, color: "#1A1A1A",
     backgroundColor: "#FAFAFA",
   },
+  editBtns: { flexDirection: "row", alignItems: "center", gap: 12 },
   saveBtn: {
-    height: 46, borderRadius: 12,
-    backgroundColor: "#4CAF50",
-    alignItems: "center", justifyContent: "center",
+    height: 40, paddingHorizontal: 24, borderRadius: 12,
+    backgroundColor: "#4CAF50", alignItems: "center", justifyContent: "center",
   },
-  saveBtnTxt:   { fontSize: 15, fontWeight: "700", color: "#FFFFFF" },
-  cancelLink:   { alignItems: "center", paddingVertical: 4 },
-  cancelLinkTxt:{ fontSize: 14, color: "#8A8A8A" },
+  saveBtnTxt: { fontSize: 14, fontWeight: "700", color: "#FFFFFF" },
+  cancelTxt:  { fontSize: 14, color: "#8A8A8A" },
 
-  accountRow: {
+  // ── Preferences (language, country, haptics) ──
+  prefRow: {
     flexDirection: "row", alignItems: "center",
-    paddingHorizontal: 18, paddingVertical: 14, gap: 12,
+    paddingHorizontal: 16, paddingVertical: 14, gap: 12,
+    flexWrap: "wrap",
   },
-  statusDotWrap:     { justifyContent: "center", marginTop: 2 },
-  statusDot:         { width: 9, height: 9, borderRadius: 5, backgroundColor: "#4CAF50" },
-  accountEmailRow:   { flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap" },
-  accountEmail:      { fontSize: 14, fontWeight: "600", color: "#1A1A1A", flexShrink: 1 },
-  connectedBadge:    { backgroundColor: "#E8F5E9", borderRadius: 6, paddingHorizontal: 7, paddingVertical: 2 },
-  connectedBadgeTxt: { fontSize: 11, fontWeight: "600", color: "#388E3C" },
-  accountMeta:       { fontSize: 12, color: "#8A8A8A", marginTop: 3 },
-  calDesc: {
-    fontSize: 14, color: "#6A6A6A", lineHeight: 20,
-    padding: 18, paddingBottom: 14,
-  },
-
-  aboutBlock: { padding: 20, gap: 14 },
-  aboutHeader: { flexDirection: "row", alignItems: "center", gap: 14 },
-  aboutIconBox: {
-    width: 40, height: 40, borderRadius: 12,
-    backgroundColor: "#EEF2FF",
+  prefIcon: {
+    width: 32, height: 32, borderRadius: 10,
     alignItems: "center", justifyContent: "center",
-    flexShrink: 0,
   },
-  aboutTitle:       { fontSize: 15, fontWeight: "700", color: "#1A1A1A" },
-  aboutTagline:     { fontSize: 12, color: "#8A8A8A", marginTop: 2 },
-  aboutDescription: { fontSize: 14, color: "#4A4A4A", lineHeight: 22 },
-  creditsBlock:     { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: "#EFEFEF", paddingTop: 12 },
-  creditsTitle:     { fontSize: 12, fontWeight: "600", color: "#8A8A8A", marginBottom: 4 },
-  creditsText:      { fontSize: 12, color: "#AAAAAA", lineHeight: 18 },
-  aboutVersion:     { fontSize: 12, color: "#BBBBBB", textAlign: "right" },
+  prefLabel: { fontSize: 14, fontWeight: "500", color: "#1A1A1A" },
+  prefHint:  { fontSize: 11, color: "#AAAAAA", marginTop: 1 },
+  pillGroup: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+  pill: {
+    flexDirection: "row", alignItems: "center", gap: 6,
+    paddingHorizontal: 14, paddingVertical: 8,
+    borderRadius: 20, backgroundColor: "#F5F3F0",
+    borderWidth: 1.5, borderColor: "transparent",
+  },
+  pillActive: { backgroundColor: "#FFF3EE", borderColor: ACCENT },
+  pillFlag:   { fontSize: 15 },
+  pillTxt:       { fontSize: 13, fontWeight: "500", color: "#6A6A6A" },
+  pillTxtActive: { color: ACCENT, fontWeight: "700" },
+
+  // ── Google Calendar ──
+  calConnected: {
+    flexDirection: "row", alignItems: "center",
+    padding: 16, gap: 12,
+  },
+  calDot:     { width: 9, height: 9, borderRadius: 5, backgroundColor: "#4CAF50" },
+  calEmailRow: { flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap" },
+  calEmail:   { fontSize: 14, fontWeight: "600", color: "#1A1A1A", flexShrink: 1 },
+  calBadge:    { backgroundColor: "#E8F5E9", borderRadius: 6, paddingHorizontal: 7, paddingVertical: 2 },
+  calBadgeTxt: { fontSize: 10, fontWeight: "600", color: "#388E3C" },
+  calMeta:     { fontSize: 12, color: "#8A8A8A", marginTop: 3 },
+  calActions: {
+    flexDirection: "row", gap: 10,
+    paddingHorizontal: 16, paddingBottom: 14,
+  },
+  calActionBtn: {
+    flexDirection: "row", alignItems: "center", gap: 6,
+    paddingHorizontal: 14, paddingVertical: 9,
+    borderRadius: 12, backgroundColor: "#F8F6F2",
+  },
+  calActionTxt: { fontSize: 13, fontWeight: "600" },
+  calConnect: {
+    flexDirection: "row", alignItems: "center",
+    padding: 16, gap: 14,
+  },
+  calConnectTxt:  { fontSize: 15, fontWeight: "600", color: "#1A1A1A" },
+  calConnectHint: { fontSize: 12, color: "#AAAAAA", marginTop: 2, lineHeight: 17 },
+
+  // ── Support ──
+  supportCard: { backgroundColor: "#FFFAF6", borderWidth: 1, borderColor: "#F5E6D8" },
+  supportRow:  { flexDirection: "row", alignItems: "flex-start", gap: 14, padding: 20, paddingBottom: 14 },
+  supportEmoji:  { fontSize: 32 },
+  supportTitle:  { fontSize: 16, fontWeight: "700", color: "#1A1A1A", marginBottom: 4 },
+  supportDesc:   { fontSize: 13, color: "#7A6A5A", lineHeight: 19 },
+  supportBtn: {
+    marginHorizontal: 20, marginBottom: 20, paddingVertical: 13,
+    borderRadius: 14, backgroundColor: ACCENT, alignItems: "center",
+  },
+  supportBtnTxt: { fontSize: 15, fontWeight: "700", color: "#FFFFFF" },
+
+  // ── Community (iOS) ──
+  communityRow: {
+    flexDirection: "row", alignItems: "center",
+    paddingHorizontal: 16, paddingVertical: 14, gap: 12,
+  },
+  communityLabel: { fontSize: 14, fontWeight: "600", color: "#1A1A1A" },
+  communityHint:  { fontSize: 11, color: "#AAAAAA", marginTop: 1 },
+
+  // ── About ──
+  aboutBlock:   { padding: 20, gap: 10 },
+  aboutTitle:   { fontSize: 16, fontWeight: "700", color: "#1A1A1A" },
+  aboutTagline: { fontSize: 13, color: ACCENT, fontWeight: "500", marginTop: -4 },
+  aboutDesc:    { fontSize: 13, color: "#6A6A6A", lineHeight: 20 },
+  aboutFooter:  { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: "#F0EDE8", paddingTop: 10, marginTop: 4 },
+  aboutCredits: { fontSize: 11, color: "#BBBBBB", lineHeight: 16 },
+  aboutVersion: { fontSize: 11, color: "#CCCCCC", textAlign: "right", marginTop: 6 },
+
+  // ── Logout ──
+  logoutBtn: {
+    flexDirection: "row", alignItems: "center", justifyContent: "center",
+    gap: 8, marginTop: 28, paddingVertical: 14,
+    borderRadius: 16, backgroundColor: "#FFF5F3",
+    borderWidth: 1, borderColor: "#FCDADA",
+  },
+  logoutTxt: { fontSize: 15, fontWeight: "600", color: ACCENT },
 });

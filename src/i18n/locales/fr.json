@@ -389,6 +389,20 @@
       "ES": "Espagne",
       "PY": "Paraguay"
     },
+    "community": {
+      "section": "Communauté",
+      "review": "Laisse un avis",
+      "reviewHint": "Ton avis nous aide à nous améliorer",
+      "share": "Partage Avante",
+      "shareHint": "Recommande-nous à quelqu'un que ça pourrait aider",
+      "shareMessage": "J'utilise Avante pour organiser mon temps avec équilibre. C'est gratuit et il y a une tortue qui t'encourage. https://apps.apple.com/app/id0000000000"
+    },
+    "support": {
+      "section": "Soutenir le projet",
+      "title": "Offre-moi un café",
+      "description": "Avante est gratuit et fait avec soin. Si ça t'aide, tu peux soutenir le projet.",
+      "button": "Soutenir 💛"
+    },
     "about": {
       "section": "À propos",
       "title": "À propos d'Avante",

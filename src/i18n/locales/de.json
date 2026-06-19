@@ -389,6 +389,20 @@
       "ES": "Spanien",
       "PY": "Paraguay"
     },
+    "community": {
+      "section": "Community",
+      "review": "Bewertung hinterlassen",
+      "reviewHint": "Dein Feedback hilft uns, besser zu werden",
+      "share": "Avante teilen",
+      "shareHint": "Empfiehl uns jemandem, dem es helfen könnte",
+      "shareMessage": "Ich nutze Avante, um meine Zeit im Gleichgewicht zu organisieren. Es ist kostenlos und hat eine Schildkröte, die dich anfeuert. https://apps.apple.com/app/id0000000000"
+    },
+    "support": {
+      "section": "Projekt unterstützen",
+      "title": "Spendier mir einen Kaffee",
+      "description": "Avante ist kostenlos und mit Liebe gemacht. Wenn es dir hilft, kannst du das Projekt unterstützen.",
+      "button": "Unterstützen 💛"
+    },
     "about": {
       "section": "Über die App",
       "title": "Über Avante",

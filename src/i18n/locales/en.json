@@ -389,6 +389,20 @@
       "ES": "Spain",
       "PY": "Paraguay"
     },
+    "community": {
+      "section": "Community",
+      "review": "Leave a review",
+      "reviewHint": "Your feedback helps us improve",
+      "share": "Share Avante",
+      "shareHint": "Recommend us to someone who might like it",
+      "shareMessage": "I'm using Avante to organise my time with balance. It's free and has a turtle that cheers you on. https://apps.apple.com/app/id0000000000"
+    },
+    "support": {
+      "section": "Support the project",
+      "title": "Buy me a coffee",
+      "description": "Avante is free and made with care. If it helps you, consider supporting the project.",
+      "button": "Support 💛"
+    },
     "about": {
       "section": "About",
       "title": "About Avante",
