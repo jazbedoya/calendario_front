@@ -155,7 +155,7 @@ export default function SettingsScreen() {
             </View>
             {!editing && (
               <TouchableOpacity style={s.mascotEditBtn} onPress={startEdit} activeOpacity={0.7}>
-                <Ionicons name="pencil-outline" size={15} color={ACCENT} />
+                <Ionicons name="pencil-outline" size={15} color={colors.terracotta} />
               </TouchableOpacity>
             )}
           </View>
@@ -290,9 +290,9 @@ export default function SettingsScreen() {
                   activeOpacity={0.7}
                 >
                   {disconnectMutation.isPending
-                    ? <ActivityIndicator size="small" color={ACCENT} />
-                    : <Ionicons name="unlink-outline" size={16} color={ACCENT} />}
-                  <Text style={[s.calActionTxt, { color: ACCENT }]}>{t("settings.calendar.disconnect")}</Text>
+                    ? <ActivityIndicator size="small" color={colors.terracotta} />
+                    : <Ionicons name="unlink-outline" size={16} color={colors.terracotta} />}
+                  <Text style={[s.calActionTxt, { color: colors.terracotta }]}>{t("settings.calendar.disconnect")}</Text>
                 </TouchableOpacity>
               </View>
             </>
