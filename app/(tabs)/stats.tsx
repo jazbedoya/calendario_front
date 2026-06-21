@@ -2,7 +2,6 @@ import { useRef } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
-import { Svg, Circle } from "react-native-svg";
 
 import { getHours } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
@@ -15,70 +14,48 @@ import { DailyTasksSection } from "@/features/tasks/DailyTasksSection";
 import { StreakBadge } from "@/features/tasks/StreakBadge";
 import { colors, spacing, radius, fontSize, fontWeight, shadows } from "@/theme";
 
-// ─── Balance Ring ────────────────────────────────────────────────────────────
+// ─── Balance Bars ────────────────────────────────────────────────────────────
 
-const RING_SIZE = 180;
-const STROKE = 18;
-const R = (RING_SIZE - STROKE) / 2;
-const CIRCUMFERENCE = 2 * Math.PI * R;
-
-interface RingProps {
+interface BalanceBarsProps {
   family: number;
   work: number;
   personal: number;
 }
 
-function BalanceRing({ family, work, personal }: RingProps) {
-  const total = family + work + personal || 1;
-  const segments = [
-    { pct: family / total, color: colors.family },
-    { pct: work / total, color: colors.work },
-    { pct: personal / total, color: colors.personal },
+function BalanceBars({ family, work, personal }: BalanceBarsProps) {
+  const { t } = useTranslation();
+  const max = Math.max(family, work, personal, 1);
+  const areas = [
+    { key: "family" as const, count: family, color: colors.family, label: t("layers.family") },
+    { key: "work" as const, count: work, color: colors.work, label: t("layers.work") },
+    { key: "personal" as const, count: personal, color: colors.personal, label: t("layers.personal") },
   ];
 
-  let offset = 0;
   return (
-    <View style={ring.container}>
-      <Svg width={RING_SIZE} height={RING_SIZE}>
-        {/* Background track */}
-        <Circle
-          cx={RING_SIZE / 2}
-          cy={RING_SIZE / 2}
-          r={R}
-          stroke={colors.surfaceWarm}
-          strokeWidth={STROKE}
-          fill="none"
-        />
-        {/* Colored segments */}
-        {segments.map(({ pct, color }, i) => {
-          const dash = pct * CIRCUMFERENCE;
-          const gap = CIRCUMFERENCE - dash;
-          const el = (
-            <Circle
-              key={i}
-              cx={RING_SIZE / 2}
-              cy={RING_SIZE / 2}
-              r={R}
-              stroke={color}
-              strokeWidth={STROKE}
-              strokeDasharray={`${dash} ${gap}`}
-              strokeDashoffset={-offset}
-              strokeLinecap="butt"
-              fill="none"
-              rotation={-90}
-              origin={`${RING_SIZE / 2}, ${RING_SIZE / 2}`}
-            />
-          );
-          offset += dash;
-          return el;
-        })}
-      </Svg>
+    <View style={bb.container}>
+      {areas.map(({ key, count, color, label }) => {
+        const pct = max > 0 ? (count / max) * 100 : 0;
+        return (
+          <View key={key} style={bb.row}>
+            <Text style={[bb.label, { color }]}>{label}</Text>
+            <View style={bb.track}>
+              <View style={[bb.fill, { width: `${Math.max(pct, 6)}%`, backgroundColor: color }]} />
+            </View>
+            <Text style={[bb.count, { color }]}>{count}</Text>
+          </View>
+        );
+      })}
     </View>
   );
 }
 
-const ring = StyleSheet.create({
-  container: { alignItems: "center", justifyContent: "center" },
+const bb = StyleSheet.create({
+  container: { gap: 10, width: "100%" },
+  row: { flexDirection: "row", alignItems: "center", gap: 10 },
+  label: { width: 70, fontSize: fontSize.label, fontWeight: fontWeight.semibold },
+  track: { flex: 1, height: 10, borderRadius: 5, backgroundColor: colors.surfaceWarm, overflow: "hidden" },
+  fill: { height: 10, borderRadius: 5 },
+  count: { width: 24, fontSize: fontSize.body, fontWeight: fontWeight.bold, textAlign: "right" },
 });
 
 // ─── Pantalla ────────────────────────────────────────────────────────────────
@@ -115,7 +92,7 @@ export default function StatsScreen() {
           <View style={[s.balanceCard, shadows.card]}>
             <Text style={s.eyebrow}>{t("balance.eyebrow")}</Text>
 
-            <BalanceRing
+            <BalanceBars
               family={weekEvents.family}
               work={weekEvents.work}
               personal={weekEvents.personal}
@@ -124,7 +101,7 @@ export default function StatsScreen() {
             <Text style={s.balanceTitle}>{t("balance.title")}</Text>
             <Text style={s.balanceSubtitle}>{t("balance.subtitle")}</Text>
 
-            {/* Legend */}
+            {/* Legend dots */}
             <View style={s.legend}>
               {([
                 { key: "family", color: colors.family },
