@@ -50,11 +50,10 @@ import {
 import { EventRow } from '@/features/overview/components/EventRow';
 import { ConflictCard } from '@/features/overview/components/ConflictCard';
 import { EventDetailSheet } from '@/features/overview/components/EventDetailSheet';
+import { colors, spacing, radius, fontSize, fontWeight, shadows } from '@/theme';
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 
-const BG             = '#F8F6F2';
-const TODAY_COLOR    = '#C8553D';
 const HOLIDAY_GOLD   = '#C8A52A';
 const LAYER_ORDER: Layer[] = ['family', 'work', 'personal'];
 const USER_TIMEZONE  = 'Europe/Madrid';
@@ -88,13 +87,10 @@ export default function LayersScreen() {
   const CELL_W = (winW - 24) / 7;
   const today = new Date();
 
-  // ── Vista mes ─────────────────────────────────────────────────────────────
   const [viewMode,     setViewMode]     = useState<'month' | 'week'>('month');
   const [viewYear,     setViewYear]     = useState(today.getFullYear());
   const [viewMonth,    setViewMonth]    = useState(today.getMonth());
-  // ── Vista semana ──────────────────────────────────────────────────────────
   const [weekStart,    setWeekStart]    = useState(() => startOfWeek(today, { weekStartsOn: 1 }));
-
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [sheetOpen,    setSheetOpen]    = useState(false);
   const [editingEvent, setEditingEvent] = useState<CalendarEvent | undefined>(undefined);
@@ -103,21 +99,14 @@ export default function LayersScreen() {
   const [searchQuery,  setSearchQuery]  = useState('');
   const [refreshing,   setRefreshing]   = useState(false);
   const qc = useQueryClient();
-
   const slideAnim = useRef(new Animated.Value(0)).current;
 
   const events               = useEventsStore((s) => s.events);
   const { mutate: doDelete } = useDeleteEvent();
 
-  const weeks = useMemo(
-    () => buildCalendarWeeks(viewYear, viewMonth),
-    [viewYear, viewMonth],
-  );
-
+  const weeks    = useMemo(() => buildCalendarWeeks(viewYear, viewMonth), [viewYear, viewMonth]);
   const weekDays = useMemo(() => buildWeekDays(weekStart), [weekStart]);
-
-  // Reference date for layersByDay
-  const refDate = viewMode === 'week' ? weekStart : new Date(viewYear, viewMonth);
+  const refDate  = viewMode === 'week' ? weekStart : new Date(viewYear, viewMonth);
 
   const layersByDay = useMemo(
     () => getLayersByDay(events, refDate, USER_TIMEZONE),
@@ -135,11 +124,7 @@ export default function LayersScreen() {
     () => (selectedDate ? getEventsForDay(events, selectedDate, USER_TIMEZONE) : []),
     [events, selectedDate],
   );
-
-  const selectedConflicts = useMemo(
-    () => detectConflicts(selectedEvents),
-    [selectedEvents],
-  );
+  const selectedConflicts = useMemo(() => detectConflicts(selectedEvents), [selectedEvents]);
 
   const filteredEvents = useMemo(() => {
     if (!searchQuery.trim()) return selectedEvents;
@@ -153,13 +138,13 @@ export default function LayersScreen() {
     setRefreshing(false);
   }, [qc]);
 
-  // ── Animación de cambio de mes ─────────────────────────────────────────────
+  // ── Animación de cambio de mes ────────────────────────────────────────────
 
   function changeMonth(dir: 'prev' | 'next') {
     if (animating) return;
     setAnimating(true);
-    const outX  = dir === 'next' ? -280 : 280;
-    const inX   = dir === 'next' ?  280 : -280;
+    const outX = dir === 'next' ? -280 : 280;
+    const inX  = dir === 'next' ?  280 : -280;
     Animated.timing(slideAnim, { toValue: outX, duration: 160, useNativeDriver: true }).start(() => {
       slideAnim.setValue(inX);
       const d = dir === 'next'
@@ -186,11 +171,9 @@ export default function LayersScreen() {
   function switchMode(mode: 'month' | 'week') {
     if (mode === viewMode) return;
     if (mode === 'week') {
-      // Sync week to selected date or today
       const base = selectedDate ? parseISO(selectedDate) : today;
       setWeekStart(startOfWeek(base, { weekStartsOn: 1 }));
     } else {
-      // Sync month to week's month
       setViewYear(weekStart.getFullYear());
       setViewMonth(weekStart.getMonth());
     }
@@ -230,7 +213,6 @@ export default function LayersScreen() {
   const monthName = format(new Date(viewYear, viewMonth, 1), 'MMMM', { locale: dateLocale });
   const yearStr   = String(viewYear);
 
-  // Week header label: "9 – 15 jun"
   const weekLabel = (() => {
     const days = buildWeekDays(weekStart);
     const s = format(days[0], 'd MMM', { locale: dateLocale });
@@ -239,78 +221,78 @@ export default function LayersScreen() {
   })();
 
   return (
-    <SafeAreaView style={styles.container} edges={['top']}>
+    <SafeAreaView style={st.container} edges={['top']}>
       <StatusBar style="dark" />
       <ScrollView
-        contentContainerStyle={styles.scroll}
+        contentContainerStyle={st.scroll}
         showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[TODAY_COLOR]} tintColor={TODAY_COLOR} />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.terracotta]} tintColor={colors.terracotta} />}
       >
 
         {/* ── Cabecera ── */}
-        <View style={styles.header}>
+        <View style={st.header}>
           <TouchableOpacity
             onPress={() => viewMode === 'month' ? changeMonth('prev') : changeWeek('prev')}
-            style={styles.navBtn}
+            style={st.navBtn}
             hitSlop={{ top: 14, bottom: 14, left: 14, right: 14 }}
             accessibilityRole="button"
             accessibilityLabel={t('calendar.previous')}
           >
-            <Ionicons name="chevron-back" size={22} color="#1A1A1A" />
+            <Ionicons name="chevron-back" size={20} color={colors.ink} />
           </TouchableOpacity>
 
-          <View style={styles.monthTitleGroup}>
+          <View style={st.monthTitleGroup}>
             {viewMode === 'month' ? (
               <>
-                <Text style={styles.monthName}>{monthName}</Text>
-                <Text style={styles.yearLabel}>{yearStr}</Text>
+                <Text style={st.yearLabel}>{yearStr}</Text>
+                <Text style={st.monthName}>{monthName}</Text>
               </>
             ) : (
-              <Text style={styles.monthName}>{weekLabel}</Text>
+              <Text style={st.monthName}>{weekLabel}</Text>
             )}
           </View>
 
           <TouchableOpacity
             onPress={() => viewMode === 'month' ? changeMonth('next') : changeWeek('next')}
-            style={styles.navBtn}
+            style={st.navBtn}
             hitSlop={{ top: 14, bottom: 14, left: 14, right: 14 }}
             accessibilityRole="button"
             accessibilityLabel={t('calendar.next')}
           >
-            <Ionicons name="chevron-forward" size={22} color="#1A1A1A" />
+            <Ionicons name="chevron-forward" size={20} color={colors.ink} />
           </TouchableOpacity>
         </View>
 
         {/* ── Toggle mes / semana ── */}
-        <View style={styles.modeToggleRow}>
-          <View style={styles.modeToggle}>
+        <View style={st.modeToggleRow}>
+          <View style={st.modeToggle}>
             <TouchableOpacity
-              style={[styles.modeBtn, viewMode === 'month' && styles.modeBtnActive]}
+              style={[st.modeBtn, viewMode === 'month' && st.modeBtnActive]}
               onPress={() => switchMode('month')}
               activeOpacity={0.75}
             >
-              <Text style={[styles.modeBtnTxt, viewMode === 'month' && styles.modeBtnTxtActive]}>{t('calendar.viewMonth')}</Text>
+              <Text style={[st.modeBtnTxt, viewMode === 'month' && st.modeBtnTxtActive]}>{t('calendar.viewMonth')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.modeBtn, viewMode === 'week' && styles.modeBtnActive]}
+              style={[st.modeBtn, viewMode === 'week' && st.modeBtnActive]}
               onPress={() => switchMode('week')}
               activeOpacity={0.75}
             >
-              <Text style={[styles.modeBtnTxt, viewMode === 'week' && styles.modeBtnTxtActive]}>{t('calendar.viewWeek')}</Text>
+              <Text style={[st.modeBtnTxt, viewMode === 'week' && st.modeBtnTxtActive]}>{t('calendar.viewWeek')}</Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.pillAnchor} pointerEvents="none">
+          <View style={st.pillAnchor} pointerEvents="none">
             <StreakPill />
           </View>
         </View>
 
         {/* ── Búsqueda ── */}
-        <View style={styles.searchRow}>
-          <Ionicons name="search-outline" size={16} color="#AAAAAA" style={styles.searchIcon} />
+        <View style={st.searchRow}>
+          <Ionicons name="search-outline" size={16} color={colors.textMuted} style={st.searchIcon} />
           <TextInput
-            style={styles.searchInput}
+            style={st.searchInput}
             placeholder={t('calendar.search')}
-            placeholderTextColor="#AAAAAA"
+            placeholderTextColor={colors.textMuted}
             value={searchQuery}
             onChangeText={setSearchQuery}
             returnKeyType="search"
@@ -318,27 +300,27 @@ export default function LayersScreen() {
           />
           {searchQuery.length > 0 && (
             <Pressable onPress={() => setSearchQuery('')} hitSlop={8}>
-              <Ionicons name="close-circle" size={16} color="#BBBBBB" />
+              <Ionicons name="close-circle" size={16} color={colors.textFaint} />
             </Pressable>
           )}
         </View>
 
         {/* ── Leyenda de áreas ── */}
-        <View style={styles.legend}>
+        <View style={st.legend}>
           {LAYER_ORDER.map((layer) => (
-            <View key={layer} style={styles.legendItem}>
-              <View style={[styles.legendDot, { backgroundColor: LAYER_COLORS[layer] }]} />
-              <Text style={styles.legendLabel}>{t(`layers.${layer}`)}</Text>
+            <View key={layer} style={st.legendItem}>
+              <View style={[st.legendDot, { backgroundColor: LAYER_COLORS[layer] }]} />
+              <Text style={st.legendLabel}>{t(`layers.${layer}`)}</Text>
             </View>
           ))}
         </View>
 
         {/* ── Encabezado días semana ── */}
-        <View style={styles.weekdayRow}>
+        <View style={st.weekdayRow}>
           {weekdays.map((d, i) => (
             <Text
               key={i}
-              style={[styles.weekdayLabel, { width: CELL_W }, (i === 5 || i === 6) && styles.weekdayLabelWeekend]}
+              style={[st.weekdayLabel, { width: CELL_W }, (i === 5 || i === 6) && st.weekdayLabelWeekend]}
             >
               {d}
             </Text>
@@ -347,9 +329,9 @@ export default function LayersScreen() {
 
         {/* ── Vista mes ── */}
         {viewMode === 'month' && (
-          <Animated.View style={[styles.grid, { transform: [{ translateX: slideAnim }] }]}>
+          <Animated.View style={[st.grid, { transform: [{ translateX: slideAnim }] }]}>
             {weeks.map((week, wi) => (
-              <View key={wi} style={styles.weekRow}>
+              <View key={wi} style={st.weekRow}>
                 {week.map((day) => {
                   const key            = format(day, 'yyyy-MM-dd');
                   const inMonth        = isSameMonth(day, new Date(viewYear, viewMonth));
@@ -363,45 +345,39 @@ export default function LayersScreen() {
                   const isHoliday = inMonth && holidayMap.has(key);
 
                   return (
-                    <View
-                      key={key}
-                      style={[
-                        { width: CELL_W },
-                        isHoliday && styles.holidayCellBg,
-                      ]}
-                    >
+                    <View key={key} style={[{ width: CELL_W }, isHoliday && st.holidayCellBg]}>
                       <Pressable
                         style={({ pressed }) => [
-                          styles.dayCell,
-                          isWeekend && inMonth && styles.weekendCell,
+                          st.dayCell,
+                          isWeekend && inMonth && st.weekendCell,
                           tintBg ? { backgroundColor: tintBg } : undefined,
-                          pressed && styles.dayCellPressed,
+                          pressed && st.dayCellPressed,
                         ]}
                         onPress={() => handleDayPress(day)}
                       >
-                        <View style={styles.dayNumWrap}>
+                        <View style={st.dayNumWrap}>
                           <View style={[
-                            styles.dayCircle,
-                            isTodayD && !isSelect && styles.todayCircle,
-                            isSelect && styles.selectedCircle,
+                            st.dayCircle,
+                            isTodayD && !isSelect && st.todayCircle,
+                            isSelect && st.selectedCircle,
                           ]}>
                             <Text style={[
-                              styles.dayText,
-                              !inMonth  && styles.outMonthText,
-                              isWeekend && inMonth && !isTodayD && !isSelect && styles.weekendText,
-                              isTodayD && !isSelect && styles.todayDayText,
-                              isSelect && styles.selectedDayText,
+                              st.dayText,
+                              !inMonth  && st.outMonthText,
+                              isWeekend && inMonth && !isTodayD && !isSelect && st.weekendText,
+                              isTodayD && !isSelect && st.todayDayText,
+                              isSelect && st.selectedDayText,
                             ]}>
                               {format(day, 'd')}
                             </Text>
-                            {isSelect && isTodayD && <View style={styles.todaySelectedDot} />}
+                            {isSelect && isTodayD && <View style={st.todaySelectedDot} />}
                           </View>
                         </View>
-                        <View style={styles.dots}>
+                        <View style={st.dots}>
                           {dots.slice(0, 3).map((l) => (
-                            <View key={l} style={[styles.dot, { backgroundColor: LAYER_COLORS[l] }]} />
+                            <View key={l} style={[st.dot, { backgroundColor: LAYER_COLORS[l] }]} />
                           ))}
-                          {dots.length === 0 && <View style={styles.dotPlaceholder} />}
+                          {dots.length === 0 && <View style={st.dotPlaceholder} />}
                         </View>
                       </Pressable>
                     </View>
@@ -414,7 +390,7 @@ export default function LayersScreen() {
 
         {/* ── Vista semana ── */}
         {viewMode === 'week' && (
-          <View style={styles.weekViewRow}>
+          <View style={st.weekViewRow}>
             {weekDays.map((day) => {
               const key       = format(day, 'yyyy-MM-dd');
               const isSelect  = selectedDate === key;
@@ -428,34 +404,34 @@ export default function LayersScreen() {
                 <Pressable
                   key={key}
                   style={({ pressed }) => [
-                    styles.weekViewCell,
-                    isWeekend && styles.weekViewCellWeekend,
-                    pressed && styles.dayCellPressed,
+                    st.weekViewCell,
+                    isWeekend && st.weekViewCellWeekend,
+                    pressed && st.dayCellPressed,
                   ]}
                   onPress={() => handleDayPress(day)}
                 >
-                  {isHolidayWk && <View style={styles.holidayCellBgOverlay} />}
-                  <View style={styles.dayNumWrap}>
+                  {isHolidayWk && <View style={st.holidayCellBgOverlay} />}
+                  <View style={st.dayNumWrap}>
                     <View style={[
-                      styles.weekViewCircle,
-                      isTodayD && !isSelect && styles.todayCircle,
-                      isSelect && styles.selectedCircle,
+                      st.weekViewCircle,
+                      isTodayD && !isSelect && st.todayCircle,
+                      isSelect && st.selectedCircle,
                     ]}>
                       <Text style={[
-                        styles.weekViewDayNum,
-                        isWeekend && !isTodayD && !isSelect && styles.weekendText,
-                        isTodayD && !isSelect && styles.todayDayText,
-                        isSelect && styles.selectedDayText,
+                        st.weekViewDayNum,
+                        isWeekend && !isTodayD && !isSelect && st.weekendText,
+                        isTodayD && !isSelect && st.todayDayText,
+                        isSelect && st.selectedDayText,
                       ]}>
                         {format(day, 'd')}
                       </Text>
                     </View>
                   </View>
-                  <View style={styles.dots}>
+                  <View style={st.dots}>
                     {dots.slice(0, 3).map((l) => (
-                      <View key={l} style={[styles.dot, { backgroundColor: LAYER_COLORS[l] }]} />
+                      <View key={l} style={[st.dot, { backgroundColor: LAYER_COLORS[l] }]} />
                     ))}
-                    {dots.length === 0 && <View style={styles.dotPlaceholder} />}
+                    {dots.length === 0 && <View style={st.dotPlaceholder} />}
                   </View>
                 </Pressable>
               );
@@ -466,40 +442,41 @@ export default function LayersScreen() {
         {/* ── Panel inferior: eventos del día ── */}
         {selectedDate && (
           <View style={[
-            styles.panel,
+            st.panel,
+            shadows.card,
             timelineItems.length > 0 && selectedEvents[0]
               ? { borderLeftWidth: 3, borderLeftColor: LAYER_COLORS[selectedEvents[0].layer] }
               : undefined,
           ]}>
-            <View style={styles.panelHeader}>
-              <Text style={styles.panelTitle}>
+            <View style={st.panelHeader}>
+              <Text style={st.panelTitle}>
                 {selectedEvents.length > 0 ? t('calendar.eventsTitle') : t('calendar.noEvents')}
               </Text>
-              <Text style={styles.panelDate}>{dayLabel}</Text>
+              <Text style={st.panelDate}>{dayLabel}</Text>
             </View>
 
             {selectedHoliday && (
-              <View style={styles.holidayRow}>
-                <View style={styles.holidayRowDot} />
-                <Text style={styles.holidayRowName}>{t(selectedHoliday.nameKey)}</Text>
-                <Text style={styles.holidayRowBadge}>{t('calendar.holiday')}</Text>
+              <View style={st.holidayRow}>
+                <View style={st.holidayRowDot} />
+                <Text style={st.holidayRowName}>{t(selectedHoliday.nameKey)}</Text>
+                <Text style={st.holidayRowBadge}>{t('calendar.holiday')}</Text>
               </View>
             )}
 
             {searchQuery.trim() && filteredEvents.length === 0 ? (
-              <View style={styles.emptyState}>
-                <Ionicons name="search-outline" size={28} color="#D4CEC8" />
-                <Text style={styles.emptyTxt}>{t('calendar.noResults', { query: searchQuery })}</Text>
+              <View style={st.emptyState}>
+                <Ionicons name="search-outline" size={28} color={colors.textDisabled} />
+                <Text style={st.emptyTxt}>{t('calendar.noResults', { query: searchQuery })}</Text>
                 <TouchableOpacity onPress={() => setSearchQuery('')} activeOpacity={0.7}>
-                  <Text style={styles.emptyAction}>{t('calendar.clearSearch')}</Text>
+                  <Text style={st.emptyAction}>{t('calendar.clearSearch')}</Text>
                 </TouchableOpacity>
               </View>
             ) : timelineItems.length === 0 ? (
-              <View style={styles.emptyState}>
-                <Ionicons name="calendar-outline" size={28} color="#D4CEC8" />
-                <Text style={styles.emptyTxt}>{t('calendar.noScheduled')}</Text>
+              <View style={st.emptyState}>
+                <Ionicons name="calendar-outline" size={28} color={colors.textDisabled} />
+                <Text style={st.emptyTxt}>{t('calendar.noScheduled')}</Text>
                 <TouchableOpacity onPress={openCreate} activeOpacity={0.7} accessibilityRole="button" accessibilityLabel={t('calendar.addEvent')}>
-                  <Text style={styles.emptyAction}>{t('calendar.addFirst')}</Text>
+                  <Text style={st.emptyAction}>{t('calendar.addFirst')}</Text>
                 </TouchableOpacity>
               </View>
             ) : (
@@ -531,18 +508,17 @@ export default function LayersScreen() {
         )}
       </ScrollView>
 
-      {/* ── FAB añadir evento ── */}
+      {/* ── FAB ── */}
       <TouchableOpacity
-        style={styles.fab}
+        style={[st.fab, shadows.fab]}
         activeOpacity={0.85}
         onPress={openCreate}
         accessibilityRole="button"
         accessibilityLabel={t('calendar.addEvent')}
       >
-        <Ionicons name="add" size={28} color="#FFFFFF" />
+        <Ionicons name="add" size={28} color={colors.white} />
       </TouchableOpacity>
 
-      {/* ── Sheet crear / editar ── */}
       <QuickAddSheet
         visible={sheetOpen}
         date={selectedDate ?? format(today, 'yyyy-MM-dd')}
@@ -552,7 +528,6 @@ export default function LayersScreen() {
         onClose={() => { setSheetOpen(false); setEditingEvent(undefined); }}
       />
 
-      {/* ── Sheet detalle de evento ── */}
       <EventDetailSheet
         visible={!!detailEvent}
         event={detailEvent}
@@ -567,53 +542,52 @@ export default function LayersScreen() {
 
 // ─── Estilos ──────────────────────────────────────────────────────────────────
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: BG },
+const st = StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.bg },
   scroll:    { paddingBottom: 120 },
 
   // ── Búsqueda ──
   searchRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: 16,
-    marginBottom: 4,
-    backgroundColor: '#F8F6F2',
-    borderRadius: 14,
-    borderWidth: 1.5,
-    borderColor: '#E8E5E0',
-    paddingHorizontal: 12,
+    marginHorizontal: spacing.screenX,
+    marginBottom: spacing.xs,
+    backgroundColor: colors.surfaceWarm,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: spacing.md,
     height: 44,
   },
-  searchIcon:  { marginRight: 8 },
-  searchInput: { flex: 1, fontSize: 14, color: '#1A1A1A' },
+  searchIcon:  { marginRight: spacing.sm },
+  searchInput: { flex: 1, fontSize: fontSize.bodySm, color: colors.ink },
 
   // ── Cabecera ──
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingTop: 18,
-    paddingBottom: 10,
+    paddingHorizontal: spacing.screenX,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.sm,
   },
-  navBtn: { padding: 4 },
+  navBtn: { padding: spacing.xs },
   monthTitleGroup: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    gap: 6,
+    alignItems: 'center',
+    gap: 2,
   },
   monthName: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#1A1A1A',
+    fontSize: fontSize.title,
+    fontWeight: fontWeight.bold,
+    color: colors.ink,
     textTransform: 'capitalize',
     letterSpacing: 0.2,
   },
   yearLabel: {
-    fontSize: 16,
-    fontWeight: '400',
-    color: '#AAAAAA',
-    letterSpacing: 0.2,
+    fontSize: fontSize.caption,
+    fontWeight: fontWeight.medium,
+    color: colors.textMuted,
+    letterSpacing: 0.5,
   },
 
   // ── Toggle ──
@@ -621,52 +595,55 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 12,
-    paddingHorizontal: 20,
+    marginBottom: spacing.md,
+    paddingHorizontal: spacing.screenX,
   },
   modeToggle: {
     flexDirection: 'row',
-    backgroundColor: '#EEEBE6',
-    borderRadius: 20,
+    backgroundColor: colors.surfaceWarm2,
+    borderRadius: radius.pill,
     padding: 3,
   },
   pillAnchor: {
     position: 'absolute',
-    right: 20,
+    right: spacing.screenX,
   },
   modeBtn: {
     paddingHorizontal: 18,
     paddingVertical: 6,
-    borderRadius: 17,
+    borderRadius: radius.pill,
   },
-  modeBtnActive: { backgroundColor: '#FFFFFF', shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 4, elevation: 2 },
-  modeBtnTxt:       { fontSize: 13, fontWeight: '600', color: '#888888' },
-  modeBtnTxtActive: { color: '#1A1A1A' },
+  modeBtnActive: {
+    backgroundColor: colors.surface,
+    ...shadows.soft,
+  },
+  modeBtnTxt:       { fontSize: fontSize.label, fontWeight: fontWeight.semibold, color: colors.textMuted },
+  modeBtnTxtActive: { color: colors.ink },
 
   // ── Leyenda ──
   legend: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    gap: spacing.xl,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.screenX,
   },
   legendItem:  { flexDirection: 'row', alignItems: 'center', gap: 7 },
   legendDot:   { width: 10, height: 10, borderRadius: 5 },
-  legendLabel: { fontSize: 13, color: '#6B6B6B', fontWeight: '500' },
+  legendLabel: { fontSize: fontSize.label, color: colors.textSecondary, fontWeight: fontWeight.medium },
 
   // ── Días semana ──
   weekdayRow: {
     flexDirection: 'row',
     alignSelf: 'stretch',
     paddingHorizontal: 12,
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   weekdayLabel: {
     textAlign: 'center',
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#BBBBBB',
+    fontSize: fontSize.caption,
+    fontWeight: fontWeight.semibold,
+    color: colors.textFaint,
     letterSpacing: 0.5,
   },
   weekdayLabelWeekend: { color: '#C4A49A' },
@@ -678,54 +655,54 @@ const styles = StyleSheet.create({
   dayCell: {
     alignItems: 'center',
     paddingVertical: 3,
-    borderRadius: 10,
+    borderRadius: radius.sm,
   },
   dayCellPressed: {
     transform: [{ scale: 0.88 }],
     opacity: 0.7,
   },
-  weekendCell: { backgroundColor: 'rgba(160, 140, 130, 0.05)' },
+  weekendCell: { backgroundColor: 'rgba(160, 140, 130, 0.04)' },
 
   // ── Vista semana ──
   weekViewRow: {
     flexDirection: 'row',
     paddingHorizontal: 12,
-    marginBottom: 4,
+    marginBottom: spacing.xs,
   },
   weekViewCell: {
     flex: 1,
     alignItems: 'center',
-    paddingVertical: 8,
-    borderRadius: 12,
+    paddingVertical: spacing.sm,
+    borderRadius: radius.md,
   },
-  weekViewCellWeekend: { backgroundColor: 'rgba(160, 140, 130, 0.05)' },
+  weekViewCellWeekend: { backgroundColor: 'rgba(160, 140, 130, 0.04)' },
   weekViewCircle: {
     width: 42, height: 42,
     borderRadius: 21,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  weekViewDayNum: { fontSize: 17, fontWeight: '600', color: '#1A1A1A' },
+  weekViewDayNum: { fontSize: 17, fontWeight: fontWeight.semibold, color: colors.ink },
 
   // Círculos del número (shared)
   dayNumWrap: { position: 'relative' },
-  holidayCellBg:        { backgroundColor: '#FFD93D', borderRadius: 10, margin: 2 },
+  holidayCellBg:        { backgroundColor: '#FFD93D', borderRadius: radius.sm, margin: 2 },
   holidayCellBgOverlay: {
     position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
     backgroundColor: '#FFD93D',
-    borderRadius: 12,
+    borderRadius: radius.md,
   },
 
   holidayRow: {
     flexDirection: 'row', alignItems: 'center', gap: 10,
     paddingVertical: 10,
-    borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: '#F0EDE8',
+    borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.hairline,
   },
   holidayRowDot:   { width: 8, height: 8, borderRadius: 4, backgroundColor: HOLIDAY_GOLD, flexShrink: 0 },
-  holidayRowName:  { flex: 1, fontSize: 14, color: '#1A1A1A', fontWeight: '500' },
+  holidayRowName:  { flex: 1, fontSize: fontSize.bodySm, color: colors.ink, fontWeight: fontWeight.medium },
   holidayRowBadge: {
-    fontSize: 11, color: HOLIDAY_GOLD, fontWeight: '600',
-    backgroundColor: '#FDF8E8', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8,
+    fontSize: fontSize.micro, color: HOLIDAY_GOLD, fontWeight: fontWeight.semibold,
+    backgroundColor: '#FDF8E8', paddingHorizontal: 8, paddingVertical: 3, borderRadius: radius.sm,
   },
 
   dayCircle: {
@@ -734,14 +711,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  todayCircle:     { borderWidth: 1.5, borderColor: TODAY_COLOR },
-  selectedCircle:  { backgroundColor: TODAY_COLOR },
+  todayCircle:     { borderWidth: 1.5, borderColor: colors.terracotta },
+  selectedCircle:  { backgroundColor: colors.terracotta },
 
-  dayText:         { fontSize: 14, color: '#1A1A1A', fontWeight: '400' },
-  outMonthText:    { color: '#D0CCC7', fontSize: 12 },
+  dayText:         { fontSize: fontSize.bodySm, color: colors.ink, fontWeight: fontWeight.regular },
+  outMonthText:    { color: colors.textDisabled, fontSize: fontSize.caption },
   weekendText:     { color: '#8A7E78' },
-  selectedDayText: { fontWeight: '700', color: '#FFFFFF' },
-  todayDayText:    { fontWeight: '700', color: TODAY_COLOR },
+  selectedDayText: { fontWeight: fontWeight.bold, color: colors.white },
+  todayDayText:    { fontWeight: fontWeight.bold, color: colors.terracotta },
   todaySelectedDot: {
     width: 4, height: 4, borderRadius: 2,
     backgroundColor: 'rgba(255,255,255,0.55)',
@@ -762,49 +739,41 @@ const styles = StyleSheet.create({
 
   // ── Panel inferior ──
   panel: {
-    marginTop: 20,
-    marginHorizontal: 16,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
+    marginTop: spacing.xl,
+    marginHorizontal: spacing.screenX,
+    backgroundColor: colors.surface,
+    borderRadius: radius.card,
     padding: 18,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.08,
-    shadowRadius: 14,
-    elevation: 4,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   panelHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'baseline',
-    marginBottom: 14,
+    marginBottom: spacing.md,
   },
-  panelTitle: { fontSize: 16, fontWeight: '700', color: '#1A1A1A', letterSpacing: 0.2 },
-  panelDate:  { fontSize: 13, color: '#AAAAAA', textTransform: 'capitalize' },
+  panelTitle: { fontSize: fontSize.bodyLg, fontWeight: fontWeight.bold, color: colors.ink, letterSpacing: 0.2 },
+  panelDate:  { fontSize: fontSize.label, color: colors.textMuted, textTransform: 'capitalize' },
   emptyState: {
-    alignItems: 'center', paddingVertical: 20, gap: 8,
+    alignItems: 'center', paddingVertical: spacing.xl, gap: spacing.sm,
   },
   emptyTxt: {
-    fontSize: 14, color: '#BBBBBB',
+    fontSize: fontSize.bodySm, color: colors.textFaint,
     textAlign: 'center',
   },
   emptyAction: {
-    fontSize: 14, fontWeight: '600', color: TODAY_COLOR,
-    paddingVertical: 6, paddingHorizontal: 16,
+    fontSize: fontSize.bodySm, fontWeight: fontWeight.semibold, color: colors.terracotta,
+    paddingVertical: 6, paddingHorizontal: spacing.lg,
   },
 
   // ── FAB ──
   fab: {
     position: 'absolute',
     bottom: Platform.OS === 'ios' ? 110 : 96,
-    right: 24,
+    right: spacing["2xl"],
     width: 54, height: 54, borderRadius: 27,
-    backgroundColor: '#1E2A4A',
+    backgroundColor: colors.ink,
     justifyContent: 'center', alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    elevation: 6,
   },
 });
