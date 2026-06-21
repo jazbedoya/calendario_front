@@ -1,4 +1,4 @@
-import { View, ScrollView, StyleSheet, Platform, RefreshControl } from "react-native";
+import { View, Text, ScrollView, StyleSheet, Platform, RefreshControl } from "react-native";
 import { useState, useCallback, useMemo } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
