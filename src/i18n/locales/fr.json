@@ -281,6 +281,14 @@
     "excited": "Vous avez quelque chose bientôt. Allez !",
     "lowEnergy": "Chaque jour compte. Vous pouvez le faire !"
   },
+  "profile": {
+    "memberSince": "Avec vous depuis",
+    "wellbeing": "Votre bien-être",
+    "streakDay": "jour de série",
+    "moments": "moments",
+    "activeAreas": "domaines actifs",
+    "appLanguage": "Langue de l'app"
+  },
   "balance": {
     "eyebrow": "Votre équilibre",
     "title": "En équilibre",

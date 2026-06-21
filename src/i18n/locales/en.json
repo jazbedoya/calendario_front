@@ -281,6 +281,14 @@
     "excited": "You've got something soon. Let's go!",
     "lowEnergy": "Every day counts. You've got this!"
   },
+  "profile": {
+    "memberSince": "With you since",
+    "wellbeing": "Your wellbeing",
+    "streakDay": "streak day",
+    "moments": "moments",
+    "activeAreas": "active areas",
+    "appLanguage": "App language"
+  },
   "balance": {
     "eyebrow": "Your balance",
     "title": "In balance",

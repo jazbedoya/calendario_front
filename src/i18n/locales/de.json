@@ -281,6 +281,14 @@
     "excited": "Sie haben bald etwas. Los geht's!",
     "lowEnergy": "Jeder Tag zählt. Sie schaffen das!"
   },
+  "profile": {
+    "memberSince": "Bei dir seit",
+    "wellbeing": "Dein Wohlbefinden",
+    "streakDay": "Tag Serie",
+    "moments": "Momente",
+    "activeAreas": "aktive Bereiche",
+    "appLanguage": "App-Sprache"
+  },
   "balance": {
     "eyebrow": "Dein Gleichgewicht",
     "title": "Im Gleichgewicht",

@@ -32,6 +32,7 @@ import { useLanguageStore }          from "@/features/settings/languageStore";
 import { useHolidayStore }           from "@/features/settings/holidayStore";
 import type { HolidayCountry }       from "@/features/overview/getHolidays";
 import { SUPPORTED_LANGUAGES, type SupportedLanguage } from "@/i18n";
+import { useHomeSummary } from "@/features/home/useHomeSummary";
 
 import { colors, spacing, radius, fontSize, fontWeight, shadows } from "@/theme";
 
@@ -131,6 +132,16 @@ export default function SettingsScreen() {
 
   const isConnected = calStatus?.connected ?? false;
 
+  const { data: summary } = useHomeSummary();
+
+  const createdAt = user?.created_at ? new Date(user.created_at) : new Date();
+  const memberSince = `${t("profile.memberSince")} ${createdAt.toLocaleDateString(undefined, { month: "long", year: "numeric" })}`;
+
+  // Bienestar stats from summary
+  const weekEvents = summary?.week_events_by_layer ?? { family: 0, work: 0, personal: 0 };
+  const totalMoments = weekEvents.family + weekEvents.work + weekEvents.personal;
+  const activeAreas = [weekEvents.family, weekEvents.work, weekEvents.personal].filter(n => n > 0).length;
+
   return (
     <SafeAreaView style={s.safe} edges={["top"]}>
       <ScrollView style={s.scroll} contentContainerStyle={s.content} showsVerticalScrollIndicator={false}>
@@ -138,26 +149,28 @@ export default function SettingsScreen() {
         {/* ── Header ── */}
         <View style={s.titleRow}>
           <Text style={s.screenTitle}>{t("settings.title")}</Text>
-          <StreakPill />
+          {!editing ? (
+            <TouchableOpacity style={s.editHeaderBtn} onPress={startEdit} activeOpacity={0.7}>
+              <Ionicons name="create-outline" size={20} color={colors.ink} />
+            </TouchableOpacity>
+          ) : null}
         </View>
 
         {/* ══════════════════════════════════════════════════════
-            MASCOTA — card compacta horizontal
+            HERO — Tuga + nombre + email + badge
             ══════════════════════════════════════════════════════ */}
-        <View style={s.card}>
-          <View style={s.mascotRow}>
-            <View style={s.mascotFrame}>
-              <TugaAnimation state={MOOD_TO_STATE[mascotState.mood]} size={56} />
+        <View style={[s.heroCard, shadows.card]}>
+          <View style={s.heroRow}>
+            <View style={s.heroTugaFrame}>
+              <TugaAnimation state={MOOD_TO_STATE[mascotState.mood]} size={64} />
             </View>
-            <View style={s.mascotInfo}>
-              <Text style={s.mascotName}>{mascotName}</Text>
-              <Text style={s.mascotHint}>{t("settings.mascot.section")}</Text>
+            <View style={s.heroInfo}>
+              <Text style={s.heroName}>{user?.full_name ?? mascotName}</Text>
+              <Text style={s.heroEmail}>{user?.email ?? ""}</Text>
+              <View style={s.heroBadge}>
+                <Text style={s.heroBadgeTxt}>{memberSince}</Text>
+              </View>
             </View>
-            {!editing && (
-              <TouchableOpacity style={s.mascotEditBtn} onPress={startEdit} activeOpacity={0.7}>
-                <Ionicons name="pencil-outline" size={15} color={colors.terracotta} />
-              </TouchableOpacity>
-            )}
           </View>
           {editing && (
             <View style={s.editBlock}>
@@ -166,7 +179,7 @@ export default function SettingsScreen() {
                 value={draft}
                 onChangeText={setDraft}
                 placeholder={t("settings.mascot.namePlaceholder")}
-                placeholderTextColor="#CCCCCC"
+                placeholderTextColor={colors.fieldPlaceholder}
                 maxLength={20}
                 autoFocus
                 autoCapitalize="words"
@@ -186,15 +199,50 @@ export default function SettingsScreen() {
         </View>
 
         {/* ══════════════════════════════════════════════════════
-            PREFERENCIAS — idioma, país, haptics en una sola card
+            BIENESTAR — stats + barra proporcional
+            ══════════════════════════════════════════════════════ */}
+        <View style={[s.wellbeingCard, shadows.card]}>
+          <View style={s.wellbeingHeader}>
+            <Text style={s.eyebrow}>{t("profile.wellbeing")}</Text>
+            <Text style={s.wellbeingStatus}>{t("balance.title")}</Text>
+          </View>
+          <View style={s.statsRow}>
+            <View style={s.statItem}>
+              <Text style={[s.statNum, { color: colors.terracotta }]}>1</Text>
+              <Text style={s.statLabel}>{t("profile.streakDay")}</Text>
+            </View>
+            <View style={[s.statItem, s.statBorder]}>
+              <Text style={[s.statNum, { color: colors.ink }]}>{totalMoments}</Text>
+              <Text style={s.statLabel}>{t("profile.moments")}</Text>
+            </View>
+            <View style={s.statItem}>
+              <Text style={[s.statNum, { color: colors.ink }]}>{activeAreas}</Text>
+              <Text style={s.statLabel}>{t("profile.activeAreas")}</Text>
+            </View>
+          </View>
+          {/* Proportional bar */}
+          <View style={s.propBar}>
+            {weekEvents.family > 0 && <View style={[s.propSeg, { flex: weekEvents.family, backgroundColor: colors.family }]} />}
+            {weekEvents.work > 0 && <View style={[s.propSeg, { flex: weekEvents.work, backgroundColor: colors.work }]} />}
+            {weekEvents.personal > 0 && <View style={[s.propSeg, { flex: weekEvents.personal, backgroundColor: colors.personal }]} />}
+            {totalMoments === 0 && <View style={[s.propSeg, { flex: 1, backgroundColor: colors.surfaceWarm }]} />}
+          </View>
+          <View style={s.propLegend}>
+            <View style={s.propLegendItem}><View style={[s.propDot, { backgroundColor: colors.family }]} /><Text style={s.propLegendTxt}>{t("layers.family")} {weekEvents.family}</Text></View>
+            <View style={s.propLegendItem}><View style={[s.propDot, { backgroundColor: colors.work }]} /><Text style={s.propLegendTxt}>{t("layers.work")} {weekEvents.work}</Text></View>
+            <View style={s.propLegendItem}><View style={[s.propDot, { backgroundColor: colors.personal }]} /><Text style={s.propLegendTxt}>{t("layers.personal")} {weekEvents.personal}</Text></View>
+          </View>
+        </View>
+
+        {/* ══════════════════════════════════════════════════════
+            IDIOMA
             ══════════════════════════════════════════════════════ */}
         <Text style={s.sectionLabel}>{t("settings.language.section")}</Text>
         <View style={s.card}>
-          {/* Idioma */}
           <View style={s.prefRow}>
-            <View style={[s.prefIcon, { backgroundColor: "#EEF2FF" }]}>
-              <Ionicons name="language-outline" size={16} color="#4A6FA5" />
-            </View>
+            <Text style={s.prefLabel}>{t("profile.appLanguage")}</Text>
+          </View>
+          <View style={[s.prefRow, { paddingTop: 0 }]}>
             <View style={s.pillGroup}>
               {SUPPORTED_LANGUAGES.map((lang) => {
                 const active = lang === language;
@@ -219,10 +267,10 @@ export default function SettingsScreen() {
 
           {/* País festivos */}
           <View style={s.prefRow}>
-            <View style={[s.prefIcon, { backgroundColor: "#FFF8E8" }]}>
-              <Ionicons name="flag-outline" size={16} color="#C8A52A" />
-            </View>
+            <Ionicons name="flag-outline" size={16} color="#C8A52A" />
             <Text style={s.prefLabel}>{t("settings.country.section")}</Text>
+          </View>
+          <View style={[s.prefRow, { paddingTop: 0 }]}>
             <View style={s.pillGroup}>
               {HOLIDAY_COUNTRIES.map((c) => {
                 const active = c === country;
@@ -242,8 +290,6 @@ export default function SettingsScreen() {
               })}
             </View>
           </View>
-
-          {/* Haptics hidden for now */}
         </View>
 
         {/* ══════════════════════════════════════════════════════
@@ -451,26 +497,75 @@ const s = StyleSheet.create({
     ...shadows.card,
   },
 
-  divider: { height: StyleSheet.hairlineWidth, backgroundColor: colors.hairline, marginLeft: 56 },
+  divider: { height: StyleSheet.hairlineWidth, backgroundColor: colors.hairline, marginLeft: spacing.lg },
 
-  // ── Mascot ──
-  mascotRow: {
-    flexDirection: "row", alignItems: "center",
-    padding: spacing.lg, gap: 14,
-  },
-  mascotFrame: {
-    width: 64, height: 64, borderRadius: radius.lg,
-    backgroundColor: colors.bg,
-    alignItems: "center", justifyContent: "center",
+  // ── Header edit button ──
+  editHeaderBtn: {
+    width: 40, height: 40, borderRadius: radius.md,
+    backgroundColor: colors.surfaceWarm, alignItems: "center", justifyContent: "center",
     borderWidth: 1, borderColor: colors.border,
   },
-  mascotInfo: { flex: 1 },
-  mascotName: { fontSize: fontSize.h4, fontWeight: fontWeight.bold, color: colors.ink },
-  mascotHint: { fontSize: fontSize.caption, color: colors.textMuted, marginTop: 2 },
-  mascotEditBtn: {
-    width: 36, height: 36, borderRadius: radius.md,
-    backgroundColor: colors.terracottaTint, alignItems: "center", justifyContent: "center",
+
+  // ── Hero card ──
+  heroCard: {
+    backgroundColor: colors.surfaceWarm,
+    borderRadius: radius.card,
+    padding: spacing.xl,
+    borderWidth: 1,
+    borderColor: colors.border,
+    marginBottom: spacing.md,
   },
+  heroRow: { flexDirection: "row", alignItems: "center", gap: 14 },
+  heroTugaFrame: {
+    width: 72, height: 72, borderRadius: radius.lg,
+    backgroundColor: colors.surface,
+    alignItems: "center", justifyContent: "center",
+    borderWidth: 1, borderColor: colors.border,
+    overflow: "hidden",
+  },
+  heroInfo: { flex: 1 },
+  heroName: { fontSize: fontSize.h3, fontWeight: fontWeight.bold, color: colors.ink },
+  heroEmail: { fontSize: fontSize.caption, color: colors.textSecondary, marginTop: 2 },
+  heroBadge: {
+    alignSelf: "flex-start", marginTop: 6,
+    backgroundColor: colors.surfaceWarm2, borderRadius: radius.sm,
+    paddingHorizontal: 8, paddingVertical: 3,
+  },
+  heroBadgeTxt: { fontSize: fontSize.micro, fontWeight: fontWeight.medium, color: colors.textMuted },
+
+  // ── Wellbeing card ──
+  wellbeingCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.card,
+    padding: spacing.xl,
+    borderWidth: 1,
+    borderColor: colors.border,
+    marginBottom: spacing.md,
+  },
+  wellbeingHeader: {
+    flexDirection: "row", justifyContent: "space-between", alignItems: "center",
+    marginBottom: spacing.lg,
+  },
+  eyebrow: {
+    fontSize: fontSize.eyebrow, fontWeight: fontWeight.semibold, color: colors.textFaint,
+    letterSpacing: 1.8, textTransform: "uppercase",
+  },
+  wellbeingStatus: {
+    fontSize: fontSize.bodySm, fontWeight: fontWeight.medium, color: colors.textMuted,
+  },
+  statsRow: { flexDirection: "row", marginBottom: spacing.lg },
+  statItem: { flex: 1, alignItems: "center" },
+  statBorder: {
+    borderLeftWidth: 1, borderRightWidth: 1, borderColor: colors.hairline,
+  },
+  statNum: { fontSize: fontSize.title, fontWeight: fontWeight.bold },
+  statLabel: { fontSize: fontSize.micro, color: colors.textMuted, marginTop: 2 },
+  propBar: { flexDirection: "row", height: 10, borderRadius: 5, overflow: "hidden", gap: 2 },
+  propSeg: { borderRadius: 5 },
+  propLegend: { flexDirection: "row", justifyContent: "space-between", marginTop: spacing.sm },
+  propLegendItem: { flexDirection: "row", alignItems: "center", gap: 4 },
+  propDot: { width: 8, height: 8, borderRadius: 4 },
+  propLegendTxt: { fontSize: fontSize.micro, color: colors.textMuted },
 
   editBlock: { paddingHorizontal: spacing.lg, paddingBottom: spacing.lg, gap: 10 },
   input: {

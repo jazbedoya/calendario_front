@@ -281,6 +281,14 @@
     "excited": "Tienes algo pronto. ¡Vamos!",
     "lowEnergy": "Cada día cuenta. ¡Tú puedes!"
   },
+  "profile": {
+    "memberSince": "Contigo desde",
+    "wellbeing": "Tu bienestar",
+    "streakDay": "día de racha",
+    "moments": "momentos",
+    "activeAreas": "áreas activas",
+    "appLanguage": "Idioma de la app"
+  },
   "balance": {
     "eyebrow": "Tu equilibrio",
     "title": "En equilibrio",
