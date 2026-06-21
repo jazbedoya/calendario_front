@@ -43,17 +43,10 @@ export default function HomeScreen() {
     setRefreshing(false);
   }, [qc]);
 
-  if (!initialized) return (
-    <View style={s.loading}>
-      <TugaAnimation state="idle" size={80} />
-    </View>
-  );
-  if (!onboardingDone) return <Redirect href="/onboarding" />;
-
   const weekEvents = summary?.week_events_by_layer ?? { family: 0, work: 0, personal: 0 };
   const totalWeekEvents = weekEvents.family + weekEvents.work + weekEvents.personal;
 
-  // Area subtitles
+  // Area subtitles — must be above early returns (Rules of Hooks)
   const areasWithData = useMemo(() => areas.map((area) => {
     if (!summary?.week_events_by_layer) return { ...area, subtitle: "", count: 0 };
     const count = summary.week_events_by_layer[area.layer as keyof typeof summary.week_events_by_layer] ?? 0;
@@ -67,6 +60,13 @@ export default function HomeScreen() {
     }
     return { ...area, subtitle, count };
   }), [areas, summary, t]);
+
+  if (!initialized) return (
+    <View style={s.loading}>
+      <TugaAnimation state="idle" size={80} />
+    </View>
+  );
+  if (!onboardingDone) return <Redirect href="/onboarding" />;
 
   return (
     <SafeAreaView style={s.container} edges={["top"]}>
