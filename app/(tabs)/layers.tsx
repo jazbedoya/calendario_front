@@ -1,5 +1,4 @@
 import { useState, useMemo, useRef, useCallback } from 'react';
-import { StreakPill } from '@/features/tasks/StreakPill';
 import {
   View,
   Text,
@@ -84,7 +83,7 @@ export default function LayersScreen() {
   const { t } = useTranslation();
   const language = useLanguageStore((s) => s.language);
   const { width: winW } = useWindowDimensions();
-  const CELL_W = (winW - 24) / 7;
+  const CELL_W = (winW - spacing.screenX * 2 - spacing.md * 2 - 2) / 7; // screenX margins + calCard padding + border
   const today = new Date();
 
   const [viewMode,     setViewMode]     = useState<'month' | 'week'>('month');
@@ -229,19 +228,9 @@ export default function LayersScreen() {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.terracotta]} tintColor={colors.terracotta} />}
       >
 
-        {/* ── Cabecera ── */}
+        {/* ── Cabecera: año + mes izquierda, toggle derecha ── */}
         <View style={st.header}>
-          <TouchableOpacity
-            onPress={() => viewMode === 'month' ? changeMonth('prev') : changeWeek('prev')}
-            style={st.navBtn}
-            hitSlop={{ top: 14, bottom: 14, left: 14, right: 14 }}
-            accessibilityRole="button"
-            accessibilityLabel={t('calendar.previous')}
-          >
-            <Ionicons name="chevron-back" size={20} color={colors.ink} />
-          </TouchableOpacity>
-
-          <View style={st.monthTitleGroup}>
+          <Pressable onPress={() => viewMode === 'month' ? changeMonth('prev') : changeWeek('prev')} style={st.headerLeft}>
             {viewMode === 'month' ? (
               <>
                 <Text style={st.yearLabel}>{yearStr}</Text>
@@ -250,44 +239,30 @@ export default function LayersScreen() {
             ) : (
               <Text style={st.monthName}>{weekLabel}</Text>
             )}
-          </View>
+          </Pressable>
 
-          <TouchableOpacity
-            onPress={() => viewMode === 'month' ? changeMonth('next') : changeWeek('next')}
-            style={st.navBtn}
-            hitSlop={{ top: 14, bottom: 14, left: 14, right: 14 }}
-            accessibilityRole="button"
-            accessibilityLabel={t('calendar.next')}
-          >
-            <Ionicons name="chevron-forward" size={20} color={colors.ink} />
-          </TouchableOpacity>
-        </View>
-
-        {/* ── Toggle mes / semana ── */}
-        <View style={st.modeToggleRow}>
-          <View style={st.modeToggle}>
-            <TouchableOpacity
-              style={[st.modeBtn, viewMode === 'month' && st.modeBtnActive]}
-              onPress={() => switchMode('month')}
-              activeOpacity={0.75}
-            >
-              <Text style={[st.modeBtnTxt, viewMode === 'month' && st.modeBtnTxtActive]}>{t('calendar.viewMonth')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[st.modeBtn, viewMode === 'week' && st.modeBtnActive]}
-              onPress={() => switchMode('week')}
-              activeOpacity={0.75}
-            >
-              <Text style={[st.modeBtnTxt, viewMode === 'week' && st.modeBtnTxtActive]}>{t('calendar.viewWeek')}</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={st.pillAnchor} pointerEvents="none">
-            <StreakPill />
+          <View style={st.headerRight}>
+            <View style={st.modeToggle}>
+              <TouchableOpacity
+                style={[st.modeBtn, viewMode === 'month' && st.modeBtnActive]}
+                onPress={() => switchMode('month')}
+                activeOpacity={0.75}
+              >
+                <Text style={[st.modeBtnTxt, viewMode === 'month' && st.modeBtnTxtActive]}>{t('calendar.viewMonth')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[st.modeBtn, viewMode === 'week' && st.modeBtnActive]}
+                onPress={() => switchMode('week')}
+                activeOpacity={0.75}
+              >
+                <Text style={[st.modeBtnTxt, viewMode === 'week' && st.modeBtnTxtActive]}>{t('calendar.viewWeek')}</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
 
-        {/* ── Búsqueda ── */}
-        <View style={st.searchRow}>
+        {/* ── Búsqueda en card ── */}
+        <View style={[st.searchCard, shadows.soft]}>
           <Ionicons name="search-outline" size={16} color={colors.textMuted} style={st.searchIcon} />
           <TextInput
             style={st.searchInput}
@@ -305,7 +280,10 @@ export default function LayersScreen() {
           )}
         </View>
 
-        {/* ── Leyenda de áreas ── */}
+        {/* ── Calendario en card ── */}
+        <View style={[st.calCard, shadows.card]}>
+
+        {/* Leyenda de áreas */}
         <View style={st.legend}>
           {LAYER_ORDER.map((layer) => (
             <View key={layer} style={st.legendItem}>
@@ -439,6 +417,8 @@ export default function LayersScreen() {
           </View>
         )}
 
+        </View>{/* close calCard */}
+
         {/* ── Panel inferior: eventos del día ── */}
         {selectedDate && (
           <View style={[
@@ -449,10 +429,8 @@ export default function LayersScreen() {
               : undefined,
           ]}>
             <View style={st.panelHeader}>
-              <Text style={st.panelTitle}>
-                {selectedEvents.length > 0 ? t('calendar.eventsTitle') : t('calendar.noEvents')}
-              </Text>
-              <Text style={st.panelDate}>{dayLabel}</Text>
+              <Text style={st.panelTitle}>{dayLabel}</Text>
+              <Text style={st.panelMonth}>{selectedDate ? format(parseISO(selectedDate), 'MMMM', { locale: dateLocale }).toUpperCase() : ''}</Text>
             </View>
 
             {selectedHoliday && (
@@ -547,17 +525,17 @@ const st = StyleSheet.create({
   scroll:    { paddingBottom: 120 },
 
   // ── Búsqueda ──
-  searchRow: {
+  searchCard: {
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: spacing.screenX,
-    marginBottom: spacing.xs,
-    backgroundColor: colors.surfaceWarm,
-    borderRadius: radius.md,
+    marginBottom: spacing.md,
+    backgroundColor: colors.surface,
+    borderRadius: radius.lg,
     borderWidth: 1,
     borderColor: colors.border,
     paddingHorizontal: spacing.md,
-    height: 44,
+    height: 46,
   },
   searchIcon:  { marginRight: spacing.sm },
   searchInput: { flex: 1, fontSize: fontSize.bodySm, color: colors.ink },
@@ -565,17 +543,14 @@ const st = StyleSheet.create({
   // ── Cabecera ──
   header: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     justifyContent: 'space-between',
     paddingHorizontal: spacing.screenX,
     paddingTop: spacing.lg,
-    paddingBottom: spacing.sm,
+    paddingBottom: spacing.md,
   },
-  navBtn: { padding: spacing.xs },
-  monthTitleGroup: {
-    alignItems: 'center',
-    gap: 2,
-  },
+  headerLeft: { flex: 1 },
+  headerRight: { flexShrink: 0 },
   monthName: {
     fontSize: fontSize.title,
     fontWeight: fontWeight.bold,
@@ -588,25 +563,25 @@ const st = StyleSheet.create({
     fontWeight: fontWeight.medium,
     color: colors.textMuted,
     letterSpacing: 0.5,
+    marginBottom: 2,
+  },
+  // ── Calendar card ──
+  calCard: {
+    marginHorizontal: spacing.screenX,
+    backgroundColor: colors.surface,
+    borderRadius: radius.card,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    marginBottom: spacing.md,
   },
 
-  // ── Toggle ──
-  modeToggleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: spacing.md,
-    paddingHorizontal: spacing.screenX,
-  },
   modeToggle: {
     flexDirection: 'row',
     backgroundColor: colors.surfaceWarm2,
     borderRadius: radius.pill,
     padding: 3,
-  },
-  pillAnchor: {
-    position: 'absolute',
-    right: spacing.screenX,
   },
   modeBtn: {
     paddingHorizontal: 18,
@@ -626,7 +601,6 @@ const st = StyleSheet.create({
     justifyContent: 'center',
     gap: spacing.xl,
     paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.screenX,
   },
   legendItem:  { flexDirection: 'row', alignItems: 'center', gap: 7 },
   legendDot:   { width: 10, height: 10, borderRadius: 5 },
@@ -636,7 +610,6 @@ const st = StyleSheet.create({
   weekdayRow: {
     flexDirection: 'row',
     alignSelf: 'stretch',
-    paddingHorizontal: 12,
     marginBottom: spacing.xs,
   },
   weekdayLabel: {
@@ -649,7 +622,7 @@ const st = StyleSheet.create({
   weekdayLabelWeekend: { color: '#C4A49A' },
 
   // ── Grilla mes ──
-  grid:    { paddingHorizontal: 12, alignItems: 'stretch' },
+  grid:    { alignItems: 'stretch' },
   weekRow: { flexDirection: 'row', alignSelf: 'stretch' },
 
   dayCell: {
@@ -666,7 +639,6 @@ const st = StyleSheet.create({
   // ── Vista semana ──
   weekViewRow: {
     flexDirection: 'row',
-    paddingHorizontal: 12,
     marginBottom: spacing.xs,
   },
   weekViewCell: {
@@ -753,8 +725,8 @@ const st = StyleSheet.create({
     alignItems: 'baseline',
     marginBottom: spacing.md,
   },
-  panelTitle: { fontSize: fontSize.bodyLg, fontWeight: fontWeight.bold, color: colors.ink, letterSpacing: 0.2 },
-  panelDate:  { fontSize: fontSize.label, color: colors.textMuted, textTransform: 'capitalize' },
+  panelTitle: { fontSize: fontSize.h3, fontWeight: fontWeight.bold, color: colors.ink, textTransform: 'capitalize' },
+  panelMonth: { fontSize: fontSize.label, fontWeight: fontWeight.semibold, color: colors.textMuted, letterSpacing: 1, textTransform: 'uppercase' },
   emptyState: {
     alignItems: 'center', paddingVertical: spacing.xl, gap: spacing.sm,
   },
