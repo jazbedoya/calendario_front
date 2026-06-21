@@ -33,10 +33,9 @@ import { useHolidayStore }           from "@/features/settings/holidayStore";
 import type { HolidayCountry }       from "@/features/overview/getHolidays";
 import { SUPPORTED_LANGUAGES, type SupportedLanguage } from "@/i18n";
 
-// ─── Constants ───────────────────────────────────────────────────────────────
+import { colors, spacing, radius, fontSize, fontWeight, shadows } from "@/theme";
 
-const ACCENT = "#C8553D";
-const BG = "#F8F6F2";
+// ─── Constants ───────────────────────────────────────────────────────────────
 
 const LANG_ICONS: Record<SupportedLanguage, string> = {
   es: "🇪🇸", en: "🇬🇧", fr: "🇫🇷", de: "🇩🇪",
@@ -408,7 +407,7 @@ export default function SettingsScreen() {
           onPress={async () => { await logout(); router.replace("/(auth)/login"); }}
           activeOpacity={0.7}
         >
-          <Ionicons name="log-out-outline" size={17} color={ACCENT} />
+          <Ionicons name="log-out-outline" size={17} color={colors.terracotta} />
           <Text style={s.logoutTxt}>{t("settings.session.logout")}</Text>
         </TouchableOpacity>
 
@@ -429,165 +428,162 @@ export default function SettingsScreen() {
 // ─── Styles ──────────────────────────────────────────────────────────────────
 
 const s = StyleSheet.create({
-  safe:    { flex: 1, backgroundColor: BG },
+  safe:    { flex: 1, backgroundColor: colors.bg },
   scroll:  { flex: 1 },
-  content: { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 48 },
+  content: { paddingHorizontal: spacing.screenX, paddingTop: spacing.xl, paddingBottom: 48 },
 
   // Header
-  titleRow:    { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 24 },
-  screenTitle: { fontSize: 28, fontWeight: "800", color: "#1A1A1A", letterSpacing: -0.3 },
+  titleRow:    { flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: spacing["2xl"] },
+  screenTitle: { fontSize: fontSize.title, fontWeight: fontWeight.bold, color: colors.ink, letterSpacing: -0.3 },
 
   sectionLabel: {
-    fontSize: 11, fontWeight: "700", color: "#999999",
-    textTransform: "uppercase", letterSpacing: 1.2,
-    marginBottom: 8, marginLeft: 4, marginTop: 28,
+    fontSize: fontSize.eyebrow, fontWeight: fontWeight.semibold, color: colors.textFaint,
+    textTransform: "uppercase", letterSpacing: 1.8,
+    marginBottom: spacing.sm, marginLeft: spacing.xs, marginTop: spacing["2xl"],
   },
 
   card: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 20,
+    backgroundColor: colors.surface,
+    borderRadius: radius.card,
     overflow: "hidden",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: colors.border,
+    ...shadows.card,
   },
 
-  divider: { height: StyleSheet.hairlineWidth, backgroundColor: "#F0EDE8", marginLeft: 56 },
+  divider: { height: StyleSheet.hairlineWidth, backgroundColor: colors.hairline, marginLeft: 56 },
 
   // ── Mascot ──
   mascotRow: {
     flexDirection: "row", alignItems: "center",
-    padding: 16, gap: 14,
+    padding: spacing.lg, gap: 14,
   },
   mascotFrame: {
-    width: 64, height: 64, borderRadius: 20,
-    backgroundColor: "#F8F6F2",
+    width: 64, height: 64, borderRadius: radius.lg,
+    backgroundColor: colors.bg,
     alignItems: "center", justifyContent: "center",
-    borderWidth: 1, borderColor: "rgba(0,0,0,0.06)",
+    borderWidth: 1, borderColor: colors.border,
   },
   mascotInfo: { flex: 1 },
-  mascotName: { fontSize: 17, fontWeight: "700", color: "#1A1A1A" },
-  mascotHint: { fontSize: 12, color: "#AAAAAA", marginTop: 2 },
+  mascotName: { fontSize: fontSize.h4, fontWeight: fontWeight.bold, color: colors.ink },
+  mascotHint: { fontSize: fontSize.caption, color: colors.textMuted, marginTop: 2 },
   mascotEditBtn: {
-    width: 36, height: 36, borderRadius: 12,
-    backgroundColor: "#FFF3EE", alignItems: "center", justifyContent: "center",
+    width: 36, height: 36, borderRadius: radius.md,
+    backgroundColor: colors.terracottaTint, alignItems: "center", justifyContent: "center",
   },
 
-  editBlock: { paddingHorizontal: 16, paddingBottom: 16, gap: 10 },
+  editBlock: { paddingHorizontal: spacing.lg, paddingBottom: spacing.lg, gap: 10 },
   input: {
-    height: 46, borderRadius: 12,
-    borderWidth: 1.5, borderColor: "#E8E5E0",
-    paddingHorizontal: 14, fontSize: 15, color: "#1A1A1A",
-    backgroundColor: "#FAFAFA",
+    height: 46, borderRadius: radius.md,
+    borderWidth: 1.5, borderColor: colors.fieldBorder,
+    paddingHorizontal: 14, fontSize: fontSize.body, color: colors.ink,
+    backgroundColor: colors.fieldBg,
   },
-  editBtns: { flexDirection: "row", alignItems: "center", gap: 12 },
+  editBtns: { flexDirection: "row", alignItems: "center", gap: spacing.md },
   saveBtn: {
-    height: 40, paddingHorizontal: 24, borderRadius: 12,
-    backgroundColor: "#4CAF50", alignItems: "center", justifyContent: "center",
+    height: 40, paddingHorizontal: spacing["2xl"], borderRadius: radius.md,
+    backgroundColor: colors.success, alignItems: "center", justifyContent: "center",
   },
-  saveBtnTxt: { fontSize: 14, fontWeight: "700", color: "#FFFFFF" },
-  cancelTxt:  { fontSize: 14, color: "#8A8A8A" },
+  saveBtnTxt: { fontSize: fontSize.bodySm, fontWeight: fontWeight.bold, color: colors.white },
+  cancelTxt:  { fontSize: fontSize.bodySm, color: colors.textMuted },
 
-  // ── Preferences (language, country, haptics) ──
+  // ── Preferences ──
   prefRow: {
     flexDirection: "row", alignItems: "center",
-    paddingHorizontal: 16, paddingVertical: 14, gap: 12,
+    paddingHorizontal: spacing.lg, paddingVertical: 14, gap: spacing.md,
     flexWrap: "wrap",
   },
   prefIcon: {
-    width: 32, height: 32, borderRadius: 10,
+    width: 32, height: 32, borderRadius: radius.sm,
     alignItems: "center", justifyContent: "center",
   },
-  prefLabel: { fontSize: 14, fontWeight: "500", color: "#1A1A1A" },
-  prefHint:  { fontSize: 11, color: "#AAAAAA", marginTop: 1 },
-  pillGroup: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+  prefLabel: { fontSize: fontSize.bodySm, fontWeight: fontWeight.medium, color: colors.ink },
+  prefHint:  { fontSize: fontSize.micro, color: colors.textMuted, marginTop: 1 },
+  pillGroup: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm },
   pill: {
     flexDirection: "row", alignItems: "center", gap: 6,
     paddingHorizontal: 14, paddingVertical: 8,
-    borderRadius: 20, backgroundColor: "#F5F3F0",
+    borderRadius: radius.pill, backgroundColor: colors.surfaceWarm,
     borderWidth: 1.5, borderColor: "transparent",
   },
-  pillActive: { backgroundColor: "#FFF3EE", borderColor: ACCENT },
+  pillActive: { backgroundColor: colors.terracottaTint, borderColor: colors.terracotta },
   pillFlag:   { fontSize: 15 },
-  pillTxt:       { fontSize: 13, fontWeight: "500", color: "#6A6A6A" },
-  pillTxtActive: { color: ACCENT, fontWeight: "700" },
+  pillTxt:       { fontSize: fontSize.label, fontWeight: fontWeight.medium, color: colors.textSecondary },
+  pillTxtActive: { color: colors.terracotta, fontWeight: fontWeight.bold },
 
   // ── Google Calendar ──
   calConnected: {
     flexDirection: "row", alignItems: "center",
-    padding: 16, gap: 12,
+    padding: spacing.lg, gap: spacing.md,
   },
-  calDot:     { width: 9, height: 9, borderRadius: 5, backgroundColor: "#4CAF50" },
-  calEmailRow: { flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap" },
-  calEmail:   { fontSize: 14, fontWeight: "600", color: "#1A1A1A", flexShrink: 1 },
+  calDot:     { width: 9, height: 9, borderRadius: 5, backgroundColor: colors.success },
+  calEmailRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm, flexWrap: "wrap" },
+  calEmail:   { fontSize: fontSize.bodySm, fontWeight: fontWeight.semibold, color: colors.ink, flexShrink: 1 },
   calBadge:    { backgroundColor: "#E8F5E9", borderRadius: 6, paddingHorizontal: 7, paddingVertical: 2 },
-  calBadgeTxt: { fontSize: 10, fontWeight: "600", color: "#388E3C" },
-  calMeta:     { fontSize: 12, color: "#8A8A8A", marginTop: 3 },
+  calBadgeTxt: { fontSize: fontSize.eyebrow, fontWeight: fontWeight.semibold, color: "#388E3C" },
+  calMeta:     { fontSize: fontSize.caption, color: colors.textMuted, marginTop: 3 },
   calActions: {
     flexDirection: "row", gap: 10,
-    paddingHorizontal: 16, paddingBottom: 14,
+    paddingHorizontal: spacing.lg, paddingBottom: 14,
   },
   calActionBtn: {
     flexDirection: "row", alignItems: "center", gap: 6,
     paddingHorizontal: 14, paddingVertical: 9,
-    borderRadius: 12, backgroundColor: "#F8F6F2",
+    borderRadius: radius.md, backgroundColor: colors.bg,
   },
-  calActionTxt: { fontSize: 13, fontWeight: "600" },
+  calActionTxt: { fontSize: fontSize.label, fontWeight: fontWeight.semibold },
   calConnect: {
     flexDirection: "row", alignItems: "center",
-    padding: 16, gap: 14,
+    padding: spacing.lg, gap: 14,
   },
-  calConnectTxt:  { fontSize: 15, fontWeight: "600", color: "#1A1A1A" },
-  calConnectHint: { fontSize: 12, color: "#AAAAAA", marginTop: 2, lineHeight: 17 },
+  calConnectTxt:  { fontSize: fontSize.body, fontWeight: fontWeight.semibold, color: colors.ink },
+  calConnectHint: { fontSize: fontSize.caption, color: colors.textMuted, marginTop: 2, lineHeight: 17 },
 
   // ── Support ──
   supportCard: { backgroundColor: "#FFFAF6", borderWidth: 1, borderColor: "#F5E6D8" },
-  supportRow:  { flexDirection: "row", alignItems: "flex-start", gap: 14, padding: 20, paddingBottom: 14 },
+  supportRow:  { flexDirection: "row", alignItems: "flex-start", gap: 14, padding: spacing.xl, paddingBottom: 14 },
   supportEmoji:  { fontSize: 32 },
-  supportTitle:  { fontSize: 16, fontWeight: "700", color: "#1A1A1A", marginBottom: 4 },
-  supportDesc:   { fontSize: 13, color: "#7A6A5A", lineHeight: 19 },
+  supportTitle:  { fontSize: fontSize.bodyLg, fontWeight: fontWeight.bold, color: colors.ink, marginBottom: 4 },
+  supportDesc:   { fontSize: fontSize.label, color: colors.textSecondary, lineHeight: 19 },
   supportBtn: {
-    marginHorizontal: 20, marginBottom: 20, paddingVertical: 13,
-    borderRadius: 14, backgroundColor: ACCENT, alignItems: "center",
+    marginHorizontal: spacing.xl, marginBottom: spacing.xl, paddingVertical: 13,
+    borderRadius: radius.md, backgroundColor: colors.terracotta, alignItems: "center",
   },
-  supportBtnTxt: { fontSize: 15, fontWeight: "700", color: "#FFFFFF" },
+  supportBtnTxt: { fontSize: fontSize.body, fontWeight: fontWeight.bold, color: colors.white },
 
   // ── Community (iOS) ──
   communityRow: {
     flexDirection: "row", alignItems: "center",
-    paddingHorizontal: 16, paddingVertical: 14, gap: 12,
+    paddingHorizontal: spacing.lg, paddingVertical: 14, gap: spacing.md,
   },
-  communityLabel: { fontSize: 14, fontWeight: "600", color: "#1A1A1A" },
-  communityHint:  { fontSize: 11, color: "#AAAAAA", marginTop: 1 },
+  communityLabel: { fontSize: fontSize.bodySm, fontWeight: fontWeight.semibold, color: colors.ink },
+  communityHint:  { fontSize: fontSize.micro, color: colors.textMuted, marginTop: 1 },
 
   // ── About ──
-  aboutBlock:   { padding: 20, gap: 10 },
-  aboutTitle:   { fontSize: 16, fontWeight: "700", color: "#1A1A1A" },
-  aboutTagline: { fontSize: 13, color: ACCENT, fontWeight: "500", marginTop: -4 },
-  aboutDesc:    { fontSize: 13, color: "#6A6A6A", lineHeight: 20 },
-  aboutFooter:  { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: "#F0EDE8", paddingTop: 10, marginTop: 4 },
-  aboutCredits: { fontSize: 11, color: "#BBBBBB", lineHeight: 16 },
-  aboutVersion: { fontSize: 11, color: "#CCCCCC", textAlign: "right", marginTop: 6 },
+  aboutBlock:   { padding: spacing.xl, gap: 10 },
+  aboutTitle:   { fontSize: fontSize.bodyLg, fontWeight: fontWeight.bold, color: colors.ink },
+  aboutTagline: { fontSize: fontSize.label, color: colors.terracotta, fontWeight: fontWeight.medium, marginTop: -4 },
+  aboutDesc:    { fontSize: fontSize.label, color: colors.textSecondary, lineHeight: 20 },
+  aboutFooter:  { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.hairline, paddingTop: 10, marginTop: 4 },
+  aboutCredits: { fontSize: fontSize.micro, color: colors.textFaint, lineHeight: 16 },
+  aboutVersion: { fontSize: fontSize.micro, color: colors.textDisabled, textAlign: "right", marginTop: 6 },
 
   // ── Toast ──
   toast: {
-    position: "absolute", bottom: 100, left: 20, right: 20,
-    flexDirection: "row", alignItems: "center", gap: 8,
-    backgroundColor: "#FFFFFF", borderRadius: 14,
-    paddingHorizontal: 16, paddingVertical: 12,
-    shadowColor: "#000", shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12, shadowRadius: 12, elevation: 6,
+    position: "absolute", bottom: 100, left: spacing.screenX, right: spacing.screenX,
+    flexDirection: "row", alignItems: "center", gap: spacing.sm,
+    backgroundColor: colors.surface, borderRadius: radius.md,
+    paddingHorizontal: spacing.lg, paddingVertical: spacing.md,
+    ...shadows.hero,
   },
-  toastTxt: { fontSize: 14, fontWeight: "500", color: "#1A1A1A", flex: 1 },
+  toastTxt: { fontSize: fontSize.bodySm, fontWeight: fontWeight.medium, color: colors.ink, flex: 1 },
 
   // ── Logout ──
   logoutBtn: {
     flexDirection: "row", alignItems: "center", justifyContent: "center",
-    gap: 8, marginTop: 28, paddingVertical: 14,
-    borderRadius: 16, backgroundColor: "#FFF5F3",
-    borderWidth: 1, borderColor: "#FCDADA",
+    gap: spacing.sm, marginTop: spacing["2xl"], paddingVertical: 14,
+    borderRadius: radius.lg, backgroundColor: colors.terracottaTint,
+    borderWidth: 1, borderColor: "rgba(200, 85, 61, 0.18)",
   },
-  logoutTxt: { fontSize: 15, fontWeight: "600", color: ACCENT },
+  logoutTxt: { fontSize: fontSize.body, fontWeight: fontWeight.semibold, color: colors.terracotta },
 });

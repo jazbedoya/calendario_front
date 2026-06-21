@@ -11,4 +11,5 @@ export const radius = {
   xl: 24,     // --av-radius-xl
   hero: 30,   // --av-radius-hero
   pill: 999,  // --av-radius-pill
+  field: 16,    // --av-field-radius
 } as const;

@@ -38,6 +38,16 @@ export const colors = {
   personalDeep: "#534984",
   personalTint: "rgba(91, 81, 147, 0.14)",
 
+  // Forms
+  fieldBg: "#FFFFFF",
+  fieldBorder: "#E7DFD0",
+  fieldFocus: "#C8553D",
+  fieldIcon: "#A8A193",
+  fieldPlaceholder: "#B7AF9E",
+  fieldLabel: "#5A554A",
+  valid: "#3D6B5F",
+  invalid: "#C8553D",
+
   // Semantic
   white: "#FFFFFF",
   success: "#4CAF50",
