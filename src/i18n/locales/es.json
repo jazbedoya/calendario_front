@@ -252,6 +252,7 @@
     },
     "addPlaceholder": "Escribe una tarea...",
     "savedConfirm": "¡Tarea guardada!",
+    "progressLabel": "Progreso de hoy",
     "deleteTitle": "Borrar tarea",
     "deleteMsg": "¿Borrar \"{{task}}\"?",
     "deleteConfirm": "Borrar",

@@ -252,6 +252,7 @@
     },
     "addPlaceholder": "Aufgabe eingeben...",
     "savedConfirm": "Aufgabe gespeichert!",
+    "progressLabel": "Fortschritt heute",
     "deleteTitle": "Aufgabe löschen",
     "deleteMsg": "\"{{task}}\" löschen?",
     "deleteConfirm": "Löschen",

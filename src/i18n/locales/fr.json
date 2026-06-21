@@ -252,6 +252,7 @@
     },
     "addPlaceholder": "Écrire une tâche...",
     "savedConfirm": "Tâche enregistrée !",
+    "progressLabel": "Progrès du jour",
     "deleteTitle": "Supprimer la tâche",
     "deleteMsg": "Supprimer \"{{task}}\" ?",
     "deleteConfirm": "Supprimer",

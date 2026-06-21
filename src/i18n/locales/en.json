@@ -252,6 +252,7 @@
     },
     "addPlaceholder": "Write a task...",
     "savedConfirm": "Task saved!",
+    "progressLabel": "Today's progress",
     "deleteTitle": "Delete task",
     "deleteMsg": "Delete \"{{task}}\"?",
     "deleteConfirm": "Delete",

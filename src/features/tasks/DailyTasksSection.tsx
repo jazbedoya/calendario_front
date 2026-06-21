@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View, Animated } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Animated } from "react-native";
 import { useTranslation } from "react-i18next";
 
 import { useQueryClient } from "@tanstack/react-query";
@@ -10,8 +10,7 @@ import { AddTask }              from "./AddTask";
 import { CelebrationOverlay }   from "./CelebrationOverlay";
 import { useTodayDate }         from "./hooks";
 import type { MascotMood }      from "@/features/mascot/getMascotState";
-
-const ACCENT = "#C8553D";
+import { colors, spacing, radius, fontSize, fontWeight, shadows } from "@/theme";
 
 function TaskSkeleton() {
   const opacity = useRef(new Animated.Value(0.4)).current;
@@ -51,13 +50,11 @@ interface DailyTasksSectionProps {
 
 export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
   const { t } = useTranslation();
-  const today = useTodayDate();
-  const { data: tasks = [], isLoading, isPending } = useGetTodayTasks();
-  const { data: yesterdayPending = [] }            = useGetYesterdayPending();
   const progressMessage = useProgressMessage(t);
+  const todayStr = useTodayDate();
 
-  // IDs de sugerencias de ayer ya añadidas (se ocultan individualmente)
-  const [addedFromYesterday, setAddedFromYesterday] = useState<string[]>([]);
+  const { data: tasks = [], isLoading }    = useGetTodayTasks();
+  const { data: yesterdayPending = [] }    = useGetYesterdayPending();
 
   const { mutate: create } = useCreateTask();
   const { mutate: toggle } = useToggleTask();
@@ -76,8 +73,8 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
   const [showModal,   setShowModal]   = useState(false);
   const prevDone    = useRef(done);
   const prevTotal   = useRef(total);
-  // Prevents re-triggering in the same session after closing + re-completing
   const alreadyFired = useRef(false);
+  const [addedFromYesterday, setAddedFromYesterday] = useState<string[]>([]);
 
   useEffect(() => {
     const justFinished =
@@ -92,7 +89,6 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
       refetchStreak().finally(() => setShowModal(true));
     }
 
-    // Reset guard if user unchecks a task
     if (done < total && done < prevDone.current) {
       alreadyFired.current = false;
     }
@@ -103,12 +99,12 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
 
   function handleCloseModal() {
     setShowModal(false);
-    // Las tareas completadas se quedan tachadas hasta que cambie el día
   }
 
   return (
     <>
-      <View style={s.card}>
+      <View style={[s.card, shadows.card]}>
+        {/* Title + subtitle */}
         <Text style={s.title}>{t('tasks.sectionTitle')}</Text>
         {!isLoading && <Text style={s.subtitle}>{msg}</Text>}
 
@@ -120,21 +116,22 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
           onCelebrationEnd={() => setCelebrating(false)}
         />
 
-        {/* Hint visual cuando no hay tareas */}
-        {!isLoading && total === 0 && (
-          <View style={s.emptyHint}>
-            <Text style={s.emptyIcon}>📝</Text>
+        {/* Progress bar */}
+        <View style={s.progressTrack}>
+          <View style={[s.progressFill, { width: `${Math.max(pct * 100, 2)}%` }]} />
+        </View>
+
+        {/* Progress label */}
+        {total > 0 && (
+          <View style={s.progressRow}>
+            <Text style={s.progressLabel}>{t('tasks.progressLabel')}</Text>
+            <Text style={s.progressCount}>
+              {t('tasks.counter', { done, total, count: total })}
+            </Text>
           </View>
         )}
 
-        {/* Contador */}
-        {total > 0 && (
-          <Text style={s.counter}>
-            {t('tasks.counter', { done, total, count: total })}
-          </Text>
-        )}
-
-        {/* Skeleton mientras carga por primera vez */}
+        {/* Skeleton mientras carga */}
         {isLoading && <TaskSkeleton />}
 
         {/* Lista */}
@@ -144,7 +141,7 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
               <TaskRow
                 key={task.id}
                 task={task}
-                accent={ACCENT}
+                accent={colors.terracotta}
                 onToggle={() => toggle({ id: task.id, done: !task.done })}
                 onDelete={() => remove(task.id)}
                 isLast={i === tasks.length - 1}
@@ -153,7 +150,7 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
           </View>
         )}
 
-        {/* Sugerencias de ayer — solo cuando hoy está vacío y ya cargó */}
+        {/* Sugerencias de ayer */}
         {tasks.length === 0 && !isLoading && yesterdayPending
           .filter((yt) => !addedFromYesterday.includes(yt.id))
           .map((yt) => (
@@ -177,13 +174,12 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
 
         {/* Añadir tarea */}
         <AddTask
-          accent={ACCENT}
+          accent={colors.terracotta}
           onAdd={(text) => create(text)}
           onFocus={onInputFocus}
         />
       </View>
 
-      {/* Modal de celebración — fuera del card para flotar sobre toda la app */}
       <CelebrationOverlay
         visible={showModal}
         streak={streakData?.current_streak ?? 1}
@@ -194,72 +190,105 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
 }
 
 const s = StyleSheet.create({
-  emptyHint: { alignItems: "center", paddingVertical: 4 },
-  emptyIcon: { fontSize: 28 },
   card: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 22,
-    padding: 20,
-    gap: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 10,
-    elevation: 3,
-  },
-  title:    { fontSize: 16, fontWeight: "700", color: "#1A1A1A" },
-  subtitle: { fontSize: 13, color: "#888888", lineHeight: 18, marginTop: -4 },
-  counter:  { fontSize: 12, fontWeight: "600", color: "#AAAAAA", textAlign: "right", marginTop: -4 },
-  list: {
-    backgroundColor: "#FAFAF9",
-    borderRadius: 14,
-    overflow: "hidden",
+    backgroundColor: colors.surface,
+    borderRadius: radius.card,
+    padding: spacing.xl,
+    gap: spacing.md,
     borderWidth: 1,
-    borderColor: "#F0EDE9",
+    borderColor: colors.border,
+  },
+  title: {
+    fontSize: fontSize.h3,
+    fontWeight: fontWeight.bold,
+    color: colors.ink,
+  },
+  subtitle: {
+    fontSize: fontSize.bodySm,
+    color: colors.textMuted,
+    marginTop: -4,
   },
 
+  // Progress bar
+  progressTrack: {
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: colors.surfaceWarm,
+    overflow: "hidden",
+  },
+  progressFill: {
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: colors.terracotta,
+  },
+  progressRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  progressLabel: {
+    fontSize: fontSize.eyebrow,
+    fontWeight: fontWeight.semibold,
+    color: colors.textFaint,
+    letterSpacing: 1.4,
+    textTransform: "uppercase",
+  },
+  progressCount: {
+    fontSize: fontSize.bodySm,
+    fontWeight: fontWeight.semibold,
+    color: colors.ink,
+  },
+
+  // List
+  list: {
+    borderRadius: radius.md,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: colors.hairline,
+    backgroundColor: colors.bg,
+  },
+
+  // Yesterday suggestions
   yesterdayRow: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FDF8F6",
-    borderRadius: 12,
+    backgroundColor: colors.surfaceWarm,
+    borderRadius: radius.md,
     borderWidth: 1,
-    borderColor: "#EDE9E4",
+    borderColor: colors.border,
     paddingVertical: 10,
     paddingHorizontal: 14,
     gap: 10,
   },
-  yesterdayText: { flex: 1, fontSize: 13, color: "#AAAAAA", lineHeight: 18 },
-  yesterdayTask: { color: "#888888", fontWeight: "600" },
+  yesterdayText: { flex: 1, fontSize: fontSize.label, color: colors.textMuted, lineHeight: 18 },
+  yesterdayTask: { color: colors.textSecondary, fontWeight: fontWeight.semibold },
   yesterdayBtn: {
     paddingVertical: 5,
     paddingHorizontal: 12,
-    borderRadius: 8,
-    backgroundColor: "#F3ECE9",
+    borderRadius: radius.sm,
+    backgroundColor: colors.terracottaTint,
   },
-  yesterdayBtnText: { fontSize: 13, fontWeight: "700", color: "#C8553D" },
+  yesterdayBtnText: { fontSize: fontSize.label, fontWeight: fontWeight.bold, color: colors.terracotta },
 
+  // Skeleton
   skeletonRow: {
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 14,
     paddingHorizontal: 16,
     gap: 12,
-    backgroundColor: "#FAFAF9",
+    backgroundColor: colors.bg,
   },
   skeletonBorder: {
     borderTopWidth: 1,
-    borderTopColor: "#F0EDE9",
+    borderTopColor: colors.hairline,
   },
   skeletonCircle: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    backgroundColor: "#E8E4E0",
+    width: 22, height: 22, borderRadius: 11,
+    backgroundColor: colors.surfaceWarm2,
   },
   skeletonLine: {
-    height: 13,
-    borderRadius: 6,
-    backgroundColor: "#E8E4E0",
+    height: 13, borderRadius: 6,
+    backgroundColor: colors.surfaceWarm2,
   },
 });
