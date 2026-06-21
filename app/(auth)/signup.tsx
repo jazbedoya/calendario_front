@@ -21,9 +21,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
 import { signupApi } from "@/features/auth/api";
-import { Mascot } from "@/features/mascot/Mascot";
+import { TugaAnimation } from "@/features/mascot/TugaAnimation";
 import { useGoogleAuth } from "@/features/auth/useGoogleAuth";
-import { Colors } from "@/lib/theme";
+import { colors, spacing, radius, fontSize, fontWeight, shadows } from "@/theme";
 
 type FormData = { full_name: string; email: string; password: string };
 
@@ -56,7 +56,6 @@ export default function SignupScreen() {
     return () => { show.remove(); hide.remove(); };
   }, []);
 
-  // ── lógica original intacta ───────────────────────────────────────────────
   const onSubmit = async (data: FormData) => {
     const attempt = async () => {
       const result = await signupApi({
@@ -74,7 +73,6 @@ export default function SignupScreen() {
     } catch (err: unknown) {
       const axiosErr = err as any;
       if (!axiosErr?.response) {
-        // Tunnel handshake — reintentar una vez
         try { await attempt(); return; } catch (retryErr: unknown) {
           const retryAxios = retryErr as any;
           const msg = retryAxios?.response?.data?.detail ?? (retryErr instanceof Error ? retryErr.message : "Error desconocido");
@@ -86,129 +84,144 @@ export default function SignupScreen() {
       setError("root", { message: msg });
     }
   };
-  // ─────────────────────────────────────────────────────────────────────────
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={s.safe}>
       <KeyboardAvoidingView
-        style={styles.flex}
+        style={s.flex}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <ScrollView
-          contentContainerStyle={styles.scroll}
+          contentContainerStyle={s.scroll}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          {/* Header pequeño — siempre visible */}
-          <View style={styles.topHeader}>
-            <Text style={styles.topBrand}>Avante</Text>
-          </View>
+          {/* Brand */}
+          <Text style={s.brand}>A V A N T E</Text>
 
-          {/* Tortuga + Títulos — ocultos en Android cuando el teclado está abierto */}
+          {/* Tuga + Títulos */}
           {!(Platform.OS === "android" && keyboardVisible) && (
-            <>
-              <Mascot name="" mood="happy" message="" size="large" showName={false} />
-              <Text style={styles.title}>{t("auth.signup.title")}</Text>
-              <Text style={styles.subtitle}>{t("auth.signup.subtitle")}</Text>
-            </>
+            <View style={s.heroSection}>
+              <View style={s.tugaCircle}>
+                <TugaAnimation state="idle" size={90} />
+              </View>
+              <Text style={s.title}>{t("auth.signup.title")}</Text>
+              <Text style={s.subtitle}>{t("auth.signup.subtitle")}</Text>
+            </View>
           )}
 
-          {/* Botón Google */}
+          {/* Google */}
           <TouchableOpacity
-            style={styles.googleBtn}
+            style={[s.googleBtn, shadows.soft]}
             onPress={() => promptAsync()}
             disabled={googleDisabled}
             activeOpacity={0.8}
           >
-            <AntDesign name="google" size={20} color="#4285F4" />
-            <Text style={styles.googleBtnText}>{t("auth.signup.googleBtn")}</Text>
+            <AntDesign name="google" size={18} color="#4285F4" />
+            <Text style={s.googleBtnText}>{t("auth.signup.googleBtn")}</Text>
           </TouchableOpacity>
 
           {/* Separador */}
-          <View style={styles.divider}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>{t("auth.signup.divider")}</Text>
-            <View style={styles.dividerLine} />
+          <View style={s.divider}>
+            <View style={s.dividerLine} />
+            <Text style={s.dividerText}>{t("auth.signup.divider")}</Text>
+            <View style={s.dividerLine} />
           </View>
 
-          <Text style={styles.label}>{t("auth.signup.nameLabel")}</Text>
+          {/* Nombre */}
+          <Text style={s.label}>{t("auth.signup.nameLabel")}</Text>
           <Controller
             control={control}
             name="full_name"
             render={({ field: { onChange, value, onBlur } }) => (
-              <TextInput
-                style={[styles.input, errors.full_name && styles.inputError]}
-                placeholder={t("auth.signup.namePlaceholder")}
-                placeholderTextColor={Colors.placeholder}
-                autoCapitalize="words"
-                onChangeText={onChange}
-                onBlur={onBlur}
-                value={value}
-              />
+              <View style={[s.inputRow, errors.full_name && s.inputError]}>
+                <Ionicons name="person-outline" size={18} color={colors.fieldIcon} style={s.inputIcon} />
+                <TextInput
+                  style={s.inputField}
+                  placeholder={t("auth.signup.namePlaceholder")}
+                  placeholderTextColor={colors.fieldPlaceholder}
+                  autoCapitalize="words"
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                />
+              </View>
             )}
           />
-          {errors.full_name && <Text style={styles.fieldError}>{errors.full_name.message}</Text>}
+          {errors.full_name && <Text style={s.fieldError}>{errors.full_name.message}</Text>}
 
-          <Text style={[styles.label, styles.labelSpaced]}>{t("auth.signup.emailLabel")}</Text>
+          {/* Email */}
+          <Text style={[s.label, s.labelSpaced]}>{t("auth.signup.emailLabel")}</Text>
           <Controller
             control={control}
             name="email"
             render={({ field: { onChange, value, onBlur } }) => (
-              <TextInput
-                style={[styles.input, errors.email && styles.inputError]}
-                placeholder="tu@email.com"
-                placeholderTextColor={Colors.placeholder}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                onChangeText={onChange}
-                onBlur={onBlur}
-                value={value}
-              />
+              <View style={[s.inputRow, errors.email && s.inputError]}>
+                <Ionicons name="mail-outline" size={18} color={colors.fieldIcon} style={s.inputIcon} />
+                <TextInput
+                  style={s.inputField}
+                  placeholder="tu@email.com"
+                  placeholderTextColor={colors.fieldPlaceholder}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                />
+              </View>
             )}
           />
-          {errors.email && <Text style={styles.fieldError}>{errors.email.message}</Text>}
+          {errors.email && <Text style={s.fieldError}>{errors.email.message}</Text>}
 
-          <Text style={[styles.label, styles.labelSpaced]}>{t("auth.signup.passwordLabel")}</Text>
+          {/* Contraseña */}
+          <Text style={[s.label, s.labelSpaced]}>{t("auth.signup.passwordLabel")}</Text>
           <Controller
             control={control}
             name="password"
             render={({ field: { onChange, value, onBlur } }) => (
-              <View style={[styles.passwordRow, errors.password && styles.inputError]}>
+              <View style={[s.inputRow, errors.password && s.inputError]}>
+                <Ionicons name="lock-closed-outline" size={18} color={colors.fieldIcon} style={s.inputIcon} />
                 <TextInput
-                  style={styles.passwordInput}
+                  style={s.inputField}
                   placeholder={t("auth.signup.passwordPlaceholder")}
-                  placeholderTextColor={Colors.placeholder}
+                  placeholderTextColor={colors.fieldPlaceholder}
                   secureTextEntry={!showPassword}
                   onChangeText={onChange}
                   onBlur={onBlur}
                   value={value}
                 />
                 <Pressable onPress={() => setShowPassword(!showPassword)} hitSlop={8}>
-                  <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={20} color="#9CA3AF" />
+                  <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={20} color={colors.fieldIcon} />
                 </Pressable>
               </View>
             )}
           />
-          {errors.password && <Text style={styles.fieldError}>{errors.password.message}</Text>}
+          {errors.password && <Text style={s.fieldError}>{errors.password.message}</Text>}
 
-          {errors.root && <Text style={styles.rootError}>{errors.root.message}</Text>}
+          {errors.root && <Text style={s.rootError}>{errors.root.message}</Text>}
 
+          {/* Botón Crear cuenta */}
           <TouchableOpacity
-            style={styles.primaryBtn}
+            style={s.primaryBtn}
             onPress={handleSubmit(onSubmit)}
             disabled={isSubmitting}
             activeOpacity={0.85}
           >
             {isSubmitting
               ? <ActivityIndicator color="#fff" />
-              : <Text style={styles.primaryBtnText}>{t("auth.signup.submitBtn")}</Text>}
+              : (
+                <View style={s.primaryBtnInner}>
+                  <Text style={s.primaryBtnText}>{t("auth.signup.submitBtn")}</Text>
+                  <Ionicons name="arrow-forward" size={18} color={colors.white} />
+                </View>
+              )}
           </TouchableOpacity>
 
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>{t("auth.signup.hasAccount")} </Text>
+          <View style={s.footer}>
+            <Text style={s.footerText}>{t("auth.signup.hasAccount")} </Text>
             <Link href={"/(auth)/login" as any} asChild>
               <Pressable>
-                <Text style={styles.footerLink}>{t("auth.signup.loginLink")}</Text>
+                <Text style={s.footerLink}>{t("auth.signup.loginLink")}</Text>
               </Pressable>
             </Link>
           </View>
@@ -218,115 +231,70 @@ export default function SignupScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: Colors.background },
+const s = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: colors.bg },
   flex: { flex: 1 },
-  scroll: { paddingHorizontal: 24, paddingBottom: 40 },
+  scroll: { paddingHorizontal: spacing.screenX, paddingBottom: 40 },
 
-  // Header pequeño — siempre visible
-  topHeader: {
-    alignItems: "center",
-    paddingTop: 12,
-    paddingBottom: 8,
-  },
-  topBrand: {
-    fontSize: 13,
-    color: Colors.textSecondary,
-    fontWeight: "500",
+  brand: {
+    textAlign: "center", fontSize: fontSize.label, fontWeight: fontWeight.semibold,
+    color: colors.ink, letterSpacing: 6, paddingTop: spacing.lg, paddingBottom: spacing.sm,
   },
 
-  // Títulos
+  heroSection: { alignItems: "center", marginBottom: spacing["2xl"] },
+  tugaCircle: {
+    width: 110, height: 110, borderRadius: 55,
+    backgroundColor: colors.surface, alignItems: "center", justifyContent: "center",
+    borderWidth: 1, borderColor: colors.border, ...shadows.card,
+    overflow: "hidden",
+  },
   title: {
-    textAlign: "center",
-    fontSize: 28,
-    fontWeight: "700",
-    fontFamily: Platform.select({ ios: "Georgia", android: "serif", default: "Georgia" }),
-    color: Colors.midnight,
-    marginTop: 20,
+    textAlign: "center", fontSize: fontSize.title, fontWeight: fontWeight.bold,
+    color: colors.ink, marginTop: spacing.xl,
   },
   subtitle: {
-    textAlign: "center",
-    fontSize: 14,
-    color: Colors.textSecondary,
-    marginTop: 6,
-    marginBottom: 28,
+    textAlign: "center", fontSize: fontSize.bodySm, fontStyle: "italic",
+    color: colors.textMuted, marginTop: 6,
   },
 
-  // Google
   googleBtn: {
-    width: "100%",
-    height: 54,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: "#E5E5E5",
-    backgroundColor: "#FFFFFF",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 12,
-    elevation: 1,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
+    width: "100%", height: 54, borderRadius: radius.field,
+    borderWidth: 1, borderColor: colors.fieldBorder, backgroundColor: colors.surface,
+    flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 12,
   },
-  googleBtnText: { fontSize: 16, fontWeight: "600", color: "#1A1A1A" },
+  googleBtnText: { fontSize: fontSize.body, fontWeight: fontWeight.semibold, color: colors.ink },
 
-  // Separador
-  divider: { flexDirection: "row", alignItems: "center", marginVertical: 20 },
-  dividerLine: { flex: 1, height: 1, backgroundColor: Colors.border },
+  divider: { flexDirection: "row", alignItems: "center", marginVertical: spacing.xl },
+  dividerLine: { flex: 1, height: StyleSheet.hairlineWidth, backgroundColor: colors.hairline },
   dividerText: {
-    marginHorizontal: 10,
-    fontSize: 11,
-    fontWeight: "600",
-    color: Colors.textMuted,
-    letterSpacing: 1.2,
+    marginHorizontal: 12, fontSize: fontSize.caption, fontWeight: fontWeight.medium,
+    color: colors.textFaint,
   },
 
-  // Campos
-  label: { fontSize: 13, fontWeight: "600", color: Colors.textPrimary, marginBottom: 6 },
-  labelSpaced: { marginTop: 16 },
+  label: { fontSize: fontSize.label, fontWeight: fontWeight.semibold, color: colors.fieldLabel, marginBottom: 6 },
+  labelSpaced: { marginTop: spacing.lg },
 
-  input: {
-    height: 52,
-    borderRadius: 16,
-    borderWidth: 1.5,
-    borderColor: Colors.border,
-    paddingHorizontal: 16,
-    fontSize: 15,
-    color: Colors.textPrimary,
-    backgroundColor: Colors.inputBg,
+  inputRow: {
+    flexDirection: "row", alignItems: "center", height: 54, borderRadius: radius.field,
+    borderWidth: 1.5, borderColor: colors.fieldBorder, paddingHorizontal: spacing.lg,
+    backgroundColor: colors.fieldBg, gap: spacing.sm,
   },
-  inputError: { borderColor: Colors.error },
+  inputIcon: { opacity: 0.7 },
+  inputField: { flex: 1, fontSize: fontSize.body, color: colors.ink },
+  inputError: { borderColor: colors.invalid },
 
-  passwordRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    height: 52,
-    borderRadius: 16,
-    borderWidth: 1.5,
-    borderColor: Colors.border,
-    paddingHorizontal: 16,
-    backgroundColor: Colors.inputBg,
-  },
-  passwordInput: { flex: 1, fontSize: 15, color: Colors.textPrimary },
+  fieldError: { fontSize: fontSize.caption, color: colors.invalid, marginTop: spacing.xs },
+  rootError: { fontSize: fontSize.label, color: colors.invalid, marginTop: spacing.md, textAlign: "center" },
 
-  fieldError: { fontSize: 12, color: Colors.error, marginTop: 4 },
-  rootError: { fontSize: 13, color: Colors.error, marginTop: 12, textAlign: "center" },
-
-  // Botón principal
   primaryBtn: {
-    height: 54,
-    borderRadius: 16,
-    backgroundColor: Colors.primary,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 20,
+    height: 56, borderRadius: radius.hero, backgroundColor: colors.terracotta,
+    alignItems: "center", justifyContent: "center", marginTop: spacing["2xl"],
+    ...shadows.fab,
   },
-  primaryBtnText: { fontSize: 16, fontWeight: "700", color: "#FFFFFF", letterSpacing: 0.3 },
+  primaryBtnInner: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+  primaryBtnText: { fontSize: fontSize.bodyLg, fontWeight: fontWeight.bold, color: colors.white },
 
-  // Footer
-  footer: { flexDirection: "row", justifyContent: "center", marginTop: 24 },
-  footerText: { fontSize: 14, color: Colors.textSecondary },
-  footerLink: { fontSize: 14, fontWeight: "700", color: Colors.midnight },
+  footer: { flexDirection: "row", justifyContent: "center", marginTop: spacing["2xl"] },
+  footerText: { fontSize: fontSize.bodySm, color: colors.textSecondary },
+  footerLink: { fontSize: fontSize.bodySm, fontWeight: fontWeight.bold, color: colors.ink, textDecorationLine: "underline" },
 });
