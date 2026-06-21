@@ -105,9 +105,9 @@
   },
   "tabs": {
     "home": "Home",
-    "all": "Calendar",
+    "all": "Agenda",
     "balance": "Balance",
-    "settings": "Settings"
+    "settings": "Profile"
   },
   "layers": {
     "family": "Family",

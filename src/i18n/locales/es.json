@@ -105,9 +105,9 @@
   },
   "tabs": {
     "home": "Inicio",
-    "all": "Todo",
+    "all": "Agenda",
     "balance": "Equilibrio",
-    "settings": "Ajustes"
+    "settings": "Perfil"
   },
   "layers": {
     "family": "Familia",
