@@ -22,9 +22,9 @@ export function Greeting({ userName }: GreetingProps) {
 
   const today = new Date();
   const locale = getDateLocale(i18n.language);
-  const dateStr = format(today, t("dateFormat.dayMonth"), { locale });
   const dayName = format(today, "EEEE", { locale });
-  const eyebrow = `${dayName.toUpperCase()}  ·  ${dateStr.toUpperCase()}`;
+  const dateNum = format(today, "d MMMM", { locale });
+  const eyebrow = `${dayName.toUpperCase()}  ·  ${dateNum.toUpperCase()}`;
 
   return (
     <View style={s.container}>
