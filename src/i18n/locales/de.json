@@ -138,10 +138,14 @@
         "other": "{{count}} Momente für dich · weiter so"
       },
       "events": "Ereignisse",
+      "familyCountLabel": "Ereignisse",
+      "workCountLabel": "Meetings",
+      "personalCountLabel": "Momente",
       "familyLabel": "Familie",
       "workLabel": "Arbeit",
       "personalLabel": "Persönlich"
     },
+    "today": "Heute",
     "tuga": {
       "status": "Ruhig",
       "weekTitle": "Deine Woche",

@@ -20,7 +20,7 @@ import { useMascotMessage } from "@/features/mascot/useMascotMessage";
 import { useMascotStore } from "@/features/mascot/mascotStore";
 import { useAuthStore } from "@/stores/authStore";
 import { useHomeSummary } from "@/features/home/useHomeSummary";
-import { colors, spacing } from "@/theme";
+import { colors, spacing, fontSize, fontWeight } from "@/theme";
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -104,6 +104,7 @@ export default function HomeScreen() {
               key={area.layer}
               area={area}
               eventCount={area.count}
+              countLabel={t(`home.area.${area.layer}CountLabel`)}
               onPress={() => {
                 if (Platform.OS === "web") {
                   window.location.href = area.route;
@@ -123,8 +124,9 @@ export default function HomeScreen() {
           />
         </View>
 
-        {/* Tasks summary */}
+        {/* HOY — Tasks summary */}
         <View style={s.section}>
+          <Text style={s.sectionEyebrow}>{t("home.today")}</Text>
           <TasksSummaryCard
             pendingCount={summary?.today_tasks_pending ?? 0}
             totalCount={(summary?.today_tasks_pending ?? 0) + 1}
@@ -141,4 +143,12 @@ const s = StyleSheet.create({
   content: { paddingBottom: 120 },
   loading: { flex: 1, backgroundColor: colors.bg, alignItems: "center", justifyContent: "center" },
   section: { paddingHorizontal: spacing.screenX, gap: 10, marginBottom: 16 },
+  sectionEyebrow: {
+    fontSize: fontSize.eyebrow,
+    fontWeight: fontWeight.semibold,
+    color: colors.textFaint,
+    letterSpacing: 1.8,
+    textTransform: "uppercase",
+    marginBottom: 4,
+  },
 });

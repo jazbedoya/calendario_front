@@ -1,28 +1,30 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useTranslation } from "react-i18next";
 import { LifeAreaSummary } from "../types";
-import { colors, spacing, radius, fontSize, fontWeight, shadows } from "@/theme";
+import { colors, areaColors, spacing, radius, fontSize, fontWeight, areaShadows } from "@/theme";
+import type { AreaKey } from "@/theme";
 
 interface LifeAreaCardProps {
   area: LifeAreaSummary;
   eventCount: number;
+  countLabel: string;
   onPress: () => void;
 }
 
-export function LifeAreaCard({ area, eventCount, onPress }: LifeAreaCardProps) {
-  const { t } = useTranslation();
+export function LifeAreaCard({ area, eventCount, countLabel, onPress }: LifeAreaCardProps) {
+  const areaKey = area.layer as AreaKey;
+  const ac = areaColors[areaKey];
 
   return (
     <TouchableOpacity
-      style={[s.card, shadows.card]}
+      style={[s.card, { backgroundColor: ac.tint }]}
       onPress={onPress}
       activeOpacity={0.88}
       accessibilityRole="button"
       accessibilityLabel={area.title}
     >
-      {/* Icon chip with area color */}
-      <View style={[s.iconChip, { backgroundColor: area.color }]}>
+      {/* Icon chip with gradient-like solid color + tinted shadow */}
+      <View style={[s.iconChip, { backgroundColor: ac.base }, areaShadows[areaKey]]}>
         <Ionicons
           name={area.iconName as keyof typeof Ionicons.glyphMap}
           size={20}
@@ -36,12 +38,13 @@ export function LifeAreaCard({ area, eventCount, onPress }: LifeAreaCardProps) {
         <Text style={s.subtitle}>{area.subtitle}</Text>
       </View>
 
-      {/* Event count + arrow */}
+      {/* Event count + label */}
       <View style={s.rightBlock}>
-        <Text style={[s.count, { color: area.color }]}>{eventCount}</Text>
-        <Text style={s.countLabel}>{t("home.area.events")}</Text>
+        <Text style={[s.count, { color: ac.deep }]}>{eventCount}</Text>
+        <Text style={[s.countLabel, { color: ac.deep }]}>{countLabel}</Text>
       </View>
-      <Ionicons name="chevron-forward" size={16} color={colors.textDisabled} />
+
+      <Ionicons name="chevron-forward" size={16} color={ac.base} style={{ opacity: 0.5 }} />
     </TouchableOpacity>
   );
 }
@@ -50,18 +53,15 @@ const s = StyleSheet.create({
   card: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: colors.surface,
     borderRadius: radius.card,
-    paddingVertical: 16,
+    paddingVertical: 18,
     paddingHorizontal: 18,
     gap: 14,
-    borderWidth: 1,
-    borderColor: colors.border,
   },
   iconChip: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
+    width: 46,
+    height: 46,
+    borderRadius: 15,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -69,25 +69,24 @@ const s = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontSize: fontSize.body,
-    fontWeight: fontWeight.semibold,
+    fontSize: fontSize.bodyLg,
+    fontWeight: fontWeight.bold,
     color: colors.ink,
   },
   subtitle: {
     fontSize: fontSize.caption,
-    color: colors.textMuted,
+    color: colors.textSecondary,
     marginTop: 2,
   },
   rightBlock: {
-    alignItems: "center",
+    alignItems: "flex-end",
   },
   count: {
-    fontSize: fontSize.h3,
+    fontSize: fontSize.h2,
     fontWeight: fontWeight.bold,
   },
   countLabel: {
     fontSize: fontSize.micro,
-    color: colors.textMuted,
     marginTop: -2,
   },
 });

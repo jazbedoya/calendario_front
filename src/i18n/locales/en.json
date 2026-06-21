@@ -138,10 +138,14 @@
         "other": "{{count}} moments for you · keep it up"
       },
       "events": "events",
+      "familyCountLabel": "events",
+      "workCountLabel": "meetings",
+      "personalCountLabel": "moments",
       "familyLabel": "Family",
       "workLabel": "Work",
       "personalLabel": "Personal"
     },
+    "today": "Today",
     "tuga": {
       "status": "Feeling calm",
       "weekTitle": "Your week",
