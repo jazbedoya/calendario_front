@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { useQueryClient } from "@tanstack/react-query";
 import { useGetTodayTasks, useGetYesterdayPending, useCreateTask, useToggleTask, useDeleteTask, useGetStreak } from "./hooks";
+import { TodayPath }            from "./TodayPath";
 import { TaskRow }              from "./TaskRow";
 import { AddTask }              from "./AddTask";
 import { CelebrationOverlay }   from "./CelebrationOverlay";
@@ -106,6 +107,14 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
         {/* Title + subtitle */}
         <Text style={s.title}>{t('tasks.sectionTitle')}</Text>
         {!isLoading && <Text style={s.subtitle}>{msg}</Text>}
+
+        {/* Camino con Tuga */}
+        <TodayPath
+          progress={pct}
+          mood={mood}
+          celebrate={celebrating}
+          onCelebrationEnd={() => setCelebrating(false)}
+        />
 
         {/* Progress bar */}
         <View style={s.progressTrack}>
