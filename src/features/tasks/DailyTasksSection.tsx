@@ -116,11 +116,6 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
           onCelebrationEnd={() => setCelebrating(false)}
         />
 
-        {/* Progress bar */}
-        <View style={s.progressTrack}>
-          <View style={[s.progressFill, { width: `${Math.max(pct * 100, 2)}%` }]} />
-        </View>
-
         {/* Progress label */}
         {total > 0 && (
           <View style={s.progressRow}>
