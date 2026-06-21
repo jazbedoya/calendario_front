@@ -7,55 +7,79 @@ import { getHours } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
 import { useMascotStore } from "@/features/mascot/mascotStore";
 import { getMascotState } from "@/features/mascot/getMascotState";
-import { useMascotMessage } from "@/features/mascot/useMascotMessage";
-import { useAuthStore } from "@/stores/authStore";
+import { TugaAnimation, MOOD_TO_STATE } from "@/features/mascot/TugaAnimation";
 import { useHomeSummary } from "@/features/home/useHomeSummary";
 import { DailyTasksSection } from "@/features/tasks/DailyTasksSection";
 import { StreakBadge } from "@/features/tasks/StreakBadge";
 import { colors, spacing, radius, fontSize, fontWeight, shadows } from "@/theme";
 
-// ─── Balance Bars ────────────────────────────────────────────────────────────
+// ─── Balance Ring (pure View, no SVG) ────────────────────────────────────────
 
-interface BalanceBarsProps {
+const RING_SIZE = 200;
+const RING_STROKE = 22;
+const INNER = RING_SIZE - RING_STROKE * 2;
+
+interface RingProps {
   family: number;
   work: number;
   personal: number;
 }
 
-function BalanceBars({ family, work, personal }: BalanceBarsProps) {
-  const { t } = useTranslation();
-  const max = Math.max(family, work, personal, 1);
-  const areas = [
-    { key: "family" as const, count: family, color: colors.family, label: t("layers.family") },
-    { key: "work" as const, count: work, color: colors.work, label: t("layers.work") },
-    { key: "personal" as const, count: personal, color: colors.personal, label: t("layers.personal") },
-  ];
+function BalanceRing({ family, work, personal }: RingProps) {
+  const total = family + work + personal || 1;
+  const familyPct = family / total;
+  const workPct = work / total;
+  const personalPct = personal / total;
 
+  // Simplified visual: stacked colored arcs using border trick
+  // We show 3 concentric partial borders overlapping
   return (
-    <View style={bb.container}>
-      {areas.map(({ key, count, color, label }) => {
-        const pct = max > 0 ? (count / max) * 100 : 0;
-        return (
-          <View key={key} style={bb.row}>
-            <Text style={[bb.label, { color }]}>{label}</Text>
-            <View style={bb.track}>
-              <View style={[bb.fill, { width: `${Math.max(pct, 6)}%`, backgroundColor: color }]} />
-            </View>
-            <Text style={[bb.count, { color }]}>{count}</Text>
-          </View>
-        );
-      })}
+    <View style={rr.container}>
+      {/* Background ring */}
+      <View style={rr.bgRing} />
+
+      {/* Colored segments as overlapping half-circles */}
+      {/* Family segment (orange) - top-right */}
+      <View style={[rr.segment, { borderColor: colors.family, borderTopColor: colors.family, borderRightColor: colors.family, borderBottomColor: familyPct > 0.5 ? colors.family : "transparent", borderLeftColor: familyPct > 0.75 ? colors.family : "transparent", transform: [{ rotate: "-90deg" }] }]} />
+      {/* Work segment (green) - from family end */}
+      <View style={[rr.segment, { borderColor: "transparent", borderTopColor: colors.work, borderRightColor: workPct > 0.25 ? colors.work : "transparent", transform: [{ rotate: `${familyPct * 360 - 90}deg` }] }]} />
+      {/* Personal segment (purple) - from work end */}
+      <View style={[rr.segment, { borderColor: "transparent", borderTopColor: colors.personal, borderRightColor: personalPct > 0.25 ? colors.personal : "transparent", transform: [{ rotate: `${(familyPct + workPct) * 360 - 90}deg` }] }]} />
+
+      {/* Center white circle with Tuga */}
+      <View style={rr.center}>
+        <TugaAnimation state="idle" size={80} />
+      </View>
     </View>
   );
 }
 
-const bb = StyleSheet.create({
-  container: { gap: 10, width: "100%" },
-  row: { flexDirection: "row", alignItems: "center", gap: 10 },
-  label: { width: 70, fontSize: fontSize.label, fontWeight: fontWeight.semibold },
-  track: { flex: 1, height: 10, borderRadius: 5, backgroundColor: colors.surfaceWarm, overflow: "hidden" },
-  fill: { height: 10, borderRadius: 5 },
-  count: { width: 24, fontSize: fontSize.body, fontWeight: fontWeight.bold, textAlign: "right" },
+const rr = StyleSheet.create({
+  container: {
+    width: RING_SIZE, height: RING_SIZE,
+    alignItems: "center", justifyContent: "center",
+    alignSelf: "center",
+  },
+  bgRing: {
+    position: "absolute",
+    width: RING_SIZE, height: RING_SIZE,
+    borderRadius: RING_SIZE / 2,
+    borderWidth: RING_STROKE,
+    borderColor: colors.surfaceWarm,
+  },
+  segment: {
+    position: "absolute",
+    width: RING_SIZE, height: RING_SIZE,
+    borderRadius: RING_SIZE / 2,
+    borderWidth: RING_STROKE,
+  },
+  center: {
+    width: INNER, height: INNER,
+    borderRadius: INNER / 2,
+    backgroundColor: colors.surface,
+    alignItems: "center", justifyContent: "center",
+    ...shadows.soft,
+  },
 });
 
 // ─── Pantalla ────────────────────────────────────────────────────────────────
@@ -89,26 +113,28 @@ export default function StatsScreen() {
           keyboardShouldPersistTaps="handled"
         >
           {/* ── Balance section ── */}
-          <View style={[s.balanceCard, shadows.card]}>
-            <Text style={s.eyebrow}>{t("balance.eyebrow")}</Text>
+          <Text style={s.screenEyebrow}>{t("balance.eyebrow")}</Text>
 
-            <BalanceBars
+          <View style={[s.balanceCard, shadows.card]}>
+            {/* Ring with Tuga */}
+            <BalanceRing
               family={weekEvents.family}
               work={weekEvents.work}
               personal={weekEvents.personal}
             />
 
+            {/* Title */}
             <Text style={s.balanceTitle}>{t("balance.title")}</Text>
             <Text style={s.balanceSubtitle}>{t("balance.subtitle")}</Text>
 
-            {/* Legend dots */}
+            {/* Legend pills */}
             <View style={s.legend}>
               {([
                 { key: "family", color: colors.family },
                 { key: "work", color: colors.work },
                 { key: "personal", color: colors.personal },
               ] as const).map(({ key, color }) => (
-                <View key={key} style={s.legendItem}>
+                <View key={key} style={s.legendPill}>
                   <View style={[s.legendDot, { backgroundColor: color }]} />
                   <Text style={s.legendLabel}>{t(`layers.${key}`)}</Text>
                 </View>
@@ -119,7 +145,7 @@ export default function StatsScreen() {
           {/* ── Constancia section ── */}
           <View style={[s.streakCard, shadows.card]}>
             <View style={s.streakHeader}>
-              <Text style={s.eyebrow}>{t("balance.constancy")}</Text>
+              <Text style={s.sectionEyebrow}>{t("balance.constancy")}</Text>
               <Text style={s.streakHint}>{t("balance.constancyHint")}</Text>
             </View>
             <StreakBadge />
@@ -140,42 +166,53 @@ const s = StyleSheet.create({
   flex: { flex: 1 },
   scroll: { paddingHorizontal: spacing.screenX, paddingTop: spacing.lg, gap: spacing.lg },
 
-  // ── Balance card ──
-  balanceCard: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.card,
-    padding: spacing["2xl"],
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: colors.border,
-    gap: 12,
-  },
-  eyebrow: {
+  screenEyebrow: {
     fontSize: fontSize.eyebrow,
     fontWeight: fontWeight.semibold,
     color: colors.textFaint,
     letterSpacing: 1.8,
     textTransform: "uppercase",
-    alignSelf: "flex-start",
+    marginBottom: 4,
+  },
+
+  // ── Balance card ──
+  balanceCard: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.card,
+    paddingVertical: spacing["2xl"],
+    paddingHorizontal: spacing.xl,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: colors.border,
+    gap: 8,
   },
   balanceTitle: {
     fontSize: fontSize.h2,
     fontWeight: fontWeight.bold,
     color: colors.ink,
-    marginTop: 8,
+    marginTop: spacing.md,
   },
   balanceSubtitle: {
     fontSize: fontSize.bodySm,
+    fontStyle: "italic",
     color: colors.textMuted,
     textAlign: "center",
   },
   legend: {
     flexDirection: "row",
-    gap: spacing.lg,
-    marginTop: 8,
+    gap: spacing.sm,
+    marginTop: spacing.md,
   },
-  legendItem: { flexDirection: "row", alignItems: "center", gap: 6 },
-  legendDot: { width: 10, height: 10, borderRadius: 5 },
+  legendPill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    backgroundColor: colors.surfaceWarm,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: radius.pill,
+  },
+  legendDot: { width: 8, height: 8, borderRadius: 4 },
   legendLabel: { fontSize: fontSize.label, color: colors.textSecondary, fontWeight: fontWeight.medium },
 
   // ── Streak card ──
@@ -190,7 +227,14 @@ const s = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 8,
+    marginBottom: spacing.sm,
+  },
+  sectionEyebrow: {
+    fontSize: fontSize.eyebrow,
+    fontWeight: fontWeight.semibold,
+    color: colors.textFaint,
+    letterSpacing: 1.8,
+    textTransform: "uppercase",
   },
   streakHint: {
     fontSize: fontSize.caption,
