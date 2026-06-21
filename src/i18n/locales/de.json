@@ -25,6 +25,13 @@
       "privacy": "Datenschutzrichtlinie · Nutzungsbedingungen",
       "copyright": "© 2026 Avante Wellness"
     },
+    "googleError": {
+      "accessDenied": "Zugriff verweigert. Bitte erneut versuchen.",
+      "cancelled": "Anmeldung abgebrochen.",
+      "server": "Google-Serverfehler. Versuche es später erneut.",
+      "noToken": "Authentifizierung konnte nicht abgeschlossen werden.",
+      "generic": "Fehler bei der Anmeldung mit Google."
+    },
     "signup": {
       "title": "Willkommen bei Avante",
       "subtitle": "Lassen Sie uns gemeinsam Ihre Zeit gestalten",
@@ -92,7 +99,9 @@
     "subtitle": "Deine Begleiterin auf dieser Reise. Sie feiert jeden Erfolg mit dir.",
     "mascotMessage": "Hallo! Schön, dich kennenzulernen.",
     "nameLabel": "Gib ihr einen Namen",
-    "startBtn": "Loslegen"
+    "startBtn": "Loslegen",
+    "errorTitle": "Speichern fehlgeschlagen",
+    "errorMsg": "Überprüfe deine Verbindung und versuche es erneut."
   },
   "tabs": {
     "home": "Start",
@@ -154,7 +163,12 @@
     "viewWeek": "Woche",
     "allDay": "Ganztägig",
     "occupied": "Andere Bereiche",
-    "holiday": "Feiertag"
+    "holiday": "Feiertag",
+    "addEvent": "Ereignis hinzufügen",
+    "addFirst": "+ Ereignis hinzufügen",
+    "clearSearch": "Suche löschen",
+    "previous": "Zurück",
+    "next": "Weiter"
   },
   "holidays": {
     "newYear": "Neujahr",
@@ -218,7 +232,11 @@
       "add": "+ Hinzufügen"
     },
     "addPlaceholder": "Aufgabe eingeben...",
-    "savedConfirm": "Aufgabe gespeichert!"
+    "savedConfirm": "Aufgabe gespeichert!",
+    "deleteTitle": "Aufgabe löschen",
+    "deleteMsg": "\"{{task}}\" löschen?",
+    "deleteConfirm": "Löschen",
+    "deleteLabel": "{{task}} löschen"
   },
   "mascot": {
     "morning": [
@@ -365,7 +383,9 @@
       "disconnectMsg": "Synchronisierte Ereignisse werden entfernt. Fortfahren?",
       "disconnectConfirm": "Trennen",
       "connectError": "Verbindung mit Google Kalender konnte nicht gestartet werden.",
-      "errorTitle": "Fehler"
+      "errorTitle": "Fehler",
+      "syncDone": "Synchronisation abgeschlossen ({{count}} Ereignisse)",
+      "disconnectedToast": "Google Kalender getrennt"
     },
     "celebration": {
       "section": "Feier",

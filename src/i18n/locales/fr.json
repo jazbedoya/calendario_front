@@ -25,6 +25,13 @@
       "privacy": "Politique de confidentialité · Conditions d'utilisation",
       "copyright": "© 2026 Avante Wellness"
     },
+    "googleError": {
+      "accessDenied": "Accès refusé. Veuillez réessayer.",
+      "cancelled": "Connexion annulée.",
+      "server": "Erreur du serveur Google. Réessayez plus tard.",
+      "noToken": "Impossible de terminer l'authentification.",
+      "generic": "Erreur lors de la connexion avec Google."
+    },
     "signup": {
       "title": "Bienvenue sur Avante",
       "subtitle": "Prenons soin de votre temps ensemble",
@@ -92,7 +99,9 @@
     "subtitle": "Votre compagne dans ce voyage. Elle célébrera chaque victoire avec vous.",
     "mascotMessage": "Bonjour ! Ravie de vous rencontrer.",
     "nameLabel": "Donnez-lui un prénom",
-    "startBtn": "Commencer"
+    "startBtn": "Commencer",
+    "errorTitle": "Impossible d'enregistrer",
+    "errorMsg": "Vérifiez votre connexion et réessayez."
   },
   "tabs": {
     "home": "Accueil",
@@ -154,7 +163,12 @@
     "viewWeek": "Semaine",
     "allDay": "Toute la journée",
     "occupied": "Autres domaines",
-    "holiday": "Jour férié"
+    "holiday": "Jour férié",
+    "addEvent": "Ajouter un événement",
+    "addFirst": "+ Ajouter un événement",
+    "clearSearch": "Effacer la recherche",
+    "previous": "Précédent",
+    "next": "Suivant"
   },
   "holidays": {
     "newYear": "Jour de l'An",
@@ -218,7 +232,11 @@
       "add": "+ Ajouter"
     },
     "addPlaceholder": "Écrire une tâche...",
-    "savedConfirm": "Tâche enregistrée !"
+    "savedConfirm": "Tâche enregistrée !",
+    "deleteTitle": "Supprimer la tâche",
+    "deleteMsg": "Supprimer \"{{task}}\" ?",
+    "deleteConfirm": "Supprimer",
+    "deleteLabel": "Supprimer {{task}}"
   },
   "mascot": {
     "morning": [
@@ -365,7 +383,9 @@
       "disconnectMsg": "Les événements synchronisés seront supprimés. Continuer ?",
       "disconnectConfirm": "Déconnecter",
       "connectError": "Impossible de démarrer la connexion avec Google Agenda.",
-      "errorTitle": "Erreur"
+      "errorTitle": "Erreur",
+      "syncDone": "Synchronisation terminée ({{count}} événements)",
+      "disconnectedToast": "Google Agenda déconnecté"
     },
     "celebration": {
       "section": "Célébration",
