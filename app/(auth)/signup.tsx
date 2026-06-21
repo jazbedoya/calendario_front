@@ -232,7 +232,7 @@ export default function SignupScreen() {
 }
 
 const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.bg },
+  safe: { flex: 1, backgroundColor: colors.surfaceWarm },
   flex: { flex: 1 },
   scroll: { paddingHorizontal: spacing.screenX, paddingBottom: 40 },
 
@@ -249,7 +249,8 @@ const s = StyleSheet.create({
     overflow: "hidden",
   },
   title: {
-    textAlign: "center", fontSize: fontSize.title, fontWeight: fontWeight.bold,
+    textAlign: "center", fontSize: fontSize.display, fontWeight: fontWeight.bold,
+    fontFamily: Platform.select({ ios: "Georgia", android: "serif", default: "Georgia" }),
     color: colors.ink, marginTop: spacing.xl,
   },
   subtitle: {
@@ -258,9 +259,10 @@ const s = StyleSheet.create({
   },
 
   googleBtn: {
-    width: "100%", height: 54, borderRadius: radius.field,
+    width: "100%", height: 56, borderRadius: radius.hero,
     borderWidth: 1, borderColor: colors.fieldBorder, backgroundColor: colors.surface,
     flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 12,
+    ...shadows.soft,
   },
   googleBtnText: { fontSize: fontSize.body, fontWeight: fontWeight.semibold, color: colors.ink },
 
@@ -271,13 +273,13 @@ const s = StyleSheet.create({
     color: colors.textFaint,
   },
 
-  label: { fontSize: fontSize.label, fontWeight: fontWeight.semibold, color: colors.fieldLabel, marginBottom: 6 },
+  label: { fontSize: fontSize.bodySm, fontWeight: fontWeight.semibold, color: colors.ink, marginBottom: 6 },
   labelSpaced: { marginTop: spacing.lg },
 
   inputRow: {
     flexDirection: "row", alignItems: "center", height: 54, borderRadius: radius.field,
-    borderWidth: 1.5, borderColor: colors.fieldBorder, paddingHorizontal: spacing.lg,
-    backgroundColor: colors.fieldBg, gap: spacing.sm,
+    borderWidth: 1, borderColor: colors.fieldBorder, paddingHorizontal: spacing.lg,
+    backgroundColor: colors.surfaceWarm, gap: spacing.sm,
   },
   inputIcon: { opacity: 0.7 },
   inputField: { flex: 1, fontSize: fontSize.body, color: colors.ink },
