@@ -281,6 +281,13 @@
     "excited": "Sie haben bald etwas. Los geht's!",
     "lowEnergy": "Jeder Tag zählt. Sie schaffen das!"
   },
+  "balance": {
+    "eyebrow": "Dein Gleichgewicht",
+    "title": "Im Gleichgewicht",
+    "subtitle": "Deine drei Welten atmen in Harmonie.",
+    "constancy": "Deine Beständigkeit",
+    "constancyHint": "Starte deine Serie heute"
+  },
   "streak": {
     "badge_one": "🔥 {{count}} Tag",
     "badge_other": "🔥 {{count}} Tage",

@@ -281,6 +281,13 @@
     "excited": "You've got something soon. Let's go!",
     "lowEnergy": "Every day counts. You've got this!"
   },
+  "balance": {
+    "eyebrow": "Your balance",
+    "title": "In balance",
+    "subtitle": "Your three worlds breathe in harmony.",
+    "constancy": "Your consistency",
+    "constancyHint": "Start your streak today"
+  },
   "streak": {
     "badge_one": "🔥 {{count}} day",
     "badge_other": "🔥 {{count}} days",
