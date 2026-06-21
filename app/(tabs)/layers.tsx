@@ -421,13 +421,7 @@ export default function LayersScreen() {
 
         {/* ── Panel inferior: eventos del día ── */}
         {selectedDate && (
-          <View style={[
-            st.panel,
-            shadows.card,
-            timelineItems.length > 0 && selectedEvents[0]
-              ? { borderLeftWidth: 3, borderLeftColor: LAYER_COLORS[selectedEvents[0].layer] }
-              : undefined,
-          ]}>
+          <View style={[st.panel, shadows.card]}>
             <View style={st.panelHeader}>
               <Text style={st.panelTitle}>{dayLabel}</Text>
               <Text style={st.panelMonth}>{selectedDate ? format(parseISO(selectedDate), 'MMMM', { locale: dateLocale }).toUpperCase() : ''}</Text>
