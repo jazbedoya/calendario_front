@@ -1,62 +1,67 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import { LifeAreaSummary } from "../types";
+import { colors, spacing, radius, fontSize, fontWeight, shadows } from "@/theme";
 
 interface LifeAreaCardProps {
   area: LifeAreaSummary;
+  eventCount: number;
   onPress: () => void;
 }
 
-function hexToRgba(hex: string, alpha: number): string {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
+export function LifeAreaCard({ area, eventCount, onPress }: LifeAreaCardProps) {
+  const { t } = useTranslation();
 
-export function LifeAreaCard({ area, onPress }: LifeAreaCardProps) {
   return (
     <TouchableOpacity
-      style={[styles.card, { backgroundColor: area.color, borderBottomColor: "#FFFFFF" }]}
+      style={[s.card, shadows.card]}
       onPress={onPress}
       activeOpacity={0.88}
+      accessibilityRole="button"
+      accessibilityLabel={area.title}
     >
-      <View style={[styles.iconCircle, { backgroundColor: "rgba(255,255,255,0.25)" }]}>
+      {/* Icon chip with area color */}
+      <View style={[s.iconChip, { backgroundColor: area.color }]}>
         <Ionicons
           name={area.iconName as keyof typeof Ionicons.glyphMap}
-          size={24}
-          color="#FFFFFF"
+          size={20}
+          color={colors.white}
         />
       </View>
-      <View style={styles.textBlock}>
-        <Text style={[styles.title, { color: "#FFFFFF" }]}>{area.title}</Text>
-        <Text style={[styles.subtitle, { color: "#FFFFFF" }]}>{area.subtitle}</Text>
+
+      {/* Text block */}
+      <View style={s.textBlock}>
+        <Text style={s.title}>{area.title}</Text>
+        <Text style={s.subtitle}>{area.subtitle}</Text>
       </View>
-      <Ionicons name="chevron-forward" size={18} color="#FFFFFF" />
+
+      {/* Event count + arrow */}
+      <View style={s.rightBlock}>
+        <Text style={[s.count, { color: area.color }]}>{eventCount}</Text>
+        <Text style={s.countLabel}>{t("home.area.events")}</Text>
+      </View>
+      <Ionicons name="chevron-forward" size={16} color={colors.textDisabled} />
     </TouchableOpacity>
   );
 }
 
-const styles = StyleSheet.create({
+const s = StyleSheet.create({
   card: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 20,
-    paddingVertical: 18,
-    paddingHorizontal: 20,
-    borderBottomWidth: 3,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 3,
-    gap: 16,
+    backgroundColor: colors.surface,
+    borderRadius: radius.card,
+    paddingVertical: 16,
+    paddingHorizontal: 18,
+    gap: 14,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
-  iconCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+  iconChip: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -64,14 +69,25 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: "#2D2D2D",
-    letterSpacing: 1.2,
+    fontSize: fontSize.body,
+    fontWeight: fontWeight.semibold,
+    color: colors.ink,
   },
   subtitle: {
-    fontSize: 13,
-    color: "#8A8A8A",
-    marginTop: 3,
+    fontSize: fontSize.caption,
+    color: colors.textMuted,
+    marginTop: 2,
+  },
+  rightBlock: {
+    alignItems: "center",
+  },
+  count: {
+    fontSize: fontSize.h3,
+    fontWeight: fontWeight.bold,
+  },
+  countLabel: {
+    fontSize: fontSize.micro,
+    color: colors.textMuted,
+    marginTop: -2,
   },
 });

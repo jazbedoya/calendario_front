@@ -136,7 +136,22 @@
         "none": "Gönn dir was diese Woche",
         "one": "1 Moment für dich · weiter so",
         "other": "{{count}} Momente für dich · weiter so"
-      }
+      },
+      "events": "Ereignisse",
+      "familyLabel": "Familie",
+      "workLabel": "Arbeit",
+      "personalLabel": "Persönlich"
+    },
+    "tuga": {
+      "status": "Ruhig",
+      "weekTitle": "Deine Woche",
+      "weekCaption": "{{count}} Momente fließen zwischen deinen drei Welten"
+    },
+    "tasks": {
+      "title": "Heutige Aufgaben",
+      "label": "Aufgaben des Tages ansehen",
+      "allDone": "Erledigt",
+      "pending": "{{count}} ausstehend"
     },
     "insight": {
       "tasksPending_one": "{{count}} Aufgabe heute ausstehend",

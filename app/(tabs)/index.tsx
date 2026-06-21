@@ -7,29 +7,29 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { Greeting } from "@/features/home/components/Greeting";
+import { TugaCard } from "@/features/home/components/TugaCard";
 import { LifeAreaCard } from "@/features/home/components/LifeAreaCard";
-import { InsightCard } from "@/features/home/components/InsightCard";
+import { TasksSummaryCard } from "@/features/home/components/TasksSummaryCard";
 import { NextEventCard } from "@/features/home/components/NextEventCard";
 import { mockHomeData } from "@/features/home/mockData";
 import { getHours } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
-import { Mascot } from "@/features/mascot/Mascot";
 import { TugaAnimation } from "@/features/mascot/TugaAnimation";
 import { getMascotState } from "@/features/mascot/getMascotState";
 import { useMascotMessage } from "@/features/mascot/useMascotMessage";
 import { useMascotStore } from "@/features/mascot/mascotStore";
 import { useAuthStore } from "@/stores/authStore";
 import { useHomeSummary } from "@/features/home/useHomeSummary";
-import { Colors } from "@/lib/theme";
+import { colors, spacing } from "@/theme";
 
 export default function HomeScreen() {
   const { t } = useTranslation();
-  const { areas, insights } = mockHomeData;
+  const { areas } = mockHomeData;
   const { mascotName, onboardingDone, initialized } = useMascotStore();
   const user = useAuthStore((s) => s.user);
-  const timezone   = user?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const deviceTz   = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const localHour  = getHours(toZonedTime(new Date(), deviceTz));
+  const timezone = user?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const deviceTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const localHour = getHours(toZonedTime(new Date(), deviceTz));
   const mascotState = getMascotState({ hourOfDay: localHour });
   const mascotMessage = useMascotMessage(mascotState.messageKey);
   const qc = useQueryClient();
@@ -44,75 +44,66 @@ export default function HomeScreen() {
   }, [qc]);
 
   if (!initialized) return (
-    <View style={{ flex: 1, backgroundColor: "#FAF9F7", alignItems: "center", justifyContent: "center" }}>
+    <View style={s.loading}>
       <TugaAnimation state="idle" size={80} />
     </View>
   );
   if (!onboardingDone) return <Redirect href="/onboarding" />;
 
-  // Áreas con subtítulos reales basados en conteo de eventos esta semana
+  const weekEvents = summary?.week_events_by_layer ?? { family: 0, work: 0, personal: 0 };
+  const totalWeekEvents = weekEvents.family + weekEvents.work + weekEvents.personal;
+
+  // Area subtitles
   const areasWithData = useMemo(() => areas.map((area) => {
-    if (!summary?.week_events_by_layer) return { ...area, subtitle: "" };
+    if (!summary?.week_events_by_layer) return { ...area, subtitle: "", count: 0 };
     const count = summary.week_events_by_layer[area.layer as keyof typeof summary.week_events_by_layer] ?? 0;
     let subtitle: string;
     if (area.layer === "family") {
-      subtitle = count === 0
-        ? t("home.area.family.none")
-        : count === 1
-          ? t("home.area.family.one")
-          : t("home.area.family.other", { count });
+      subtitle = count === 0 ? t("home.area.family.none") : count === 1 ? t("home.area.family.one") : t("home.area.family.other", { count });
     } else if (area.layer === "work") {
-      subtitle = count === 0
-        ? t("home.area.work.none")
-        : count >= 5
-          ? t("home.area.work.intense", { count })
-          : t("home.area.work.calm", { count });
+      subtitle = count === 0 ? t("home.area.work.none") : count >= 5 ? t("home.area.work.intense", { count }) : t("home.area.work.calm", { count });
     } else {
-      subtitle = count === 0
-        ? t("home.area.personal.none")
-        : count === 1
-          ? t("home.area.personal.one")
-          : t("home.area.personal.other", { count });
+      subtitle = count === 0 ? t("home.area.personal.none") : count === 1 ? t("home.area.personal.one") : t("home.area.personal.other", { count });
     }
-    return { ...area, subtitle };
+    return { ...area, subtitle, count };
   }), [areas, summary, t]);
 
-  // Insight de tareas pendientes
-  const insightsWithData = useMemo(() => insights.map((ins) => {
-    if (ins.id === "focus" && summary) {
-      const n = summary.today_tasks_pending;
-      return { ...ins, text: n === 0 ? t("home.insight.tasksUpToDate") : t("home.insight.tasksPending", { count: n }) };
-    }
-    return ins;
-  }), [insights, summary, t]);
-
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
+    <SafeAreaView style={s.container} edges={["top"]}>
       <StatusBar style="dark" />
       <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={styles.content}
+        style={s.scroll}
+        contentContainerStyle={s.content}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            colors={[Colors.primary]}
-            tintColor={Colors.primary}
+            colors={[colors.terracotta]}
+            tintColor={colors.terracotta}
           />
         }
       >
         <Greeting userName={user?.full_name?.split(" ")[0] ?? "tú"} />
 
-        <View style={styles.mascotSection}>
-          <Mascot name={mascotName} mood={mascotState.mood} message={mascotMessage} />
+        {/* Tuga card with weekly progress */}
+        <View style={s.section}>
+          <TugaCard
+            name={mascotName}
+            mood={mascotState.mood}
+            message={mascotMessage}
+            weekProgress={weekEvents}
+            totalEvents={totalWeekEvents}
+          />
         </View>
 
-        <View style={styles.areaCards}>
+        {/* Area cards */}
+        <View style={s.section}>
           {areasWithData.map((area) => (
             <LifeAreaCard
               key={area.layer}
               area={area}
+              eventCount={area.count}
               onPress={() => {
                 if (Platform.OS === "web") {
                   window.location.href = area.route;
@@ -124,13 +115,19 @@ export default function HomeScreen() {
           ))}
         </View>
 
-        <View style={styles.insightRow}>
-          {insightsWithData.map((insight) => (
-            <InsightCard key={insight.id} insight={insight} />
-          ))}
+        {/* Next event */}
+        <View style={s.section}>
           <NextEventCard
             events={summary?.upcoming_events ?? []}
             timezone={timezone}
+          />
+        </View>
+
+        {/* Tasks summary */}
+        <View style={s.section}>
+          <TasksSummaryCard
+            pendingCount={summary?.today_tasks_pending ?? 0}
+            totalCount={(summary?.today_tasks_pending ?? 0) + 1}
           />
         </View>
       </ScrollView>
@@ -138,11 +135,10 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.background },
-  scroll:    { flex: 1 },
-  content:   { paddingBottom: 120 },
-  mascotSection: { marginTop: 8, marginBottom: 4 },
-  areaCards: { paddingHorizontal: 20, gap: 12 },
-  insightRow: { flexDirection: "row", paddingHorizontal: 20, marginTop: 28, gap: 12 },
+const s = StyleSheet.create({
+  container: { flex: 1, backgroundColor: colors.bg },
+  scroll: { flex: 1 },
+  content: { paddingBottom: 120 },
+  loading: { flex: 1, backgroundColor: colors.bg, alignItems: "center", justifyContent: "center" },
+  section: { paddingHorizontal: spacing.screenX, gap: 10, marginBottom: 16 },
 });

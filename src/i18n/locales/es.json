@@ -136,7 +136,22 @@
         "none": "Hazte un hueco esta semana",
         "one": "1 momento para ti · sigue así",
         "other": "{{count}} momentos para ti · sigue así"
-      }
+      },
+      "events": "eventos",
+      "familyLabel": "Familia",
+      "workLabel": "Trabajo",
+      "personalLabel": "Personal"
+    },
+    "tuga": {
+      "status": "En calma",
+      "weekTitle": "Tu semana",
+      "weekCaption": "{{count}} momentos fluyendo entre tus tres mundos"
+    },
+    "tasks": {
+      "title": "Tareas de hoy",
+      "label": "Ver tareas del día",
+      "allDone": "Completo",
+      "pending": "{{count}} pendientes"
     },
     "insight": {
       "tasksPending_one": "{{count}} tarea pendiente hoy",

@@ -136,7 +136,22 @@
         "none": "Make some time for yourself",
         "one": "1 moment for you · keep it up",
         "other": "{{count}} moments for you · keep it up"
-      }
+      },
+      "events": "events",
+      "familyLabel": "Family",
+      "workLabel": "Work",
+      "personalLabel": "Personal"
+    },
+    "tuga": {
+      "status": "Feeling calm",
+      "weekTitle": "Your week",
+      "weekCaption": "{{count}} moments flowing between your three worlds"
+    },
+    "tasks": {
+      "title": "Today's tasks",
+      "label": "View today's tasks",
+      "allDone": "All done",
+      "pending": "{{count}} pending"
     },
     "insight": {
       "tasksPending_one": "{{count}} task pending today",

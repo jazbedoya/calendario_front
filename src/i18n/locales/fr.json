@@ -136,7 +136,22 @@
         "none": "Faites-vous une place cette semaine",
         "one": "1 moment pour vous · continuez",
         "other": "{{count}} moments pour vous · continuez"
-      }
+      },
+      "events": "événements",
+      "familyLabel": "Famille",
+      "workLabel": "Travail",
+      "personalLabel": "Personnel"
+    },
+    "tuga": {
+      "status": "Sereine",
+      "weekTitle": "Votre semaine",
+      "weekCaption": "{{count}} moments qui circulent entre vos trois mondes"
+    },
+    "tasks": {
+      "title": "Tâches du jour",
+      "label": "Voir les tâches du jour",
+      "allDone": "Terminé",
+      "pending": "{{count}} en attente"
     },
     "insight": {
       "tasksPending_one": "{{count}} tâche en attente aujourd'hui",
