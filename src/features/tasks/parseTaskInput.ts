@@ -30,6 +30,22 @@ const DAY_MAP: Record<string, (ref: Date) => Date> = {
   friday:    (r) => nextFriday(r),
   saturday:  (r) => nextSaturday(r),
   sunday:    (r) => nextSunday(r),
+  // French
+  lundi:     (r) => nextMonday(r),
+  mardi:     (r) => nextTuesday(r),
+  mercredi:  (r) => nextWednesday(r),
+  jeudi:     (r) => nextThursday(r),
+  vendredi:  (r) => nextFriday(r),
+  samedi:    (r) => nextSaturday(r),
+  dimanche:  (r) => nextSunday(r),
+  // German
+  montag:    (r) => nextMonday(r),
+  dienstag:  (r) => nextTuesday(r),
+  mittwoch:  (r) => nextWednesday(r),
+  donnerstag:(r) => nextThursday(r),
+  freitag:   (r) => nextFriday(r),
+  samstag:   (r) => nextSaturday(r),
+  sonntag:   (r) => nextSunday(r),
 };
 
 const DAY_DISPLAY: Record<string, string> = {
@@ -37,17 +53,36 @@ const DAY_DISPLAY: Record<string, string> = {
   jueves: "Jueves", viernes: "Viernes", "sabado": "Sábado", "sábado": "Sábado", domingo: "Domingo",
   monday: "Monday", tuesday: "Tuesday", wednesday: "Wednesday",
   thursday: "Thursday", friday: "Friday", saturday: "Saturday", sunday: "Sunday",
+  // French
+  lundi: "Lundi", mardi: "Mardi", mercredi: "Mercredi",
+  jeudi: "Jeudi", vendredi: "Vendredi", samedi: "Samedi", dimanche: "Dimanche",
+  // German
+  montag: "Montag", dienstag: "Dienstag", mittwoch: "Mittwoch",
+  donnerstag: "Donnerstag", freitag: "Freitag", samstag: "Samstag", sonntag: "Sonntag",
 };
 
-const RELATIVE_ES: Record<string, (r: Date) => Date> = {
+const RELATIVE_WORDS: Record<string, (r: Date) => Date> = {
+  // Spanish
   hoy:     (r) => r,
   "mañana": (r) => addDays(r, 1),
   manana:  (r) => addDays(r, 1),
+  // English
+  today:    (r) => r,
+  tomorrow: (r) => addDays(r, 1),
+  // French
+  "aujourd'hui": (r) => r,
+  aujourdhui:    (r) => r,
+  demain:        (r) => addDays(r, 1),
+  // German
+  heute:  (r) => r,
+  morgen: (r) => addDays(r, 1),
 };
 
 const RELATIVE_DISPLAY: Record<string, string> = {
   hoy: "Hoy", "mañana": "Mañana", manana: "Mañana",
   today: "Today", tomorrow: "Tomorrow",
+  "aujourd'hui": "Aujourd'hui", aujourdhui: "Aujourd'hui", demain: "Demain",
+  heute: "Heute", morgen: "Morgen",
 };
 
 // ── Time extraction ────────────────────────────────────────────────────────
@@ -92,7 +127,7 @@ export function parseTaskInput(input: string): ParsedTask {
   const lower = remaining.toLowerCase();
 
   // Extract relative day (hoy, mañana)
-  for (const [key, fn] of Object.entries(RELATIVE_ES)) {
+  for (const [key, fn] of Object.entries(RELATIVE_WORDS)) {
     const re = new RegExp(`\\b${key}\\b`, "i");
     if (re.test(lower)) {
       const d = fn(now);

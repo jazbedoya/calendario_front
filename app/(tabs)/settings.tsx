@@ -33,6 +33,7 @@ import { useHolidayStore }           from "@/features/settings/holidayStore";
 import type { HolidayCountry }       from "@/features/overview/getHolidays";
 import { SUPPORTED_LANGUAGES, type SupportedLanguage } from "@/i18n";
 import { useHomeSummary } from "@/features/home/useHomeSummary";
+import { useGetStreak } from "@/features/tasks/hooks";
 
 import { colors, spacing, radius, fontSize, fontWeight, shadows } from "@/theme";
 
@@ -66,6 +67,8 @@ export default function SettingsScreen() {
   const { hapticsEnabled, setHapticsEnabled } = useCelebrationSettings();
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout>>();
+  const [loggingOut, setLoggingOut] = useState(false);
+  const { data: streakData } = useGetStreak();
 
   function showToast(msg: string) {
     setToast(msg);
@@ -208,7 +211,7 @@ export default function SettingsScreen() {
           </View>
           <View style={s.statsRow}>
             <View style={s.statItem}>
-              <Text style={[s.statNum, { color: colors.terracotta }]}>1</Text>
+              <Text style={[s.statNum, { color: colors.terracotta }]}>{streakData?.current_streak ?? 0}</Text>
               <Text style={s.statLabel}>{t("profile.streakDay")}</Text>
             </View>
             <View style={[s.statItem, s.statBorder]}>
@@ -394,7 +397,8 @@ export default function SettingsScreen() {
                 style={s.communityRow}
                 onPress={() => {
                   // TODO: replace with actual App Store URL
-                  Linking.openURL("https://apps.apple.com/app/id0000000000");
+                  // TODO: replace with actual App Store ID after launch
+                  Alert.alert("Avante", t("settings.community.comingSoon"));
                 }}
                 activeOpacity={0.7}
               >
@@ -450,7 +454,13 @@ export default function SettingsScreen() {
             ══════════════════════════════════════════════════════ */}
         <TouchableOpacity
           style={s.logoutBtn}
-          onPress={async () => { await logout(); router.replace("/(auth)/login"); }}
+          onPress={async () => {
+            if (loggingOut) return;
+            setLoggingOut(true);
+            try { await logout(); } catch { /* ignore */ }
+            router.replace("/(auth)/login");
+          }}
+          disabled={loggingOut}
           activeOpacity={0.7}
         >
           <Ionicons name="log-out-outline" size={17} color={colors.terracotta} />

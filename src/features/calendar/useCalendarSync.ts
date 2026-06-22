@@ -5,9 +5,11 @@ import {
   disconnectCalendarApi,
 } from "./api";
 import { useCalendarStore } from "./calendarStore";
+import { useAuthStore } from "@/stores/authStore";
 
 export function useCalendarStatus() {
   const setStatus = useCalendarStore((s) => s.setStatus);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   return useQuery({
     queryKey: ["calendar-status"],
@@ -21,6 +23,7 @@ export function useCalendarStatus() {
       return data;
     },
     staleTime: 300_000,
+    enabled: isAuthenticated,
   });
 }
 

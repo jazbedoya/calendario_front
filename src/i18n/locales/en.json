@@ -478,7 +478,8 @@
       "reviewHint": "Your feedback helps us improve",
       "share": "Share Avante",
       "shareHint": "Recommend us to someone who might like it",
-      "shareMessage": "I'm using Avante to organise my time with balance. It's free and has a turtle that cheers you on. https://apps.apple.com/app/id0000000000"
+      "shareMessage": "I'm using Avante to organise my time with balance. It's free and has a turtle that cheers you on.",
+      "comingSoon": "Coming soon to the App Store"
     },
     "support": {
       "section": "Support the project",

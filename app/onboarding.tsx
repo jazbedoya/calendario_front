@@ -92,7 +92,7 @@ export default function OnboardingScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FAF9F7",
+    backgroundColor: "#F8F6F2",
   },
   inner: {
     flex: 1,
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   button: {
     height: 54,
     borderRadius: 16,
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#C8553D",
     alignItems: "center",
     justifyContent: "center",
   },

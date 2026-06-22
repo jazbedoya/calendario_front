@@ -18,8 +18,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
 import { forgotPasswordApi } from "@/features/auth/api";
-import { Colors } from "@/lib/theme";
 import { Ionicons } from "@expo/vector-icons";
+import { colors, radius, fontSize, fontWeight } from "@/theme";
 
 type FormData = { email: string };
 
@@ -49,51 +49,51 @@ export default function ForgotPasswordScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={st.safe}>
       <KeyboardAvoidingView
-        style={styles.flex}
+        style={st.flex}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <ScrollView
-          contentContainerStyle={styles.scroll}
+          contentContainerStyle={st.scroll}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.topHeader}>
-            <Pressable onPress={() => router.back()} style={styles.backBtn}>
-              <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
+          <View style={st.topHeader}>
+            <Pressable onPress={() => router.back()} style={st.backBtn}>
+              <Ionicons name="arrow-back" size={22} color={colors.textSecondary} />
             </Pressable>
           </View>
 
           {sent ? (
-            <View style={styles.successContainer}>
-              <View style={styles.successIcon}>
-                <Ionicons name="mail-outline" size={48} color={Colors.primary} />
+            <View style={st.successContainer}>
+              <View style={st.successIcon}>
+                <Ionicons name="mail-outline" size={48} color={colors.terracotta} />
               </View>
-              <Text style={styles.title}>{t("auth.forgotPw.successTitle")}</Text>
-              <Text style={styles.subtitle}>{t("auth.forgotPw.successSubtitle")}</Text>
+              <Text style={st.title}>{t("auth.forgotPw.successTitle")}</Text>
+              <Text style={st.subtitle}>{t("auth.forgotPw.successSubtitle")}</Text>
               <TouchableOpacity
-                style={styles.primaryBtn}
+                style={st.primaryBtn}
                 onPress={() => router.replace("/(auth)/login" as any)}
                 activeOpacity={0.85}
               >
-                <Text style={styles.primaryBtnText}>{t("auth.forgotPw.backToLogin")}</Text>
+                <Text style={st.primaryBtnText}>{t("auth.forgotPw.backToLogin")}</Text>
               </TouchableOpacity>
             </View>
           ) : (
             <>
-              <Text style={styles.title}>{t("auth.forgotPw.title")}</Text>
-              <Text style={styles.subtitle}>{t("auth.forgotPw.subtitle")}</Text>
+              <Text style={st.title}>{t("auth.forgotPw.title")}</Text>
+              <Text style={st.subtitle}>{t("auth.forgotPw.subtitle")}</Text>
 
-              <Text style={[styles.label, { marginTop: 32 }]}>{t("auth.forgotPw.emailLabel")}</Text>
+              <Text style={[st.label, { marginTop: 32 }]}>{t("auth.forgotPw.emailLabel")}</Text>
               <Controller
                 control={control}
                 name="email"
                 render={({ field: { onChange, value, onBlur } }) => (
                   <TextInput
-                    style={[styles.input, errors.email && styles.inputError]}
+                    style={[st.input, errors.email && st.inputError]}
                     placeholder="tu@email.com"
-                    placeholderTextColor={Colors.placeholder}
+                    placeholderTextColor={colors.fieldPlaceholder}
                     keyboardType="email-address"
                     autoCapitalize="none"
                     onChangeText={onChange}
@@ -103,19 +103,19 @@ export default function ForgotPasswordScreen() {
                   />
                 )}
               />
-              {errors.email && <Text style={styles.fieldError}>{errors.email.message}</Text>}
+              {errors.email && <Text style={st.fieldError}>{errors.email.message}</Text>}
 
-              {errors.root && <Text style={styles.rootError}>{errors.root.message}</Text>}
+              {errors.root && <Text style={st.rootError}>{errors.root.message}</Text>}
 
               <TouchableOpacity
-                style={styles.primaryBtn}
+                style={st.primaryBtn}
                 onPress={handleSubmit(onSubmit)}
                 disabled={isSubmitting}
                 activeOpacity={0.85}
               >
                 {isSubmitting
                   ? <ActivityIndicator color="#fff" />
-                  : <Text style={styles.primaryBtnText}>{t("auth.forgotPw.submitBtn")}</Text>}
+                  : <Text style={st.primaryBtnText}>{t("auth.forgotPw.submitBtn")}</Text>}
               </TouchableOpacity>
             </>
           )}
@@ -125,8 +125,8 @@ export default function ForgotPasswordScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: Colors.background },
+const st = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: colors.bg },
   flex: { flex: 1 },
   scroll: { paddingHorizontal: 24, paddingBottom: 40 },
 
@@ -134,52 +134,52 @@ const styles = StyleSheet.create({
   backBtn: { width: 36, height: 36, alignItems: "center", justifyContent: "center" },
 
   title: {
-    fontSize: 28,
-    fontWeight: "700",
+    fontSize: fontSize.title,
+    fontWeight: fontWeight.bold,
     fontFamily: Platform.select({ ios: "Georgia", android: "serif", default: "Georgia" }),
-    color: Colors.midnight,
+    color: colors.ink,
     marginBottom: 8,
   },
   subtitle: {
-    fontSize: 14,
-    color: Colors.textSecondary,
+    fontSize: fontSize.bodySm,
+    color: colors.textSecondary,
     lineHeight: 20,
     marginBottom: 8,
   },
 
-  label: { fontSize: 13, fontWeight: "600", color: Colors.textPrimary, marginBottom: 6 },
+  label: { fontSize: fontSize.label, fontWeight: fontWeight.semibold, color: colors.textSecondary, marginBottom: 6 },
 
   input: {
     height: 52,
-    borderRadius: 16,
+    borderRadius: radius.field,
     borderWidth: 1.5,
-    borderColor: Colors.border,
+    borderColor: colors.fieldBorder,
     paddingHorizontal: 16,
-    fontSize: 15,
-    color: Colors.textPrimary,
-    backgroundColor: Colors.inputBg,
+    fontSize: fontSize.body,
+    color: colors.ink,
+    backgroundColor: colors.fieldBg,
   },
-  inputError: { borderColor: Colors.error },
+  inputError: { borderColor: colors.invalid },
 
-  fieldError: { fontSize: 12, color: Colors.error, marginTop: 4 },
-  rootError: { fontSize: 13, color: Colors.error, marginTop: 12, textAlign: "center" },
+  fieldError: { fontSize: fontSize.caption, color: colors.invalid, marginTop: 4 },
+  rootError: { fontSize: fontSize.label, color: colors.invalid, marginTop: 12, textAlign: "center" },
 
   primaryBtn: {
     height: 54,
-    borderRadius: 16,
-    backgroundColor: Colors.primary,
+    borderRadius: radius.field,
+    backgroundColor: colors.terracotta,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 20,
   },
-  primaryBtnText: { fontSize: 16, fontWeight: "700", color: "#FFFFFF", letterSpacing: 0.3 },
+  primaryBtnText: { fontSize: fontSize.bodyLg, fontWeight: fontWeight.bold, color: "#FFFFFF", letterSpacing: 0.3 },
 
   successContainer: { flex: 1, alignItems: "center", paddingTop: 48 },
   successIcon: {
     width: 88,
     height: 88,
     borderRadius: 44,
-    backgroundColor: Colors.inputBg,
+    backgroundColor: colors.surfaceWarm,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 24,

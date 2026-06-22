@@ -478,7 +478,8 @@
       "reviewHint": "Tu opinión nos ayuda a mejorar",
       "share": "Comparte Avante",
       "shareHint": "Recomiéndanos a quien le pueda ayudar",
-      "shareMessage": "Estoy usando Avante para organizar mi tiempo con equilibrio. Es gratis y tiene una tortuga que te anima. https://apps.apple.com/app/id0000000000"
+      "shareMessage": "Estoy usando Avante para organizar mi tiempo con equilibrio. Es gratis y tiene una tortuga que te anima.",
+      "comingSoon": "Próximamente disponible en la App Store"
     },
     "support": {
       "section": "Apoyar el proyecto",

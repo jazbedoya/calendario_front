@@ -20,7 +20,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
 import { resetPasswordApi } from "@/features/auth/api";
-import { Colors } from "@/lib/theme";
+import { colors, radius, fontSize, fontWeight } from "@/theme";
 
 type FormData = { token: string; password: string; confirm: string };
 
@@ -71,37 +71,36 @@ export default function ResetPasswordScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={st.safe}>
       <KeyboardAvoidingView
-        style={styles.flex}
+        style={st.flex}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <ScrollView
-          contentContainerStyle={styles.scroll}
+          contentContainerStyle={st.scroll}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.topHeader}>
-            <Pressable onPress={() => router.back()} style={styles.backBtn}>
-              <Ionicons name="arrow-back" size={22} color={Colors.textPrimary} />
+          <View style={st.topHeader}>
+            <Pressable onPress={() => router.back()} style={st.backBtn}>
+              <Ionicons name="arrow-back" size={22} color={colors.textSecondary} />
             </Pressable>
           </View>
 
-          <Text style={styles.title}>{t("auth.resetPw.title")}</Text>
-          <Text style={styles.subtitle}>{t("auth.resetPw.subtitle")}</Text>
+          <Text style={st.title}>{t("auth.resetPw.title")}</Text>
+          <Text style={st.subtitle}>{t("auth.resetPw.subtitle")}</Text>
 
-          {/* Token field — hidden if came from deep link */}
           {!tokenParam && (
             <>
-              <Text style={[styles.label, { marginTop: 32 }]}>{t("auth.resetPw.tokenLabel")}</Text>
+              <Text style={[st.label, { marginTop: 32 }]}>{t("auth.resetPw.tokenLabel")}</Text>
               <Controller
                 control={control}
                 name="token"
                 render={({ field: { onChange, value, onBlur } }) => (
                   <TextInput
-                    style={[styles.input, errors.token && styles.inputError]}
+                    style={[st.input, errors.token && st.inputError]}
                     placeholder={t("auth.resetPw.tokenPlaceholder")}
-                    placeholderTextColor={Colors.placeholder}
+                    placeholderTextColor={colors.fieldPlaceholder}
                     autoCapitalize="none"
                     autoCorrect={false}
                     onChangeText={onChange}
@@ -110,69 +109,69 @@ export default function ResetPasswordScreen() {
                   />
                 )}
               />
-              {errors.token && <Text style={styles.fieldError}>{errors.token.message}</Text>}
+              {errors.token && <Text style={st.fieldError}>{errors.token.message}</Text>}
             </>
           )}
 
-          <Text style={[styles.label, { marginTop: tokenParam ? 32 : 16 }]}>
+          <Text style={[st.label, { marginTop: tokenParam ? 32 : 16 }]}>
             {t("auth.resetPw.passwordLabel")}
           </Text>
           <Controller
             control={control}
             name="password"
             render={({ field: { onChange, value, onBlur } }) => (
-              <View style={[styles.passwordRow, errors.password && styles.inputError]}>
+              <View style={[st.passwordRow, errors.password && st.inputError]}>
                 <TextInput
-                  style={styles.passwordInput}
+                  style={st.passwordInput}
                   placeholder="••••••••"
-                  placeholderTextColor={Colors.placeholder}
+                  placeholderTextColor={colors.fieldPlaceholder}
                   secureTextEntry={!showPassword}
                   onChangeText={onChange}
                   onBlur={onBlur}
                   value={value}
                 />
                 <Pressable onPress={() => setShowPassword(!showPassword)} hitSlop={8}>
-                  <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={20} color="#9CA3AF" />
+                  <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={20} color={colors.fieldIcon} />
                 </Pressable>
               </View>
             )}
           />
-          {errors.password && <Text style={styles.fieldError}>{errors.password.message}</Text>}
+          {errors.password && <Text style={st.fieldError}>{errors.password.message}</Text>}
 
-          <Text style={[styles.label, styles.labelSpaced]}>{t("auth.resetPw.confirmLabel")}</Text>
+          <Text style={[st.label, st.labelSpaced]}>{t("auth.resetPw.confirmLabel")}</Text>
           <Controller
             control={control}
             name="confirm"
             render={({ field: { onChange, value, onBlur } }) => (
-              <View style={[styles.passwordRow, errors.confirm && styles.inputError]}>
+              <View style={[st.passwordRow, errors.confirm && st.inputError]}>
                 <TextInput
-                  style={styles.passwordInput}
+                  style={st.passwordInput}
                   placeholder="••••••••"
-                  placeholderTextColor={Colors.placeholder}
+                  placeholderTextColor={colors.fieldPlaceholder}
                   secureTextEntry={!showConfirm}
                   onChangeText={onChange}
                   onBlur={onBlur}
                   value={value}
                 />
                 <Pressable onPress={() => setShowConfirm(!showConfirm)} hitSlop={8}>
-                  <Ionicons name={showConfirm ? "eye-off-outline" : "eye-outline"} size={20} color="#9CA3AF" />
+                  <Ionicons name={showConfirm ? "eye-off-outline" : "eye-outline"} size={20} color={colors.fieldIcon} />
                 </Pressable>
               </View>
             )}
           />
-          {errors.confirm && <Text style={styles.fieldError}>{errors.confirm.message}</Text>}
+          {errors.confirm && <Text style={st.fieldError}>{errors.confirm.message}</Text>}
 
-          {errors.root && <Text style={styles.rootError}>{errors.root.message}</Text>}
+          {errors.root && <Text style={st.rootError}>{errors.root.message}</Text>}
 
           <TouchableOpacity
-            style={styles.primaryBtn}
+            style={st.primaryBtn}
             onPress={handleSubmit(onSubmit)}
             disabled={isSubmitting}
             activeOpacity={0.85}
           >
             {isSubmitting
               ? <ActivityIndicator color="#fff" />
-              : <Text style={styles.primaryBtnText}>{t("auth.resetPw.submitBtn")}</Text>}
+              : <Text style={st.primaryBtnText}>{t("auth.resetPw.submitBtn")}</Text>}
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -180,8 +179,8 @@ export default function ResetPasswordScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: Colors.background },
+const st = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: colors.bg },
   flex: { flex: 1 },
   scroll: { paddingHorizontal: 24, paddingBottom: 40 },
 
@@ -189,55 +188,55 @@ const styles = StyleSheet.create({
   backBtn: { width: 36, height: 36, alignItems: "center", justifyContent: "center" },
 
   title: {
-    fontSize: 28,
-    fontWeight: "700",
+    fontSize: fontSize.title,
+    fontWeight: fontWeight.bold,
     fontFamily: Platform.select({ ios: "Georgia", android: "serif", default: "Georgia" }),
-    color: Colors.midnight,
+    color: colors.ink,
     marginBottom: 8,
   },
   subtitle: {
-    fontSize: 14,
-    color: Colors.textSecondary,
+    fontSize: fontSize.bodySm,
+    color: colors.textSecondary,
     lineHeight: 20,
   },
 
-  label: { fontSize: 13, fontWeight: "600", color: Colors.textPrimary, marginBottom: 6 },
+  label: { fontSize: fontSize.label, fontWeight: fontWeight.semibold, color: colors.textSecondary, marginBottom: 6 },
   labelSpaced: { marginTop: 16 },
 
   input: {
     height: 52,
-    borderRadius: 16,
+    borderRadius: radius.field,
     borderWidth: 1.5,
-    borderColor: Colors.border,
+    borderColor: colors.fieldBorder,
     paddingHorizontal: 16,
-    fontSize: 15,
-    color: Colors.textPrimary,
-    backgroundColor: Colors.inputBg,
+    fontSize: fontSize.body,
+    color: colors.ink,
+    backgroundColor: colors.fieldBg,
   },
-  inputError: { borderColor: Colors.error },
+  inputError: { borderColor: colors.invalid },
 
   passwordRow: {
     flexDirection: "row",
     alignItems: "center",
     height: 52,
-    borderRadius: 16,
+    borderRadius: radius.field,
     borderWidth: 1.5,
-    borderColor: Colors.border,
+    borderColor: colors.fieldBorder,
     paddingHorizontal: 16,
-    backgroundColor: Colors.inputBg,
+    backgroundColor: colors.fieldBg,
   },
-  passwordInput: { flex: 1, fontSize: 15, color: Colors.textPrimary },
+  passwordInput: { flex: 1, fontSize: fontSize.body, color: colors.ink },
 
-  fieldError: { fontSize: 12, color: Colors.error, marginTop: 4 },
-  rootError: { fontSize: 13, color: Colors.error, marginTop: 12, textAlign: "center" },
+  fieldError: { fontSize: fontSize.caption, color: colors.invalid, marginTop: 4 },
+  rootError: { fontSize: fontSize.label, color: colors.invalid, marginTop: 12, textAlign: "center" },
 
   primaryBtn: {
     height: 54,
-    borderRadius: 16,
-    backgroundColor: Colors.primary,
+    borderRadius: radius.field,
+    backgroundColor: colors.terracotta,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 20,
   },
-  primaryBtnText: { fontSize: 16, fontWeight: "700", color: "#FFFFFF", letterSpacing: 0.3 },
+  primaryBtnText: { fontSize: fontSize.bodyLg, fontWeight: fontWeight.bold, color: "#FFFFFF", letterSpacing: 0.3 },
 });
