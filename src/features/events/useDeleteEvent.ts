@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api";
 import { useEventsStore } from "./eventsStore";
 import { enqueue, dequeue } from "@/lib/mutationQueue";
+import { capture } from "@/lib/analytics";
 
 export interface DeleteEventInput {
   id: string;
@@ -34,6 +35,7 @@ export function useDeleteEvent() {
         removeEvent(id);
       }
       qc.invalidateQueries({ queryKey: ["events"] });
+      capture("event_deleted", { was_recurring: deleteMode === "all" });
       import("./useScheduleEventReminder").then(({ cancelEventReminder }) => {
         cancelEventReminder(id).catch(() => {});
       });

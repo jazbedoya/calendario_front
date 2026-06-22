@@ -15,6 +15,7 @@ import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { Mascot } from "@/features/mascot/Mascot";
 import { useMascotStore } from "@/features/mascot/mascotStore";
+import { capture } from "@/lib/analytics";
 
 export default function OnboardingScreen() {
   const { t } = useTranslation();
@@ -27,8 +28,10 @@ export default function OnboardingScreen() {
     setSaving(true);
     try {
       const trimmed = name.trim() || "Tuga";
+      capture("turtle_named", { name: trimmed });
       await setMascotName(trimmed);
       await completeOnboarding();
+      capture("onboarding_completed");
       router.replace("/(tabs)");
     } catch {
       setSaving(false);

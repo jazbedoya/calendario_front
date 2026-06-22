@@ -4,6 +4,7 @@ import { apiClient } from "@/lib/api";
 import { useEventsStore } from "./eventsStore";
 import type { CalendarEvent, Layer } from "@/features/overview/types";
 import { enqueue, dequeue } from "@/lib/mutationQueue";
+import { capture } from "@/lib/analytics";
 
 export interface CreateEventInput {
   title: string;
@@ -57,9 +58,10 @@ export function useCreateEvent() {
       };
     },
 
-    onSuccess: (event) => {
+    onSuccess: (event, input) => {
       addEvent(event);
       qc.invalidateQueries({ queryKey: ["events"] });
+      capture("event_created", { area: input.layer, has_recurrence: !!input.recurrenceRule });
       import("./useScheduleEventReminder").then(({ scheduleEventReminder }) => {
         scheduleEventReminder(event.id, event.title, event.startAt).catch(() => {});
       });

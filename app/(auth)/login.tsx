@@ -18,6 +18,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Linking from "expo-linking";
+import { capture } from "@/lib/analytics";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
 import { loginApi, getMeApi } from "@/features/auth/api";
@@ -67,6 +68,7 @@ export default function LoginScreen() {
       const me = await getMeApi();
       setUser(me);
       await syncMascotName(me.mascot_name);
+      capture("user_logged_in", { method: "email" });
       const isNewAccount = Date.now() - new Date(me.created_at).getTime() < 120_000;
       if (isNewAccount) {
         router.replace("/onboarding");

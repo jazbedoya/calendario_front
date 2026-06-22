@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Analytiques anonymes",
+    "body": "Avante collecte des données d'utilisation anonymes pour améliorer l'application. Nous ne partageons jamais de données personnelles ni le contenu de vos événements ou tâches.",
+    "accept": "Accepter",
+    "reject": "Non, merci"
+  },
   "common": {
     "cancel": "Annuler",
     "save": "Enregistrer",
@@ -486,6 +492,11 @@
       "title": "Offre-moi un café",
       "description": "Avante est gratuit et fait avec soin. Si ça t'aide, tu peux soutenir le projet.",
       "button": "Soutenir 💛"
+    },
+    "analytics": {
+      "section": "Confidentialité",
+      "label": "Partager des analyses anonymes",
+      "hint": "Aidez-nous à améliorer Avante sans partager de données personnelles"
     },
     "about": {
       "section": "À propos",

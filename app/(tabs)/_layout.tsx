@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
+import { screenView } from "@/lib/analytics";
 
 const ICON_MAP: Record<string, keyof typeof Ionicons.glyphMap> = {
   index:    "home",
@@ -91,10 +92,23 @@ function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   );
 }
 
+const SCREEN_NAMES: Record<string, string> = {
+  index: "home", layers: "agenda", stats: "balance", settings: "settings",
+};
+
 export default function TabsLayout() {
   const { t } = useTranslation();
   return (
-    <Tabs tabBar={(props) => <FloatingTabBar {...props} />} screenOptions={{ headerShown: false }}>
+    <Tabs
+      tabBar={(props) => <FloatingTabBar {...props} />}
+      screenOptions={{ headerShown: false }}
+      screenListeners={{
+        focus: (e) => {
+          const name = SCREEN_NAMES[e.target?.split("-")[0] ?? ""] ?? "unknown";
+          screenView(name);
+        },
+      }}
+    >
       <Tabs.Screen name="index"    options={{ title: t("tabs.home") }} />
       <Tabs.Screen name="layers"   options={{ title: t("tabs.all") }} />
       <Tabs.Screen name="stats"    options={{ title: t("tabs.balance") }} />

@@ -7,6 +7,7 @@ import { getMeApi, patchMeApi } from "@/features/auth/api";
 import { getGoogleRedirectUri } from "@/lib/getGoogleRedirectUri";
 import { useAuthStore } from "@/stores/authStore";
 import { useMascotStore } from "@/features/mascot/mascotStore";
+import { capture } from "@/lib/analytics";
 
 // Build the Google OAuth URL entirely on the client — avoids a backend round-trip
 // that can time out on slow mobile connections. The state is base64 JSON (no JWT
@@ -98,6 +99,7 @@ export function useGoogleAuth(onError?: (msg: string) => void) {
           patchMeApi({ timezone: deviceTz }).catch(() => {});
         }
         const isNewAccount = Date.now() - new Date(me.created_at).getTime() < 120_000;
+        capture(isNewAccount ? "user_signed_up" : "user_logged_in", { method: "google" });
         if (isNewAccount) {
           router.replace("/onboarding");
         } else {

@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Anonymous analytics",
+    "body": "Avante collects anonymous usage data to improve the app. We never share personal data or the content of your events or tasks.",
+    "accept": "Accept",
+    "reject": "No, thanks"
+  },
   "common": {
     "cancel": "Cancel",
     "save": "Save",
@@ -486,6 +492,11 @@
       "title": "Buy me a coffee",
       "description": "Avante is free and made with care. If it helps you, consider supporting the project.",
       "button": "Support 💛"
+    },
+    "analytics": {
+      "section": "Privacy",
+      "label": "Share anonymous analytics",
+      "hint": "Help us improve Avante without sharing personal data"
     },
     "about": {
       "section": "About",

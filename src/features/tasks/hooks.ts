@@ -2,6 +2,7 @@ import { Alert } from "react-native";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { subDays } from "date-fns";
 import i18n from "@/i18n";
+import { capture } from "@/lib/analytics";
 import { formatInTimeZone } from "date-fns-tz";
 
 import { useAuthStore } from "@/stores/authStore";
@@ -102,6 +103,7 @@ export function useCreateTask() {
         return [...without, realTask].sort((a, b) => a.order - b.order);
       });
       qc.invalidateQueries({ queryKey: STREAK_KEY });
+      capture("task_created");
     },
 
     onError: (_err, _vars, ctx) => {
@@ -144,11 +146,12 @@ export function useToggleTask() {
       return { previous };
     },
 
-    onSuccess: (result, { id }) => {
+    onSuccess: (result, { id, done }) => {
       qc.setQueryData<DailyTask[]>(qk, (old = []) =>
         old.map((t) => (t.id === id ? { ...t, done: result.done } : t))
       );
       qc.invalidateQueries({ queryKey: STREAK_KEY });
+      capture(done ? "task_completed" : "task_uncompleted");
     },
 
     onError: (_err, _vars, ctx) => {
@@ -188,6 +191,7 @@ export function useDeleteTask() {
     onSuccess: (_result, id) => {
       // Direct cache update — no refetch, avoids wiping concurrent optimistic creates.
       qc.setQueryData<DailyTask[]>(qk, (old = []) => old.filter((t) => t.id !== id));
+      capture("task_deleted");
     },
 
     onError: (_err, _vars, ctx) => {

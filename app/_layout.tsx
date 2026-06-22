@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as Sentry from "@sentry/react-native";
 import { Stack } from "expo-router";
 import { useQueryClient } from "@tanstack/react-query";
@@ -24,6 +24,9 @@ import { useCelebrationSettings } from "@/stores/celebrationSettingsStore";
 import { useLanguageStore } from "@/features/settings/languageStore";
 import { useHolidayStore } from "@/features/settings/holidayStore";
 import { replayQueue } from "@/lib/mutationQueue";
+import { initAnalytics, identifyUser } from "@/lib/analytics";
+import { useAnalyticsConsent } from "@/stores/analyticsConsentStore";
+import { AnalyticsConsentSheet } from "@/components/AnalyticsConsentSheet";
 
 // NativeWind web requires darkMode to be set to 'class' at runtime
 if (typeof StyleSheet.setFlag === "function") {
@@ -43,6 +46,12 @@ function AppShell() {
   const initializeLanguage     = useLanguageStore((s) => s.initialize);
   const initializeHolidays     = useHolidayStore((s) => s.initialize);
   const isAuthenticated        = useAuthStore((s) => s.isAuthenticated);
+  const user                   = useAuthStore((s) => s.user);
+  const initializeConsent      = useAnalyticsConsent((s) => s.initialize);
+  const consent                = useAnalyticsConsent((s) => s.consent);
+  const consentInitialized     = useAnalyticsConsent((s) => s.initialized);
+  const acceptConsent          = useAnalyticsConsent((s) => s.accept);
+  const rejectConsent          = useAnalyticsConsent((s) => s.reject);
   const qc = useQueryClient();
 
   // Cancela notificaciones de "¿cómo estuvo tu día?" que pudieran haber
@@ -58,6 +67,8 @@ function AppShell() {
 
   useEffect(() => {
     async function init() {
+      await initAnalytics();
+      await initializeConsent();
       // Auth first so we can read user.language for the language init
       await initializeAuth();
       const serverLanguage = useAuthStore.getState().user?.language;
@@ -70,6 +81,18 @@ function AppShell() {
     }
     init();
   }, [initializeAuth, initializeMascot, initializeCelebration, initializeLanguage]);
+
+  // Identify user in PostHog when authenticated
+  useEffect(() => {
+    if (isAuthenticated && user && consent === "accepted") {
+      identifyUser(user.id, {
+        email: user.email,
+        language: user.language,
+        createdAt: user.created_at,
+        turtleName: user.mascot_name,
+      });
+    }
+  }, [isAuthenticated, user, consent]);
 
   // Replaya mutaciones pendientes (WAL) al autenticarse
   const replayed = useRef(false);
@@ -98,9 +121,16 @@ function AppShell() {
     return () => sub.remove();
   }, [qc]);
 
+  const showConsent = consentInitialized && consent === null && isAuthenticated;
+
   return (
     <>
       <Stack screenOptions={{ headerShown: false }} />
+      <AnalyticsConsentSheet
+        visible={showConsent}
+        onAccept={acceptConsent}
+        onReject={rejectConsent}
+      />
     </>
   );
 }

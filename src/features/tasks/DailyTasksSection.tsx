@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View, Animated } from "react-native
 import { useTranslation } from "react-i18next";
 
 import { useQueryClient } from "@tanstack/react-query";
+import { capture } from "@/lib/analytics";
 import { useGetTodayTasks, useGetYesterdayPending, useCreateTask, useToggleTask, useDeleteTask, useGetStreak } from "./hooks";
 import { TodayPath }            from "./TodayPath";
 import { TaskRow }              from "./TaskRow";
@@ -86,6 +87,7 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
     if (justFinished) {
       alreadyFired.current = true;
       setCelebrating(true);
+      capture("all_tasks_completed", { total_today: total, streak_days: streakData?.current_streak ?? 0 });
       refetchStreak().finally(() => setShowModal(true));
     }
 

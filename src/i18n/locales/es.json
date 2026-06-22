@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Analíticas anónimas",
+    "body": "Avante recopila datos anónimos de uso para mejorar la app. Nunca compartimos datos personales ni contenido de tus eventos o tareas.",
+    "accept": "Aceptar",
+    "reject": "No, gracias"
+  },
   "common": {
     "cancel": "Cancelar",
     "save": "Guardar",
@@ -486,6 +492,11 @@
       "title": "Invítame a un café",
       "description": "Avante es gratis y se mantiene con cariño. Si te ayuda, puedes apoyar el proyecto.",
       "button": "Apoyar 💛"
+    },
+    "analytics": {
+      "section": "Privacidad",
+      "label": "Compartir analíticas anónimas",
+      "hint": "Ayúdanos a mejorar Avante sin compartir datos personales"
     },
     "about": {
       "section": "Acerca de",

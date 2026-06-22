@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import * as Linking from "expo-linking";
+import { capture } from "@/lib/analytics";
 import { Link, useRouter } from "expo-router";
 import { useState, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -65,6 +66,7 @@ export default function SignupScreen() {
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         redirect_to: Linking.createURL("email-verified"),
       });
+      capture("user_signed_up", { method: "email" });
       router.replace({ pathname: "/(auth)/pending-verification", params: { email: result.email } } as any);
     };
 

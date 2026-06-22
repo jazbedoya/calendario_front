@@ -34,6 +34,8 @@ import type { HolidayCountry }       from "@/features/overview/getHolidays";
 import { SUPPORTED_LANGUAGES, type SupportedLanguage } from "@/i18n";
 import { useHomeSummary } from "@/features/home/useHomeSummary";
 import { useGetStreak } from "@/features/tasks/hooks";
+import { useAnalyticsConsent } from "@/stores/analyticsConsentStore";
+import { capture, resetUser } from "@/lib/analytics";
 
 import { colors, spacing, radius, fontSize, fontWeight, shadows } from "@/theme";
 
@@ -69,6 +71,7 @@ export default function SettingsScreen() {
   const toastTimer = useRef<ReturnType<typeof setTimeout>>();
   const [loggingOut, setLoggingOut] = useState(false);
   const { data: streakData } = useGetStreak();
+  const { consent: analyticsConsent, accept: acceptAnalytics, reject: rejectAnalytics } = useAnalyticsConsent();
 
   function showToast(msg: string) {
     setToast(msg);
@@ -116,7 +119,7 @@ export default function SettingsScreen() {
 
   function handleDisconnect() {
     const doDisconnect = () => disconnectMutation.mutate(undefined, {
-      onSuccess: () => showToast(t("settings.calendar.disconnectedToast")),
+      onSuccess: () => { capture("google_calendar_disconnected"); showToast(t("settings.calendar.disconnectedToast")); },
     });
     if (Platform.OS === "web") {
       if (window.confirm(t("settings.calendar.disconnectMsg"))) doDisconnect();
@@ -253,7 +256,7 @@ export default function SettingsScreen() {
                   <TouchableOpacity
                     key={lang}
                     style={[s.pill, active && s.pillActive]}
-                    onPress={() => setLanguage(lang)}
+                    onPress={() => { capture("language_changed", { from: language, to: lang }); setLanguage(lang); }}
                     activeOpacity={0.7}
                   >
                     <Text style={s.pillFlag}>{LANG_ICONS[lang]}</Text>
@@ -281,7 +284,7 @@ export default function SettingsScreen() {
                   <TouchableOpacity
                     key={c}
                     style={[s.pill, active && s.pillActive]}
-                    onPress={() => setCountry(c)}
+                    onPress={() => { capture("country_changed", { from: country, to: c }); setCountry(c); }}
                     activeOpacity={0.7}
                   >
                     <Text style={s.pillFlag}>{COUNTRY_FLAGS[c]}</Text>
@@ -322,7 +325,7 @@ export default function SettingsScreen() {
                 <TouchableOpacity
                   style={s.calActionBtn}
                   onPress={() => syncMutation.mutate(undefined, {
-                    onSuccess: (data) => showToast(t("settings.calendar.syncDone", { count: data.synced })),
+                    onSuccess: (data) => { capture("google_calendar_synced", { events_imported: data.synced }); showToast(t("settings.calendar.syncDone", { count: data.synced })); },
                   })}
                   disabled={syncMutation.isPending}
                   activeOpacity={0.7}
@@ -382,7 +385,7 @@ export default function SettingsScreen() {
               </View>
               <TouchableOpacity
                 style={s.supportBtn}
-                onPress={() => Linking.openURL("https://ko-fi.com/jazmin_bedoya")}
+                onPress={() => { capture("support_tapped"); Linking.openURL("https://ko-fi.com/jazmin_bedoya"); }}
                 activeOpacity={0.85}
               >
                 <Text style={s.supportBtnTxt}>{t("settings.support.button")}</Text>
@@ -434,6 +437,25 @@ export default function SettingsScreen() {
         )}
 
         {/* ══════════════════════════════════════════════════════
+            ANALÍTICAS
+            ══════════════════════════════════════════════════════ */}
+        <Text style={s.sectionLabel}>{t("settings.analytics.section")}</Text>
+        <View style={s.card}>
+          <View style={s.switchRow}>
+            <View style={{ flex: 1 }}>
+              <Text style={s.switchLabel}>{t("settings.analytics.label")}</Text>
+              <Text style={s.switchHint}>{t("settings.analytics.hint")}</Text>
+            </View>
+            <Switch
+              value={analyticsConsent === "accepted"}
+              onValueChange={(v) => v ? acceptAnalytics() : rejectAnalytics()}
+              trackColor={{ false: colors.surfaceWarm2, true: colors.terracotta }}
+              thumbColor={colors.white}
+            />
+          </View>
+        </View>
+
+        {/* ══════════════════════════════════════════════════════
             ACERCA DE
             ══════════════════════════════════════════════════════ */}
         <Text style={s.sectionLabel}>{t("settings.about.section")}</Text>
@@ -457,6 +479,8 @@ export default function SettingsScreen() {
           onPress={async () => {
             if (loggingOut) return;
             setLoggingOut(true);
+            capture("user_logged_out");
+            resetUser();
             try { await logout(); } catch { /* ignore */ }
             router.replace("/(auth)/login");
           }}
