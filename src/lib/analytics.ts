@@ -15,6 +15,7 @@ export async function initAnalytics(): Promise<void> {
   if (!POSTHOG_KEY || posthog) return;
   posthog = new PostHog(POSTHOG_KEY, {
     host: POSTHOG_HOST,
+    persistence: "memory",
   });
   await posthog.ready();
 }
