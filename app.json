@@ -17,7 +17,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.jbedo.calendar2026",
+      "package": "com.jazbedoya.avante",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1E2A4A"
