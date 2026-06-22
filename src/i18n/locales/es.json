@@ -290,7 +290,9 @@
     },
     "create": "Crear tarea",
     "creating": "Creando...",
-    "saved": "Tarea guardada"
+    "saved": "Tarea guardada",
+    "conflict": "Conflicto de horario",
+    "conflictHint": "Se guardará igualmente si confirmas"
   },
   "mascot": {
     "morning": [

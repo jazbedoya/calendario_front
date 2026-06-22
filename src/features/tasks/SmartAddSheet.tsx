@@ -19,11 +19,16 @@ import { format, parseISO } from "date-fns";
 import { useLanguageStore } from "@/features/settings/languageStore";
 import { getDateLocale } from "@/i18n/dateLocale";
 
+import { fromZonedTime } from "date-fns-tz";
+import { formatInTimeZone } from "date-fns-tz";
+
 import { TugaAnimation } from "@/features/mascot/TugaAnimation";
 import { parseTaskInput } from "./parseTaskInput";
 import { useCreateTask } from "./hooks";
 import { useCreateEvent } from "@/features/events/useCreateEvent";
-import { LAYER_COLORS, type Layer } from "@/features/overview/types";
+import { useEventsStore } from "@/features/events/eventsStore";
+import { detectConflicts, getEventsForDay } from "@/features/overview/calendarUtils";
+import { LAYER_COLORS, type Layer, type CalendarEvent } from "@/features/overview/types";
 
 // ── Tokens del diseño (avante-anadir-tarea-tokens.css) ──────────────────────
 
@@ -88,6 +93,28 @@ export function SmartAddSheet({ visible, onClose, showSubtitle = false, initialD
   const hasParsed = parsed.title.length > 0 && (parsed.hour !== null || parsed.layer !== null || parsed.dayName !== null || !!initialDate);
 
   const effectiveLayer = selectedLayer ?? parsed.layer ?? initialLayer;
+
+  // ── Conflict detection ───────────────────────────────────────────────────
+  const events = useEventsStore((s) => s.events);
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const conflicts = useMemo(() => {
+    if (mode !== "calendar" || parsed.hour === null) return [];
+    const eventDate = parsed.date ?? initialDate ?? format(new Date(), "yyyy-MM-dd");
+    const hh = String(parsed.hour).padStart(2, "0");
+    const mm = String(parsed.minute ?? 0).padStart(2, "0");
+    const eh = String((parsed.hour + 1) % 24).padStart(2, "0");
+    const draft: CalendarEvent = {
+      id: "__draft__",
+      title: parsed.title || "New",
+      startAt: fromZonedTime(`${eventDate}T${hh}:${mm}:00`, tz).toISOString(),
+      endAt: fromZonedTime(`${eventDate}T${eh}:${mm}:00`, tz).toISOString(),
+      isAllDay: false,
+      layer: effectiveLayer ?? "work",
+    };
+    const dayEvts = getEventsForDay(events, eventDate, tz);
+    return detectConflicts([...dayEvts, draft]);
+  }, [mode, parsed.hour, parsed.minute, parsed.date, parsed.title, initialDate, effectiveLayer, events, tz]);
 
   useEffect(() => {
     if (visible) {
@@ -307,6 +334,27 @@ export function SmartAddSheet({ visible, onClose, showSubtitle = false, initialD
                 )}
               </>
             )}
+            {/* Conflict warning */}
+            {conflicts.length > 0 && (() => {
+              const c = conflicts[0];
+              const timeA = formatInTimeZone(parseISO(c.eventA.startAt), tz, "HH:mm");
+              const timeB = formatInTimeZone(parseISO(c.eventB.startAt), tz, "HH:mm");
+              return (
+                <View style={s.conflictCard}>
+                  <Ionicons name="warning-outline" size={16} color="#D97706" />
+                  <View style={{ flex: 1 }}>
+                    <Text style={s.conflictTitle}>{t("smartAdd.conflict")}</Text>
+                    <Text style={s.conflictDetail}>
+                      {c.eventA.title} · {timeA}
+                    </Text>
+                    <Text style={s.conflictDetail}>
+                      {c.eventB.title} · {timeB}
+                    </Text>
+                    <Text style={s.conflictHint}>{t("smartAdd.conflictHint")}</Text>
+                  </View>
+                </View>
+              );
+            })()}
           </ScrollView>
 
           {/* CTA fixed at bottom */}
@@ -536,6 +584,36 @@ const s = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
     color: T.textSecondary,
+  },
+
+  // Conflict
+  conflictCard: {
+    flexDirection: "row",
+    gap: 10,
+    marginHorizontal: SCREEN_X,
+    marginTop: 16,
+    backgroundColor: "#FFFBEB",
+    borderRadius: 14,
+    padding: 14,
+    borderLeftWidth: 3,
+    borderLeftColor: "#F59E0B",
+  },
+  conflictTitle: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#92400E",
+    marginBottom: 4,
+  },
+  conflictDetail: {
+    fontSize: 12,
+    color: "#92400E",
+    lineHeight: 17,
+  },
+  conflictHint: {
+    fontSize: 12,
+    color: "#B45309",
+    fontStyle: "italic",
+    marginTop: 4,
   },
 
   // CTA

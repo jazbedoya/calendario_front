@@ -290,7 +290,9 @@
     },
     "create": "Créer tâche",
     "creating": "Création...",
-    "saved": "Tâche enregistrée"
+    "saved": "Tâche enregistrée",
+    "conflict": "Conflit d'horaire",
+    "conflictHint": "Elle sera enregistrée quand même si vous confirmez"
   },
   "mascot": {
     "morning": [

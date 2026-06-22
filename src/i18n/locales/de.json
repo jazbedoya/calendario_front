@@ -290,7 +290,9 @@
     },
     "create": "Aufgabe erstellen",
     "creating": "Wird erstellt...",
-    "saved": "Aufgabe gespeichert"
+    "saved": "Aufgabe gespeichert",
+    "conflict": "Zeitkonflikt",
+    "conflictHint": "Wird trotzdem gespeichert, wenn du bestätigst"
   },
   "mascot": {
     "morning": [

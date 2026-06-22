@@ -290,7 +290,9 @@
     },
     "create": "Create task",
     "creating": "Creating...",
-    "saved": "Task saved"
+    "saved": "Task saved",
+    "conflict": "Time conflict",
+    "conflictHint": "It will be saved anyway if you confirm"
   },
   "mascot": {
     "morning": [
