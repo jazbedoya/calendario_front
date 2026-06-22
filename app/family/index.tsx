@@ -3,5 +3,5 @@ import { AreaCalendarScreen } from "@/features/overview/components/AreaCalendarS
 
 export default function FamilyScreen() {
   const { t } = useTranslation();
-  return <AreaCalendarScreen layer="family" accent="#E8826B" accentLight="#F5D0C5" title={t("layers.family")} />;
+  return <AreaCalendarScreen layer="family" accent="#E89B53" accentLight="rgba(232, 155, 83, 0.14)" title={t("layers.family")} />;
 }

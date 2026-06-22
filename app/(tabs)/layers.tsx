@@ -39,6 +39,7 @@ import { getHolidayMapForMonth } from '@/features/overview/getHolidays';
 import { useEventsStore } from '@/features/events/eventsStore';
 import { useDeleteEvent } from '@/features/events/useDeleteEvent';
 import { QuickAddSheet } from '@/features/events/components/QuickAddSheet';
+import { SmartAddSheet } from '@/features/tasks/SmartAddSheet';
 import { getLayersByDay, detectConflicts, getEventsForDay } from '@/features/overview/calendarUtils';
 import {
   LAYER_COLORS,
@@ -97,6 +98,7 @@ export default function LayersScreen() {
   const [animating,    setAnimating]    = useState(false);
   const [searchQuery,  setSearchQuery]  = useState('');
   const [refreshing,   setRefreshing]   = useState(false);
+  const [smartAddOpen, setSmartAddOpen] = useState(false);
   const qc = useQueryClient();
   const slideAnim = useRef(new Animated.Value(0)).current;
 
@@ -447,7 +449,7 @@ export default function LayersScreen() {
               <View style={st.emptyState}>
                 <Ionicons name="calendar-outline" size={28} color={colors.textDisabled} />
                 <Text style={st.emptyTxt}>{t('calendar.noScheduled')}</Text>
-                <TouchableOpacity onPress={openCreate} activeOpacity={0.7} accessibilityRole="button" accessibilityLabel={t('calendar.addEvent')}>
+                <TouchableOpacity onPress={() => setSmartAddOpen(true)} activeOpacity={0.7} accessibilityRole="button" accessibilityLabel={t('calendar.addEvent')}>
                   <Text style={st.emptyAction}>{t('calendar.addFirst')}</Text>
                 </TouchableOpacity>
               </View>
@@ -484,12 +486,20 @@ export default function LayersScreen() {
       <TouchableOpacity
         style={[st.fab, shadows.fab]}
         activeOpacity={0.85}
-        onPress={openCreate}
+        onPress={() => setSmartAddOpen(true)}
         accessibilityRole="button"
         accessibilityLabel={t('calendar.addEvent')}
       >
         <Ionicons name="add" size={28} color={colors.white} />
       </TouchableOpacity>
+
+      <SmartAddSheet
+        visible={smartAddOpen}
+        onClose={() => setSmartAddOpen(false)}
+        showSubtitle
+        initialDate={selectedDate}
+        mode="calendar"
+      />
 
       <QuickAddSheet
         visible={sheetOpen}

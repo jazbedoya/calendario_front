@@ -171,7 +171,6 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
         <AddTask
           accent={colors.terracotta}
           onAdd={(text) => create(text)}
-          onFocus={onInputFocus}
         />
       </View>
 

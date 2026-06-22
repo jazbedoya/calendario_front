@@ -258,6 +258,30 @@
     "deleteConfirm": "Borrar",
     "deleteLabel": "Borrar {{task}}"
   },
+  "smartAdd": {
+    "eyebrow": "NUEVA TAREA",
+    "subtitle": "Escribe la tarea y la hora",
+    "placeholder": "Ej: Desconectar 1 hora",
+    "placeholderCalendar": "Ej: Reunión con equipo el lunes 9:00",
+    "understands": "AVANTE ENTIENDE",
+    "task": "Tarea",
+    "when": "Cuándo",
+    "edit": "Editar",
+    "category": "Categoría sugerida",
+    "noCategory": "Sin categoría",
+    "today": "Hoy",
+    "moreOptions": "Más opciones",
+    "repeat": "Repetir",
+    "recurrence": {
+      "none": "No repetir",
+      "daily": "Todos los días",
+      "weekly": "Cada semana",
+      "monthly": "Cada mes"
+    },
+    "create": "Crear tarea",
+    "creating": "Creando...",
+    "saved": "Tarea guardada"
+  },
   "mascot": {
     "morning": [
       "¡Listo para un gran día!",
