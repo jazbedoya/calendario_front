@@ -3,6 +3,7 @@ import { fromZonedTime } from "date-fns-tz";
 import { apiClient } from "@/lib/api";
 import { useEventsStore } from "./eventsStore";
 import type { CalendarEvent, Layer } from "@/features/overview/types";
+import { capture } from "@/lib/analytics";
 
 export interface UpdateEventInput {
   id:       string;
@@ -51,6 +52,7 @@ export function useUpdateEvent() {
     onSuccess: (event) => {
       updateEvent(event);
       qc.invalidateQueries({ queryKey: ["events"] });
+      capture("event_updated", { area: event.layer });
       import("./useScheduleEventReminder").then(({ cancelEventReminder, scheduleEventReminder }) => {
         cancelEventReminder(event.id)
           .then(() => scheduleEventReminder(event.id, event.title, event.startAt))

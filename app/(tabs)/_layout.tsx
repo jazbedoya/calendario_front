@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { screenView } from "@/lib/analytics";
+import { screenView, capture } from "@/lib/analytics";
 
 const ICON_MAP: Record<string, keyof typeof Ionicons.glyphMap> = {
   index:    "home",
@@ -106,6 +106,9 @@ export default function TabsLayout() {
         focus: (e) => {
           const name = SCREEN_NAMES[e.target?.split("-")[0] ?? ""] ?? "unknown";
           screenView(name);
+          if (name === "agenda") capture("calendar_viewed");
+          else if (name === "balance") capture("balance_viewed");
+          else if (name === "settings") capture("settings_viewed");
         },
       }}
     >

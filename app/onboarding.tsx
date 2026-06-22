@@ -28,10 +28,9 @@ export default function OnboardingScreen() {
     setSaving(true);
     try {
       const trimmed = name.trim() || "Tuga";
-      capture("turtle_named", { name: trimmed });
       await setMascotName(trimmed);
       await completeOnboarding();
-      capture("onboarding_completed");
+      capture("onboarding_completed", { turtle_name: trimmed });
       router.replace("/(tabs)");
     } catch {
       setSaving(false);

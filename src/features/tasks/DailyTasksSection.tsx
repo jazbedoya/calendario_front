@@ -87,8 +87,15 @@ export function DailyTasksSection({ onInputFocus }: DailyTasksSectionProps) {
     if (justFinished) {
       alreadyFired.current = true;
       setCelebrating(true);
-      capture("all_tasks_completed", { total_today: total, streak_days: streakData?.current_streak ?? 0 });
-      refetchStreak().finally(() => setShowModal(true));
+      const currentStreak = streakData?.current_streak ?? 0;
+      capture("all_tasks_completed", { total_today: total, streak_days: currentStreak });
+      refetchStreak().then((result) => {
+        const newStreak = result.data?.current_streak ?? 0;
+        if (newStreak > currentStreak) {
+          capture("streak_increased", { days: newStreak });
+        }
+        setShowModal(true);
+      });
     }
 
     if (done < total && done < prevDone.current) {

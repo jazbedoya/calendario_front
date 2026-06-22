@@ -66,7 +66,7 @@ export default function SignupScreen() {
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         redirect_to: Linking.createURL("email-verified"),
       });
-      capture("user_signed_up", { method: "email" });
+      capture("user_registered", { method: "email" });
       router.replace({ pathname: "/(auth)/pending-verification", params: { email: result.email } } as any);
     };
 

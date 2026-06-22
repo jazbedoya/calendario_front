@@ -99,7 +99,7 @@ export function useGoogleAuth(onError?: (msg: string) => void) {
           patchMeApi({ timezone: deviceTz }).catch(() => {});
         }
         const isNewAccount = Date.now() - new Date(me.created_at).getTime() < 120_000;
-        capture(isNewAccount ? "user_signed_up" : "user_logged_in", { method: "google" });
+        capture(isNewAccount ? "user_registered" : "user_logged_in", { method: "google" });
         if (isNewAccount) {
           router.replace("/onboarding");
         } else {

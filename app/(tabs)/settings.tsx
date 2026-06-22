@@ -325,7 +325,7 @@ export default function SettingsScreen() {
                 <TouchableOpacity
                   style={s.calActionBtn}
                   onPress={() => syncMutation.mutate(undefined, {
-                    onSuccess: (data) => { capture("google_calendar_synced", { events_imported: data.synced }); showToast(t("settings.calendar.syncDone", { count: data.synced })); },
+                    onSuccess: (data) => { capture("calendar_sync_completed", { events_imported: data.synced }); showToast(t("settings.calendar.syncDone", { count: data.synced })); },
                   })}
                   disabled={syncMutation.isPending}
                   activeOpacity={0.7}
