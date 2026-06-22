@@ -13,9 +13,10 @@ let posthog: PostHog | null = null;
 
 export async function initAnalytics(): Promise<void> {
   if (!POSTHOG_KEY || posthog) return;
-  posthog = await PostHog.initAsync(POSTHOG_KEY, {
+  posthog = new PostHog(POSTHOG_KEY, {
     host: POSTHOG_HOST,
   });
+  await posthog.ready();
 }
 
 export function getPostHog(): PostHog | null {
