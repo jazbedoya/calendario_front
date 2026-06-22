@@ -2,6 +2,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { parseISO } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
+import { useTranslation } from "react-i18next";
 import type { CalendarEvent } from "@/features/overview/types";
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export function OccupiedRow({ event, timezone }: Props) {
+  const { t } = useTranslation();
   const start = formatInTimeZone(parseISO(event.startAt), timezone, "HH:mm");
   const end   = formatInTimeZone(parseISO(event.endAt),   timezone, "HH:mm");
 
@@ -18,7 +20,7 @@ export function OccupiedRow({ event, timezone }: Props) {
       <View style={s.bar} />
       <View style={s.info}>
         <Text style={s.time}>{start} – {end}</Text>
-        <Text style={s.label}>Ocupado</Text>
+        <Text style={s.label}>{t('calendar.occupied')}</Text>
       </View>
       <Ionicons name="lock-closed" size={14} color="#D0D0D0" style={s.lock} />
     </View>

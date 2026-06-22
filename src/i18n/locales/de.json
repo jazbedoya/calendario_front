@@ -256,7 +256,35 @@
     "deleteTitle": "Aufgabe löschen",
     "deleteMsg": "\"{{task}}\" löschen?",
     "deleteConfirm": "Löschen",
-    "deleteLabel": "{{task}} löschen"
+    "deleteLabel": "{{task}} löschen",
+    "errorTitle": "Fehler",
+    "errorSave": "Aufgabe konnte nicht gespeichert werden. Überprüfe deine Verbindung und versuche es erneut.",
+    "errorToggle": "Änderung konnte nicht gespeichert werden. Überprüfe deine Verbindung und versuche es erneut.",
+    "errorDelete": "Aufgabe konnte nicht gelöscht werden. Überprüfe deine Verbindung und versuche es erneut."
+  },
+  "smartAdd": {
+    "eyebrow": "NEUE AUFGABE",
+    "subtitle": "Schreibe die Aufgabe und die Uhrzeit",
+    "placeholder": "Z.B.: 1 Stunde abschalten",
+    "placeholderCalendar": "Z.B.: Teammeeting am Montag 9:00",
+    "understands": "AVANTE VERSTEHT",
+    "task": "Aufgabe",
+    "when": "Wann",
+    "edit": "Bearbeiten",
+    "category": "Vorgeschlagene Kategorie",
+    "noCategory": "Keine Kategorie",
+    "today": "Heute",
+    "moreOptions": "Mehr Optionen",
+    "repeat": "Wiederholen",
+    "recurrence": {
+      "none": "Nicht wiederholen",
+      "daily": "Jeden Tag",
+      "weekly": "Jede Woche",
+      "monthly": "Jeden Monat"
+    },
+    "create": "Aufgabe erstellen",
+    "creating": "Wird erstellt...",
+    "saved": "Aufgabe gespeichert"
   },
   "mascot": {
     "morning": [

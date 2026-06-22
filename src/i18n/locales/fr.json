@@ -256,7 +256,35 @@
     "deleteTitle": "Supprimer la tâche",
     "deleteMsg": "Supprimer \"{{task}}\" ?",
     "deleteConfirm": "Supprimer",
-    "deleteLabel": "Supprimer {{task}}"
+    "deleteLabel": "Supprimer {{task}}",
+    "errorTitle": "Erreur",
+    "errorSave": "Impossible d'enregistrer la tâche. Vérifiez votre connexion et réessayez.",
+    "errorToggle": "Impossible d'enregistrer la modification. Vérifiez votre connexion et réessayez.",
+    "errorDelete": "Impossible de supprimer la tâche. Vérifiez votre connexion et réessayez."
+  },
+  "smartAdd": {
+    "eyebrow": "NOUVELLE TÂCHE",
+    "subtitle": "Écrivez la tâche et l'heure",
+    "placeholder": "Ex : Se déconnecter 1 heure",
+    "placeholderCalendar": "Ex : Réunion d'équipe lundi 9h00",
+    "understands": "AVANTE COMPREND",
+    "task": "Tâche",
+    "when": "Quand",
+    "edit": "Modifier",
+    "category": "Catégorie suggérée",
+    "noCategory": "Sans catégorie",
+    "today": "Aujourd'hui",
+    "moreOptions": "Plus d'options",
+    "repeat": "Répéter",
+    "recurrence": {
+      "none": "Ne pas répéter",
+      "daily": "Tous les jours",
+      "weekly": "Chaque semaine",
+      "monthly": "Chaque mois"
+    },
+    "create": "Créer tâche",
+    "creating": "Création...",
+    "saved": "Tâche enregistrée"
   },
   "mascot": {
     "morning": [

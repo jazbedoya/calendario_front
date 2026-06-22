@@ -1,6 +1,7 @@
 import { Alert } from "react-native";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { subDays } from "date-fns";
+import i18n from "@/i18n";
 import { formatInTimeZone } from "date-fns-tz";
 
 import { useAuthStore } from "@/stores/authStore";
@@ -107,7 +108,7 @@ export function useCreateTask() {
       // Remove only the failed optimistic task — don't wipe the full cache snapshot,
       // which would also remove other in-flight optimistic tasks.
       if (ctx) qc.setQueryData<DailyTask[]>(qk, (old = []) => old.filter((t) => t.id !== ctx.optimisticId));
-      Alert.alert("Error", "No se pudo guardar la tarea. Comprueba tu conexión e inténtalo de nuevo.");
+      Alert.alert(i18n.t("tasks.errorTitle"), i18n.t("tasks.errorSave"));
     },
   });
 }
@@ -152,7 +153,7 @@ export function useToggleTask() {
 
     onError: (_err, _vars, ctx) => {
       if (ctx?.previous) qc.setQueryData(qk, ctx.previous);
-      Alert.alert("Error", "No se pudo guardar el cambio. Comprueba tu conexión e inténtalo de nuevo.");
+      Alert.alert(i18n.t("tasks.errorTitle"), i18n.t("tasks.errorToggle"));
     },
   });
 }
@@ -191,7 +192,7 @@ export function useDeleteTask() {
 
     onError: (_err, _vars, ctx) => {
       if (ctx?.previous) qc.setQueryData(qk, ctx.previous);
-      Alert.alert("Error", "No se pudo borrar la tarea. Comprueba tu conexión e inténtalo de nuevo.");
+      Alert.alert(i18n.t("tasks.errorTitle"), i18n.t("tasks.errorDelete"));
     },
   });
 }

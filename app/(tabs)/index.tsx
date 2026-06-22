@@ -129,7 +129,7 @@ export default function HomeScreen() {
           <Text style={s.sectionEyebrow}>{t("home.today")}</Text>
           <TasksSummaryCard
             pendingCount={summary?.today_tasks_pending ?? 0}
-            totalCount={(summary?.today_tasks_pending ?? 0) + 1}
+            totalCount={summary?.today_tasks_total ?? (summary?.today_tasks_pending ?? 0)}
           />
         </View>
       </ScrollView>

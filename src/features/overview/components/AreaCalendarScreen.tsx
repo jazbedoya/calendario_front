@@ -60,7 +60,7 @@ import { colors, spacing, radius, fontSize, fontWeight, shadows } from "@/theme"
 
 // ─── Constantes ───────────────────────────────────────────────────────────────
 
-const USER_TZ      = "Europe/Madrid";
+const USER_TZ      = Intl.DateTimeFormat().resolvedOptions().timeZone;
 const HOLIDAY_GOLD = "#C8A52A";
 
 function buildWeeks(year: number, month: number): Date[][] {

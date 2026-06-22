@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef, useCallback } from 'react';
+import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -37,6 +37,7 @@ import { useTranslation } from 'react-i18next';
 import { useHolidayStore } from '@/features/settings/holidayStore';
 import { getHolidayMapForMonth } from '@/features/overview/getHolidays';
 import { useEventsStore } from '@/features/events/eventsStore';
+import { useGetEvents } from '@/features/events/useGetEvents';
 import { useDeleteEvent } from '@/features/events/useDeleteEvent';
 import { QuickAddSheet } from '@/features/events/components/QuickAddSheet';
 import { SmartAddSheet } from '@/features/tasks/SmartAddSheet';
@@ -56,7 +57,7 @@ import { colors, spacing, radius, fontSize, fontWeight, shadows } from '@/theme'
 
 const HOLIDAY_GOLD   = '#C8A52A';
 const LAYER_ORDER: Layer[] = ['family', 'work', 'personal'];
-const USER_TIMEZONE  = 'Europe/Madrid';
+const USER_TIMEZONE  = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -103,7 +104,13 @@ export default function LayersScreen() {
   const slideAnim = useRef(new Animated.Value(0)).current;
 
   const events               = useEventsStore((s) => s.events);
+  const setEvents            = useEventsStore((s) => s.setEvents);
+  const { data: fetchedEvents } = useGetEvents(viewYear, viewMonth);
   const { mutate: doDelete } = useDeleteEvent();
+
+  useEffect(() => {
+    if (fetchedEvents) setEvents(fetchedEvents);
+  }, [fetchedEvents, setEvents]);
 
   const weeks    = useMemo(() => buildCalendarWeeks(viewYear, viewMonth), [viewYear, viewMonth]);
   const weekDays = useMemo(() => buildWeekDays(weekStart), [weekStart]);

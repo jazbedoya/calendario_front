@@ -145,7 +145,7 @@ export function SmartAddSheet({ visible, onClose, showSubtitle = false, initialD
     }
   }
 
-  const canCreate = text.trim().length > 0 && parsed.hour !== null && !saving;
+  const canCreate = text.trim().length > 0 && (mode === "task" || parsed.hour !== null) && !saving;
 
   return (
     <Modal

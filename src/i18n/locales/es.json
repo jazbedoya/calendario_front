@@ -256,7 +256,11 @@
     "deleteTitle": "Borrar tarea",
     "deleteMsg": "¿Borrar \"{{task}}\"?",
     "deleteConfirm": "Borrar",
-    "deleteLabel": "Borrar {{task}}"
+    "deleteLabel": "Borrar {{task}}",
+    "errorTitle": "Error",
+    "errorSave": "No se pudo guardar la tarea. Comprueba tu conexión e inténtalo de nuevo.",
+    "errorToggle": "No se pudo guardar el cambio. Comprueba tu conexión e inténtalo de nuevo.",
+    "errorDelete": "No se pudo borrar la tarea. Comprueba tu conexión e inténtalo de nuevo."
   },
   "smartAdd": {
     "eyebrow": "NUEVA TAREA",

@@ -7,13 +7,16 @@ import type { CalendarEvent } from "@/features/overview/types";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapEvent(d: any): CalendarEvent {
   return {
-    id:       String(d.id),
-    title:    d.title,
-    startAt:  d.start_at,
-    endAt:    d.end_at,
-    isAllDay: d.is_all_day,
-    layer:    d.layer,
-    location: d.location ?? undefined,
+    id:                 String(d.id),
+    title:              d.title,
+    startAt:            d.start_at,
+    endAt:              d.end_at,
+    isAllDay:           d.is_all_day,
+    layer:              d.layer,
+    location:           d.location ?? undefined,
+    description:        d.description ?? undefined,
+    recurrenceRule:     d.recurrence_rule ?? undefined,
+    recurrenceParentId: d.recurrence_parent_id ?? undefined,
   };
 }
 

@@ -256,7 +256,35 @@
     "deleteTitle": "Delete task",
     "deleteMsg": "Delete \"{{task}}\"?",
     "deleteConfirm": "Delete",
-    "deleteLabel": "Delete {{task}}"
+    "deleteLabel": "Delete {{task}}",
+    "errorTitle": "Error",
+    "errorSave": "Could not save the task. Check your connection and try again.",
+    "errorToggle": "Could not save the change. Check your connection and try again.",
+    "errorDelete": "Could not delete the task. Check your connection and try again."
+  },
+  "smartAdd": {
+    "eyebrow": "NEW TASK",
+    "subtitle": "Write the task and time",
+    "placeholder": "E.g.: Disconnect for 1 hour",
+    "placeholderCalendar": "E.g.: Team meeting on Monday 9:00",
+    "understands": "AVANTE UNDERSTANDS",
+    "task": "Task",
+    "when": "When",
+    "edit": "Edit",
+    "category": "Suggested category",
+    "noCategory": "No category",
+    "today": "Today",
+    "moreOptions": "More options",
+    "repeat": "Repeat",
+    "recurrence": {
+      "none": "No repeat",
+      "daily": "Every day",
+      "weekly": "Every week",
+      "monthly": "Every month"
+    },
+    "create": "Create task",
+    "creating": "Creating...",
+    "saved": "Task saved"
   },
   "mascot": {
     "morning": [
