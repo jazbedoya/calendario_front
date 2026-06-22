@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Calendario",
+    "name": "Avante",
     "slug": "calendario2026",
     "version": "1.0.0",
     "scheme": "calendario",
@@ -11,7 +11,7 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#F8F6F2"
     },
     "ios": {
       "supportsTablet": true
@@ -20,7 +20,7 @@
       "package": "com.jbedo.calendar2026",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#1E2A4A"
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
