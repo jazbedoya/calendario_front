@@ -2,7 +2,7 @@ import { ExpoConfig, ConfigContext } from "expo/config";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "Calendario",
+  name: "Avante",
   slug: "calendario-app",
   scheme: "calendario",
   version: "1.0.0",
@@ -13,7 +13,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   splash: {
     image: "./assets/splash-icon.png",
     resizeMode: "contain",
-    backgroundColor: "#ffffff",
+    backgroundColor: "#F8F6F2",
   },
   updates: {
     fallbackToCacheTimeout: 0,
@@ -21,14 +21,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   assetBundlePatterns: ["**/*"],
   ios: {
     supportsTablet: false,
-    bundleIdentifier: "com.jbedo.calendar2026",
+    bundleIdentifier: "com.jazbedoya.avante",
   },
   android: {
     adaptiveIcon: {
       foregroundImage: "./assets/adaptive-icon.png",
-      backgroundColor: "#ffffff",
+      backgroundColor: "#1E2A4A",
     },
-    package: "com.jbedo.calendar2026",
+    package: "com.jazbedoya.avante",
     usesCleartextTraffic: true,
     edgeToEdgeEnabled: true,
     predictiveBackGestureEnabled: false,
