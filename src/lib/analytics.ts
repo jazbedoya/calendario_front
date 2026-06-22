@@ -1,5 +1,5 @@
 /**
- * PostHog analytics wrapper.
+ * PostHog analytics wrapper (v3).
  * All tracking goes through this module — never import PostHog directly elsewhere.
  */
 import PostHog from "posthog-react-native";
@@ -13,9 +13,8 @@ let posthog: PostHog | null = null;
 
 export async function initAnalytics(): Promise<void> {
   if (!POSTHOG_KEY || posthog) return;
-  posthog = new PostHog(POSTHOG_KEY, {
+  posthog = await PostHog.initAsync(POSTHOG_KEY, {
     host: POSTHOG_HOST,
-    enableSessionReplay: false,
   });
 }
 
@@ -31,8 +30,6 @@ export function identifyUser(userId: string, properties: {
   country?: string;
   createdAt?: string;
   turtleName?: string;
-  platform?: string;
-  appVersion?: string;
   hasGoogleConnected?: boolean;
 }) {
   posthog?.identify(userId, {
