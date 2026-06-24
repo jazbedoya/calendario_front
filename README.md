@@ -1,6 +1,17 @@
 # Avante — Mobile App
 
-Cross-platform mobile app that helps people balance family, work, and personal time. Built with React Native and published on [Google Play](https://play.google.com/store/apps/details?id=com.jazbedoya.avante).
+[![Google Play](https://img.shields.io/badge/Google_Play-Published-green?logo=google-play)](https://play.google.com/store/apps/details?id=com.jazbedoya.avante)
+[![React Native](https://img.shields.io/badge/React_Native-Expo_54-blue?logo=expo)](https://expo.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-blue?logo=typescript)](https://www.typescriptlang.org/)
+
+Cross-platform mobile app that helps people balance family, work, and personal time with emotional context awareness. **Published on Google Play.**
+
+<p align="center">
+  <img src="docs/screenshots/01-login.png" width="200" alt="Login" />
+  <img src="docs/screenshots/02-inicio.png" width="200" alt="Home" />
+  <img src="docs/screenshots/03-agenda.png" width="200" alt="Agenda" />
+  <img src="docs/screenshots/04-equilibrio.png" width="200" alt="Balance" />
+</p>
 
 ## Tech Stack
 
@@ -18,7 +29,7 @@ Cross-platform mobile app that helps people balance family, work, and personal t
 | **Auth** | JWT + Google OAuth 2.0 |
 | **Analytics** | PostHog (GDPR consent flow) |
 | **Crash reporting** | Sentry |
-| **Build** | EAS Build + EAS Submit |
+| **Build & Deploy** | EAS Build + Google Play |
 
 ## Features
 
