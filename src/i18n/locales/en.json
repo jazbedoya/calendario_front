@@ -18,7 +18,7 @@
   },
   "auth": {
     "login": {
-      "title": "Welcome back",
+      "title": "Welcome",
       "subtitle": "Your time is waiting",
       "googleBtn": "Continue with Google",
       "divider": "OR SIGN IN WITH EMAIL",

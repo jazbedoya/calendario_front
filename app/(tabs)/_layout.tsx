@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Platform, Keyboard } from "re
 import { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { screenView, capture } from "@/lib/analytics";
 
@@ -34,6 +35,7 @@ const MAIN_TABS = ["index", "layers", "stats", "settings"];
 
 function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const visibleRoutes = state.routes.filter((r) => MAIN_TABS.includes(r.name));
   const [keyboardVisible, setKeyboardVisible] = useState(false);
 
@@ -45,8 +47,10 @@ function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
 
   if (keyboardVisible) return null;
 
+  const bottomOffset = Math.max(insets.bottom, Platform.OS === "ios" ? 28 : 12) + 8;
+
   return (
-    <View style={styles.barWrapper}>
+    <View style={[styles.barWrapper, { bottom: bottomOffset }]}>
       <View style={styles.bar}>
         {visibleRoutes.map((route) => {
           const index = state.routes.indexOf(route);
@@ -123,7 +127,6 @@ export default function TabsLayout() {
 const styles = StyleSheet.create({
   barWrapper: {
     position: "absolute",
-    bottom: Platform.OS === "ios" ? 28 : 20,
     left: 24,
     right: 24,
     alignItems: "center",

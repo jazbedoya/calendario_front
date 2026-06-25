@@ -18,7 +18,7 @@
   },
   "auth": {
     "login": {
-      "title": "Bon retour",
+      "title": "Bienvenue",
       "subtitle": "Votre temps vous attend",
       "googleBtn": "Continuer avec Google",
       "divider": "OU SE CONNECTER PAR E-MAIL",

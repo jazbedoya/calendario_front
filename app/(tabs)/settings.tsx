@@ -715,4 +715,12 @@ const s = StyleSheet.create({
     borderWidth: 1, borderColor: "rgba(200, 85, 61, 0.18)",
   },
   logoutTxt: { fontSize: fontSize.body, fontWeight: fontWeight.semibold, color: colors.terracotta },
+
+  // ── Switch row (analytics) ──
+  switchRow: {
+    flexDirection: "row", alignItems: "center", justifyContent: "space-between",
+    paddingHorizontal: spacing.lg, paddingVertical: 14, gap: spacing.md,
+  },
+  switchLabel: { fontSize: fontSize.bodySm, fontWeight: fontWeight.medium, color: colors.ink },
+  switchHint:  { fontSize: fontSize.micro, color: colors.textMuted, marginTop: 2 },
 });
