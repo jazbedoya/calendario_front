@@ -63,7 +63,9 @@
       "emailNotVerified": "Vérifiez votre e-mail avant de vous connecter. Consultez votre boîte de réception.",
       "serverError": "Erreur serveur, veuillez réessayer plus tard",
       "connectionError": "Impossible de se connecter au serveur",
-      "unexpected": "Erreur inattendue, veuillez réessayer"
+      "unexpected": "Erreur inattendue, veuillez réessayer",
+      "emailExists": "Un compte avec cet email existe déjà",
+      "tooManyRequests": "Trop de tentatives, veuillez patienter"
     },
     "emailVerified": {
       "title": "Compte vérifié !",

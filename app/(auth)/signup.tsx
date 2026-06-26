@@ -58,8 +58,11 @@ export default function SignupScreen() {
   }, []);
 
   const onSubmit = async (data: FormData) => {
-    const attempt = async () => {
-      const result = await signupApi({
+    const goToVerification = () =>
+      router.replace({ pathname: "/(auth)/pending-verification", params: { email: data.email } } as any);
+
+    try {
+      await signupApi({
         email: data.email,
         password: data.password,
         full_name: data.full_name,
@@ -67,23 +70,49 @@ export default function SignupScreen() {
         redirect_to: Linking.createURL("email-verified"),
       });
       capture("user_registered", { method: "email" });
-      router.replace({ pathname: "/(auth)/pending-verification", params: { email: result.email } } as any);
-    };
-
-    try {
-      await attempt();
+      goToVerification();
     } catch (err: unknown) {
       const axiosErr = err as any;
+      const status = axiosErr?.response?.status;
+      const detail = axiosErr?.response?.data?.detail;
+
+      // If first request had no HTTP response (network issue), retry once
       if (!axiosErr?.response) {
-        try { await attempt(); return; } catch (retryErr: unknown) {
+        try {
+          await signupApi({
+            email: data.email,
+            password: data.password,
+            full_name: data.full_name,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            redirect_to: Linking.createURL("email-verified"),
+          });
+          capture("user_registered", { method: "email" });
+          goToVerification();
+        } catch (retryErr: unknown) {
           const retryAxios = retryErr as any;
-          const msg = retryAxios?.response?.data?.detail ?? (retryErr instanceof Error ? retryErr.message : "Error desconocido");
+          const retryDetail = retryAxios?.response?.data?.detail;
+          // "Email already registered" on retry means the first request actually succeeded
+          if (retryAxios?.response?.status === 400 && retryDetail === "Email already registered") {
+            capture("user_registered", { method: "email" });
+            goToVerification();
+            return;
+          }
+          const msg = retryDetail ?? (retryErr instanceof Error ? retryErr.message : t("auth.errors.unexpected"));
           setError("root", { message: msg });
-          return;
         }
+        return;
       }
-      const msg = axiosErr?.response?.data?.detail ?? (err instanceof Error ? err.message : "Error desconocido");
-      setError("root", { message: msg });
+
+      // Show translated error for known cases
+      if (status === 400 && detail === "Email already registered") {
+        setError("root", { message: t("auth.errors.emailExists") });
+      } else if (status === 429) {
+        setError("root", { message: t("auth.errors.tooManyRequests") });
+      } else if (status && status >= 500) {
+        setError("root", { message: t("auth.errors.serverError") });
+      } else {
+        setError("root", { message: detail ?? t("auth.errors.unexpected") });
+      }
     }
   };
 

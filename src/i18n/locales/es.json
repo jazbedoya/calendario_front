@@ -63,7 +63,9 @@
       "emailNotVerified": "Verifica tu email antes de entrar. Revisa tu bandeja de entrada.",
       "serverError": "Error en el servidor, intenta más tarde",
       "connectionError": "No se pudo conectar con el servidor",
-      "unexpected": "Error inesperado, intenta de nuevo"
+      "unexpected": "Error inesperado, intenta de nuevo",
+      "emailExists": "Ya existe una cuenta con este email",
+      "tooManyRequests": "Demasiados intentos, espera un momento"
     },
     "emailVerified": {
       "title": "¡Cuenta verificada!",

@@ -63,7 +63,9 @@
       "emailNotVerified": "Bitte bestätigen Sie Ihre E-Mail vor der Anmeldung. Überprüfen Sie Ihren Posteingang.",
       "serverError": "Serverfehler, bitte versuchen Sie es später erneut",
       "connectionError": "Verbindung zum Server fehlgeschlagen",
-      "unexpected": "Unerwarteter Fehler, bitte versuchen Sie es erneut"
+      "unexpected": "Unerwarteter Fehler, bitte versuchen Sie es erneut",
+      "emailExists": "Ein Konto mit dieser E-Mail existiert bereits",
+      "tooManyRequests": "Zu viele Versuche, bitte warten Sie einen Moment"
     },
     "emailVerified": {
       "title": "Konto bestätigt!",

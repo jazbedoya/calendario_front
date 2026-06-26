@@ -63,7 +63,9 @@
       "emailNotVerified": "Please verify your email before signing in. Check your inbox.",
       "serverError": "Server error, please try again later",
       "connectionError": "Could not connect to the server",
-      "unexpected": "Unexpected error, please try again"
+      "unexpected": "Unexpected error, please try again",
+      "emailExists": "An account with this email already exists",
+      "tooManyRequests": "Too many attempts, please wait a moment"
     },
     "emailVerified": {
       "title": "Account verified!",
