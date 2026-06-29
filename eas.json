@@ -19,6 +19,9 @@
     },
     "production": {
       "autoIncrement": true,
+      "android": {
+        "buildType": "app-bundle"
+      },
       "env": {
         "EXPO_PUBLIC_API_URL": "https://calendariobackend-production.up.railway.app",
         "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "412267573077-bcnihn2b97212e16jhor0aurqf7k99rs.apps.googleusercontent.com",
