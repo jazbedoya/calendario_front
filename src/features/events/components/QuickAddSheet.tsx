@@ -181,7 +181,7 @@ export function QuickAddSheet({
     <Modal visible={visible} transparent animationType="none" onRequestClose={onClose} statusBarTranslucent>
       <TouchableOpacity style={s.backdrop} activeOpacity={1} onPress={() => { Keyboard.dismiss(); onClose(); }} />
 
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={s.kav} pointerEvents="box-none">
+      <KeyboardAvoidingView behavior="padding" style={s.kav} pointerEvents="box-none">
         <Animated.View style={[s.sheet, { transform: [{ translateY: slideAnim }] }]}>
           {/* Handle */}
           <View style={s.handle} />

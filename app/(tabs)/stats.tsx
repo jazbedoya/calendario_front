@@ -103,7 +103,7 @@ export default function StatsScreen() {
     <SafeAreaView style={s.safe} edges={["top"]}>
       <KeyboardAvoidingView
         style={s.flex}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior="padding"
         keyboardVerticalOffset={0}
       >
         <ScrollView

@@ -52,7 +52,7 @@ export default function ForgotPasswordScreen() {
     <SafeAreaView style={st.safe}>
       <KeyboardAvoidingView
         style={st.flex}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior="padding"
       >
         <ScrollView
           contentContainerStyle={st.scroll}

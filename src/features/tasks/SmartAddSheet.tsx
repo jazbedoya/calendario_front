@@ -182,7 +182,7 @@ export function SmartAddSheet({ visible, onClose, showSubtitle = false, initialD
     >
       <SafeAreaView style={s.safe}>
         <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          behavior="padding"
           style={s.flex}
         >
           <ScrollView

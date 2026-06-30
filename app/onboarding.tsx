@@ -42,7 +42,7 @@ export default function OnboardingScreen() {
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         style={styles.inner}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        behavior="padding"
       >
         <View style={styles.topSection}>
           <Text style={styles.title}>{t('onboarding.title')}</Text>

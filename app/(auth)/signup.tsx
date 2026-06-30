@@ -120,7 +120,7 @@ export default function SignupScreen() {
     <SafeAreaView style={s.safe}>
       <KeyboardAvoidingView
         style={s.flex}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior="padding"
       >
         <ScrollView
           contentContainerStyle={s.scroll}

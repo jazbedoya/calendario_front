@@ -104,7 +104,7 @@ export function DayCheckSheet({ visible, date, onClose }: DayCheckSheetProps) {
       />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior="padding"
         style={sh.kav}
         pointerEvents="box-none"
       >
