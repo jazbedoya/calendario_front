@@ -167,6 +167,7 @@ export function AreaCalendarScreen({ layer, accent, accentLight, title }: Props)
   }
 
   function handleDay(day: Date) {
+    if (!isSameMonth(day, new Date(viewYear, viewMonth))) return;
     const key = format(day, "yyyy-MM-dd");
     setSelectedDate((prev) => (prev === key ? null : key));
   }
@@ -261,21 +262,26 @@ export function AreaCalendarScreen({ layer, accent, accentLight, title }: Props)
                 {week.map((day) => {
                   const key      = format(day, "yyyy-MM-dd");
                   const inMonth  = isSameMonth(day, new Date(viewYear, viewMonth));
+
+                  if (!inMonth) {
+                    return <View key={key} style={st.dayCellWrap} />;
+                  }
+
                   const isSelect = selectedDate === key;
                   const isTodayD = isToday(day);
                   const layers   = layersByDay.get(key);
                   const hasArea  = layers?.has(layer) ?? false;
                   const hasOther = layers ? otherLayers.some((l) => layers.has(l)) : false;
                   const isWeekend = day.getDay() === 0 || day.getDay() === 6;
-                  const isHoliday = inMonth && holidayMap.has(key);
-                  const tintBg = hasArea && inMonth ? (accent + '0D') : undefined;
+                  const isHoliday = holidayMap.has(key);
+                  const tintBg = hasArea ? (accent + '0D') : undefined;
 
                   return (
                     <View key={key} style={[st.dayCellWrap, isHoliday && st.holidayCellBg]}>
                       <Pressable
                         style={({ pressed }) => [
                           st.dayCell,
-                          isWeekend && inMonth && st.weekendCell,
+                          isWeekend && st.weekendCell,
                           tintBg ? { backgroundColor: tintBg } : undefined,
                           pressed && st.dayCellPressed,
                         ]}
@@ -289,8 +295,7 @@ export function AreaCalendarScreen({ layer, accent, accentLight, title }: Props)
                           ]}>
                             <Text style={[
                               st.dayText,
-                              !inMonth && st.outMonthText,
-                              isWeekend && inMonth && !isTodayD && !isSelect && st.weekendText,
+                              isWeekend && !isTodayD && !isSelect && st.weekendText,
                               isTodayD && !isSelect && { color: accent, fontWeight: "700" as const },
                               isSelect && st.selectedDayText,
                             ]}>

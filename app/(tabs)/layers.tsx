@@ -172,6 +172,7 @@ export default function LayersScreen() {
   }
 
   function handleDayPress(day: Date) {
+    if (viewMode === 'month' && !isSameMonth(day, new Date(viewYear, viewMonth))) return;
     const key = format(day, 'yyyy-MM-dd');
     setSelectedDate((prev) => (prev === key ? null : key));
   }
@@ -237,20 +238,34 @@ export default function LayersScreen() {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.terracotta]} tintColor={colors.terracotta} />}
       >
 
-        {/* ── Cabecera: año + mes izquierda, toggle derecha ── */}
+        {/* ── Cabecera: [<] Mes [>]   [Mes | Semana] ── */}
         <View style={st.header}>
-          <Pressable onPress={() => viewMode === 'month' ? changeMonth('prev') : changeWeek('prev')} style={st.headerLeft}>
-            {viewMode === 'month' ? (
-              <>
-                <Text style={st.yearLabel}>{yearStr}</Text>
-                <Text style={st.monthName}>{monthName}</Text>
-              </>
-            ) : (
-              <Text style={st.monthName}>{weekLabel}</Text>
-            )}
-          </Pressable>
+          {/* Año encima */}
+          {viewMode === 'month' && <Text style={st.yearLabel}>{yearStr}</Text>}
 
-          <View style={st.headerRight}>
+          <View style={st.headerRow}>
+            {/* Grupo izquierdo: < Mes > */}
+            <View style={st.navGroup}>
+              <TouchableOpacity
+                onPress={() => viewMode === 'month' ? changeMonth('prev') : changeWeek('prev')}
+                style={st.navArrow}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="chevron-back" size={20} color={colors.textMuted} />
+              </TouchableOpacity>
+              <Text style={st.monthName}>
+                {viewMode === 'month' ? monthName : weekLabel}
+              </Text>
+              <TouchableOpacity
+                onPress={() => viewMode === 'month' ? changeMonth('next') : changeWeek('next')}
+                style={st.navArrow}
+                activeOpacity={0.7}
+              >
+                <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+              </TouchableOpacity>
+            </View>
+
+            {/* Toggle derecha */}
             <View style={st.modeToggle}>
               <TouchableOpacity
                 style={[st.modeBtn, viewMode === 'month' && st.modeBtnActive]}
@@ -322,21 +337,26 @@ export default function LayersScreen() {
                 {week.map((day) => {
                   const key            = format(day, 'yyyy-MM-dd');
                   const inMonth        = isSameMonth(day, new Date(viewYear, viewMonth));
+
+                  if (!inMonth) {
+                    return <View key={key} style={{ width: CELL_W }} />;
+                  }
+
                   const isSelect       = selectedDate === key;
                   const isTodayD       = isToday(day);
                   const layers         = layersByDay.get(key);
                   const dots           = layers ? LAYER_ORDER.filter((l) => layers.has(l)) : [];
                   const dominantLayer  = dots[0] ?? null;
                   const isWeekend      = day.getDay() === 0 || day.getDay() === 6;
-                  const tintBg = dominantLayer && inMonth ? (LAYER_COLORS[dominantLayer] + '0D') : undefined;
-                  const isHoliday = inMonth && holidayMap.has(key);
+                  const tintBg = dominantLayer ? (LAYER_COLORS[dominantLayer] + '0D') : undefined;
+                  const isHoliday = holidayMap.has(key);
 
                   return (
                     <View key={key} style={[{ width: CELL_W }, isHoliday && st.holidayCellBg]}>
                       <Pressable
                         style={({ pressed }) => [
                           st.dayCell,
-                          isWeekend && inMonth && st.weekendCell,
+                          isWeekend && st.weekendCell,
                           tintBg ? { backgroundColor: tintBg } : undefined,
                           pressed && st.dayCellPressed,
                         ]}
@@ -350,8 +370,7 @@ export default function LayersScreen() {
                           ]}>
                             <Text style={[
                               st.dayText,
-                              !inMonth  && st.outMonthText,
-                              isWeekend && inMonth && !isTodayD && !isSelect && st.weekendText,
+                              isWeekend && !isTodayD && !isSelect && st.weekendText,
                               isTodayD && !isSelect && st.todayDayText,
                               isSelect && st.selectedDayText,
                             ]}>
@@ -553,15 +572,26 @@ const st = StyleSheet.create({
 
   // ── Cabecera ──
   header: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'space-between',
     paddingHorizontal: spacing.screenX,
     paddingTop: spacing.lg,
     paddingBottom: spacing.md,
   },
-  headerLeft: { flex: 1 },
-  headerRight: { flexShrink: 0 },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  navGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+  },
+  navArrow: {
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   monthName: {
     fontSize: fontSize.title,
     fontWeight: fontWeight.bold,
